@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#4ecc5f</color>
+    <color name="colorPrimaryDark">#40a64e</color>
+    <color name="colorAccent">#40a64e</color>
+
+    <color name="btn_bg_color_unselected">#40a64e</color>
+    <color name="btn_bg_color_selected">#4ecc5f</color>
+
+    <color name="item_oneword_r">#aaaaaa</color>
+    <color name="item_oneword_f">#4ecc5f</color>
+    <color name="item_oneword_l">#ff403d</color>
+
+
+    <color name="item_divider">#aaaaaa</color>
+    <color name="item_oneword_icons_delete">#ffffff</color>
+    <color name="item_oneword_icons_like">#ffffff</color>
+
+</resources>
