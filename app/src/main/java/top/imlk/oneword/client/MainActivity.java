@@ -1,44 +1,40 @@
 package top.imlk.oneword.client;
 
 import android.graphics.Rect;
-import android.os.RemoteException;
-import android.os.ServiceManager;
 import android.os.UserHandle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.android.internal.widget.ILockSettings;
 
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import top.imlk.oneword.R;
-import top.imlk.oneword.Hitokoto.HitokotoApi;
 import top.imlk.oneword.Hitokoto.HitokotoBean;
+import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
+import top.imlk.oneword.util.SharedPreferencesUtil;
 import top.imlk.oneword.view.MainOneWordView;
+import top.imlk.oneword.view.OneWordShowPanel;
+import top.imlk.oneword.view.PastedNestedScrollView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, Observer<HitokotoBean> {
 
-    private ILockSettings mLockSettingsService;
+//    private ILockSettings mLockSettingsService;
+
+    public OneWordSQLiteOpenHelper oneWordSQLiteOpenHelper;
 
 //    private Button btnSetMsg;
 //    private Button btnRequestMsg;
 
 //    private EditText etInputMsg;
 
-    private TextView tvMsgMain;
-    private TextView tvMsgFrom;
 
-    private HitokotoBean curHitokotoBean;
+    private PastedNestedScrollView pastedNestedScrollView;
 
     private MainOneWordView mainOneWordView;
 
+    private OneWordShowPanel oneWordShowPanel;
 
     private int mUserId;
 
@@ -48,38 +44,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         this.mUserId = UserHandle.myUserId();
 
-//        this.btnSetMsg = findViewById(R.id.btn_set_msg);
-//        this.btnSetMsg.setOnClickListener(this);
 
-//        this.btnRequestMsg = findViewById(R.id.btn_get_net_msg);
-//        this.btnRequestMsg.setOnClickListener(this);
+        this.pastedNestedScrollView = findViewById(R.id.root_pasted_scroll_view);
 
-        this.tvMsgMain = findViewById(R.id.tv_msg_main);
-        this.tvMsgFrom = findViewById(R.id.tv_msg_from);
-
+        this.oneWordSQLiteOpenHelper = new OneWordSQLiteOpenHelper(this);
 
 //        this.etInputMsg = findViewById(R.id.message);
 
         this.mainOneWordView = findViewById(R.id.ll_main_oneword);
+        this.mainOneWordView.initContext(this);
 
+        this.oneWordShowPanel = findViewById(R.id.one_word_show_panel);
+        this.oneWordShowPanel.initContext(this);
+        this.oneWordShowPanel.initView();
+//        upDateLP();
 
-        try {
-            updateMsgMain(getMsgFromLockScreen());
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(this, "获取当前锁屏一言失败", Toast.LENGTH_LONG).show();
-        }
+        // TODO
+//        try {
+//            updateMsgMain(getMsgFromLockScreen());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            Toast.makeText(this, "获取当前锁屏一言失败", Toast.LENGTH_LONG).show();
+//        }
 
     }
 
-    private ILockSettings getLockSettings() {
-        if (this.mLockSettingsService == null) {
-            this.mLockSettingsService = ILockSettings.Stub.asInterface(ServiceManager.getService("lock_settings"));
-        }
-        return this.mLockSettingsService;
-    }
+//    private ILockSettings getLockSettings() {
+//        if (this.mLockSettingsService == null) {
+//            this.mLockSettingsService = ILockSettings.Stub.asInterface(ServiceManager.getService("lock_settings"));
+//        }
+//        return this.mLockSettingsService;
+//    }
 
     @Override
     public void onClick(View v) {
@@ -118,29 +116,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        getLockSettings().setString("lock_screen_owner_info", str, this.mUserId);
 //    }
 
-    public void writeMsgToLockScreen(HitokotoBean hitokotoBean) throws RemoteException {
-        getLockSettings().setString("lock_screen_owner_info", hitokotoBean.from, this.mUserId);
+//    public void writeMsgToLockScreen(HitokotoBean hitokotoBean) throws RemoteException {
+//        getLockSettings().setString("lock_screen_owner_info", hitokotoBean.from, this.mUserId);
+//    }
+
+
+//    public String getMsgFromLockScreen() throws RemoteException {
+//        return getLockSettings().getString("lock_screen_owner_info", null, this.mUserId);
+//    }
+
+
+    public void updateStateByBean(HitokotoBean hitokotoBean) {
+
+        this.oneWordShowPanel.updateCurHitokotoBean(hitokotoBean);
+        this.oneWordShowPanel.updateMsgMain(hitokotoBean.hitokoto);
+        this.oneWordShowPanel.updateMsgFrom(hitokotoBean.from);
+        this.oneWordShowPanel.updateLike(hitokotoBean.like);
+
     }
 
-
-    public String getMsgFromLockScreen() throws RemoteException {
-        return getLockSettings().getString("lock_screen_owner_info", null, this.mUserId);
-    }
-
-
-    public void updateMsgByBean(HitokotoBean hitokotoBean) {
-        this.curHitokotoBean = hitokotoBean;
-        updateMsgMain(hitokotoBean.hitokoto);
-        updateMsgFrom(hitokotoBean.from);
-    }
-
-    public void updateMsgMain(String str) {
-        this.tvMsgMain.setText(TextUtils.isEmpty(str) ? "当前一言" : str);
-    }
-
-    public void updateMsgFrom(String str) {
-        this.tvMsgFrom.setText("——" + (TextUtils.isEmpty(str) ? "出处" : str));
-    }
 
     public Rect getAreaView() {
         Rect outRect = new Rect();
@@ -149,6 +143,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void gotoPage(int index) {
+
+        this.pastedNestedScrollView.scrollToBottom();
+        this.pastedNestedScrollView.canScroll = true;
+
         this.mainOneWordView.gotoPage(index);
     }
 
@@ -156,9 +154,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
 
-        if (this.mainOneWordView != null) {
-            mainOneWordView.upDateLP(getAreaView());
-        }
+        upDateLP();
 
     }
 
@@ -170,7 +166,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onNext(HitokotoBean hitokotoBean) {
-        updateMsgByBean(hitokotoBean);
+
+        if (this.oneWordSQLiteOpenHelper.query_one_item(hitokotoBean, OneWordSQLiteOpenHelper.TABLE_LIKE) != -1) {
+            hitokotoBean.like = true;
+        }
+
+        this.oneWordSQLiteOpenHelper.insert_to_history(hitokotoBean);
+
+        updateStateByBean(hitokotoBean);
+
+        SharedPreferencesUtil.saveCurOneWord(this, hitokotoBean);
+
+        // TODO
+
     }
 
     @Override
@@ -182,5 +190,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onComplete() {
 
+    }
+
+    public void upDateLP() {
+        if (this.mainOneWordView != null) {
+            mainOneWordView.upDateLP(getAreaView());
+        }
     }
 }

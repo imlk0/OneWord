@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<top.imlk.oneword.view.PastedNestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_pasted_scroll_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -8,17 +9,19 @@
     <top.imlk.oneword.view.MainOneWordView
         android:id="@+id/ll_main_oneword"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:descendantFocusability="blocksDescendants">
 
         <LinearLayout
-            android:id="@+id/ll_page_main"
+            android:id="@+id/ll_page_first"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <RelativeLayout
+            <top.imlk.oneword.view.OneWordShowPanel
+                android:id="@+id/one_word_show_panel"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1">
@@ -76,7 +79,7 @@
                         android:src="@drawable/ic_done_white_24dp" />
 
                 </RelativeLayout>
-            </RelativeLayout>
+            </top.imlk.oneword.view.OneWordShowPanel>
 
             <!--<EditText-->
             <!--android:id="@+id/message"-->
@@ -144,16 +147,16 @@
             android:layout_height="wrap_content"
             android:background="@android:color/white">
 
-            <android.support.v4.view.ViewPager
+            <top.imlk.oneword.view.UnScrollableViewPaper
                 android:id="@+id/vp_page_extend"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
-            </android.support.v4.view.ViewPager>
+            </top.imlk.oneword.view.UnScrollableViewPaper>
 
         </LinearLayout>
 
     </top.imlk.oneword.view.MainOneWordView>
 
 
-</ScrollView>
+</top.imlk.oneword.view.PastedNestedScrollView>

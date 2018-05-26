@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="top.imlk.oneword"
->
+    package="top.imlk.oneword">
     <!--android:sharedUserId="android.uid.systemui"-->
     <!--android:process="com.android.systemui"-->
 
@@ -11,7 +10,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".client.MainActivity">
+        <activity android:name=".client.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,7 +20,18 @@
         </activity>
     </application>
 
-    <uses-permission android:name="android.permission.ACCESS_KEYGUARD_SECURE_STORAGE" />
+    <meta-data
+        android:name="xposedmodule"
+        android:value="true" />
+    <meta-data
+        android:name="xposeddescription"
+        android:value="ConfessTalkKiller - 坦白说揭露者\ndeveloper: imlk\ncoolapk: https://www.coolapk.com/apk/top.imlk.confesstalk" />
+    <meta-data
+        android:name="xposedminversion"
+        android:value="36" />
+
+
+    <!--<uses-permission android:name="android.permission.ACCESS_KEYGUARD_SECURE_STORAGE" />-->
     <uses-permission android:name="permission android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.INTERNET" />
 

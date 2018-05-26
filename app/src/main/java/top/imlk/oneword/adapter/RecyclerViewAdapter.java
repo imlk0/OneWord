@@ -31,7 +31,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
     }
 
     private void fillData() {
-        for (int i = 0; i < 10; ++i) {
+        for (int i = 0; i < 20; ++i) {
             date.add(new HitokotoBean(i, "test " + i, "type " + i, "from " + i, "creator " + i, "create at " + i, i % 2 == 1));
         }
     }

@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -25,7 +26,29 @@ public class ExtendViewPageAdaper extends PagerAdapter {
 
     private Context context;
 
-    public ExtendViewPageAdaper(Context context) throws ClassNotFoundException, NoSuchFieldException {
+//    private static Class listenerInfoClass;
+//
+//    private static Field mOnTouchListenerField;
+//
+//    private static Field mListenerInfoField;
+//
+//    static {
+//        try {
+//            listenerInfoClass = Class.forName("android.view.View$ListenerInfo");
+//            mOnTouchListenerField = listenerInfoClass.getDeclaredField("mOnTouchListener");
+//            mOnTouchListenerField.setAccessible(true);
+//
+//            mListenerInfoField = View.class.getDeclaredField("mListenerInfo");
+//            mListenerInfoField.setAccessible(true);
+//
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (NoSuchFieldException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+    public ExtendViewPageAdaper(Context context) {
 
         this.context = context;
 
@@ -44,33 +67,47 @@ public class ExtendViewPageAdaper extends PagerAdapter {
     public void initViewGroup(int index) {
         switch (index) {
             case 0:
-                RecyclerView recyclerView = data.get(0).findViewById(R.id.rv_on_history_page);
+                final RecyclerView recyclerView = data.get(0).findViewById(R.id.rv_on_history_page);
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
                 recyclerView.setHasFixedSize(true);// TODO
                 recyclerView.setAdapter(new RecyclerViewAdapter(context));
                 SwipeToAction swipeToAction = new SwipeToAction(recyclerView, new SwipeToAction.SwipeListener() {
                     @Override
                     public boolean swipeLeft(Object itemData) {
-                        return false;
+                        return true;
                     }
 
                     @Override
                     public boolean swipeRight(Object itemData) {
-                        return false;
+                        return true;
                     }
 
                     @Override
                     public void onClick(Object itemData) {
-                        Toast.makeText(context,"Clicked",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Clicked", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onLongClick(Object itemData) {
-                        Toast.makeText(context,"LongClicked",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "LongClicked", Toast.LENGTH_SHORT).show();
                     }
                 });
 
-                recyclerView.
+//                View.OnTouchListener onTouchListener = null;
+//                try {
+//                    onTouchListener = (View.OnTouchListener) mOnTouchListenerField.get(mListenerInfoField.get(recyclerView));
+//                } catch (IllegalAccessException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                final View.OnTouchListener finalOnTouchListener = onTouchListener;
+//                recyclerView.setOnTouchListener(new View.OnTouchListener() {
+//                    @Override
+//                    public boolean onTouch(View v, MotionEvent event) {
+//                        finalOnTouchListener.onTouch(v, event);
+//                        return true;
+//                    }
+//                });
 
 
                 break;
@@ -92,18 +129,37 @@ public class ExtendViewPageAdaper extends PagerAdapter {
 
                     @Override
                     public void onClick(Object itemData) {
-                        Toast.makeText(context,"Clicked",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Clicked", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onLongClick(Object itemData) {
-                        Toast.makeText(context,"LongClicked",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "LongClicked", Toast.LENGTH_SHORT).show();
                     }
                 });
                 break;
             case 2:
                 break;
         }
+    }
+
+    public void upDateLP(int height){
+
+        try{
+
+            ViewGroup.LayoutParams layoutParams;
+
+            layoutParams = data.get(0).getLayoutParams();
+            layoutParams.height = height;
+            data.get(0).setLayoutParams(layoutParams);
+
+            layoutParams = data.get(1).getLayoutParams();
+            layoutParams.height = height;
+            data.get(1).setLayoutParams(layoutParams);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     @Override

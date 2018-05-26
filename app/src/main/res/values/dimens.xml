@@ -14,4 +14,7 @@
     <dimen name="item_bottom_icon_width">40dp</dimen>
     <dimen name="iv_msg_operator_size">48dp</dimen>
     <dimen name="iv_msg_operator_mg">18dp</dimen>
+    <dimen name="item_selector_icon_mg_bottom">4dp</dimen>
+    <dimen name="item_selector_icon_mg_top">12dp</dimen>
+    <dimen name="item_selector_text_mg_bottom">5dp</dimen>
 </resources>

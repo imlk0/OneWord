@@ -22,27 +22,22 @@ public class BottomNavigatorItem extends LinearLayout {
 
     public int index;
 
-    private Context context;
 
     public BottomNavigatorItem(Context context) {
         super(context);
-        this.context = context;
     }
 
     public BottomNavigatorItem(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        this.context = context;
     }
 
     public BottomNavigatorItem(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        this.context = context;
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public BottomNavigatorItem(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        this.context = context;
     }
 
     @Override

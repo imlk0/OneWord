@@ -38,7 +38,6 @@ public class HitokotoApi {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(callback);
 
-
     }
 
 

@@ -5,12 +5,10 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.os.Build;
 import android.support.annotation.Nullable;
-import android.support.v4.view.NestedScrollingParent;
-import android.support.v4.view.NestedScrollingParentHelper;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 
 
@@ -25,17 +23,14 @@ import top.imlk.oneword.client.MainActivity;
 /**
  * Created by imlk on 2018/5/20.
  */
-public class MainOneWordView extends LinearLayout implements NestedScrollingParent {
+public class MainOneWordView extends LinearLayout {
 
-    private NestedScrollingParentHelper nestedScrollingParentHelper;
 
     private LinearLayout llMsgBottom;
-
-
-    private LinearLayout llPageMain;
+    private LinearLayout llPageFirst;
     private LinearLayout llPageExtend;
 
-    private MainActivity context;
+    private Context context;
 
     private MagicIndicator bottomMagicIndicator;
 
@@ -47,50 +42,48 @@ public class MainOneWordView extends LinearLayout implements NestedScrollingPare
 
     public MainOneWordView(Context context) {
         super(context);
-        init(context);
-
     }
 
     public MainOneWordView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init(context);
-
     }
 
     public MainOneWordView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context);
-
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public MainOneWordView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        init(context);
-
     }
 
-    private void init(Context context) {
-        this.context = (MainActivity) context;
-        this.nestedScrollingParentHelper = new NestedScrollingParentHelper(this);
+    public void initContext(Context context) {
+        this.context = context;
     }
 
     public void upDateLP(Rect rect) {
 
 
-        if (llPageMain != null) {
+        if (llPageFirst != null) {
 
-            ViewGroup.LayoutParams layoutParams = llPageMain.getLayoutParams();
+            ViewGroup.LayoutParams layoutParams = llPageFirst.getLayoutParams();
             layoutParams.height = rect.height();
-            llPageMain.setLayoutParams(layoutParams);
+            llPageFirst.setLayoutParams(layoutParams);
 
         }
+
+
         if (llPageExtend != null) {
 
             ViewGroup.LayoutParams layoutParams = llPageExtend.getLayoutParams();
             layoutParams.height = rect.height() - (this.llMsgBottom == null ? 0 : this.llMsgBottom.getHeight());
             llPageExtend.setLayoutParams(layoutParams);
         }
+
+        if (extendViewPageAdaper != null) {
+            extendViewPageAdaper.upDateLP(rect.height() - (this.llMsgBottom == null ? 0 : this.llMsgBottom.getHeight()));
+        }
+
 
         if (bottomNavigatorAdapter != null) {
             bottomNavigatorAdapter.upDateLP(rect);
@@ -102,11 +95,12 @@ public class MainOneWordView extends LinearLayout implements NestedScrollingPare
 
 
         llMsgBottom = findViewById(R.id.ll_msg_bottom);
-        if (llMsgBottom == null) {
-            return;//第一次调用
-        }
+//        if (llMsgBottom == null) {
+//            return;//第一次调用
+//        }
 
-        llPageMain = findViewById(R.id.ll_page_main);
+
+        llPageFirst = findViewById(R.id.ll_page_first);
 
         llPageExtend = findViewById(R.id.ll_page_extend);
 
@@ -118,6 +112,17 @@ public class MainOneWordView extends LinearLayout implements NestedScrollingPare
         commonNavigator.setAdapter(bottomNavigatorAdapter);
 
         bottomMagicIndicator.setNavigator(commonNavigator);
+
+        llMsgBottom.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                if (llMsgBottom.getHeight() != 0) {
+                    llMsgBottom.getViewTreeObserver().removeOnPreDrawListener(this);
+                    ((MainActivity) context).upDateLP();//更新ui
+                }
+                return true;
+            }
+        });
 
 
         viewPager = findViewById(R.id.vp_page_extend);
@@ -148,28 +153,60 @@ public class MainOneWordView extends LinearLayout implements NestedScrollingPare
     }
 
 
-    public void gotoPage(int index){
+    public void gotoPage(int index) {
         viewPager.setCurrentItem(index);
     }
 
+//    @Override
+//    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+//        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+//
+//        ((MainActivity) this.context).upDateLP();
+//
+//    }
 
-    @Override
-    public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
-        return true;
-    }
+    // implement from NestedScrollingParent
 
-    @Override
-    public void onNestedScrollAccepted(View child, View target, int axes) {
-        nestedScrollingParentHelper.onNestedScrollAccepted(child, target, axes);
-    }
+//    @Override
+//    public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
+//        return true;
+//    }
+//
+//    @Override
+//    public void onNestedScrollAccepted(View child, View target, int axes) {
+//        nestedScrollingParentHelper.onNestedScrollAccepted(child, target, axes);
+//    }
+//
+//    @Override
+//    public void onStopNestedScroll(View child) {
+//
+//    }
+//
+//    @Override
+//    public void onNestedScroll(View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
+//
+//    }
+//
+//    @Override
+//    public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
+//
+//    }
+//
+//    @Override
+//    public boolean onNestedFling(View target, float velocityX, float velocityY, boolean consumed) {
+//        return false;
+//}
+//
+//    @Override
+//    public boolean onNestedPreFling(View target, float velocityX, float velocityY) {
+//        return false;
+//    }
+//
+//    @Override
+//    public int getNestedScrollAxes() {
+//        return nestedScrollingParentHelper.getNestedScrollAxes();
+//    }
+//
 
-    @Override
-    public void onStopNestedScroll(View child) {
 
-    }
-
-    @Override
-    public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
-
-    }
 }

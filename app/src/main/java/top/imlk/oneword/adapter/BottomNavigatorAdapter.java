@@ -119,7 +119,7 @@ public class BottomNavigatorAdapter extends CommonNavigatorAdapter implements Vi
     }
 
 
-    public void upDateLP(Rect rect) {
+    public void upDateLP(Rect rect) {//设置底部按钮宽度均摊
         for (int i = 0; i < data.size(); ++i) {
             ViewGroup.LayoutParams layoutParams = data.get(i).getLayoutParams();
             layoutParams.width = rect.width() / data.size();
