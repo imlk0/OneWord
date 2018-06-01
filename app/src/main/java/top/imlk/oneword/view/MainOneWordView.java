@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.os.Build;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
@@ -26,38 +27,42 @@ import top.imlk.oneword.client.MainActivity;
 public class MainOneWordView extends LinearLayout {
 
 
-    private LinearLayout llMsgBottom;
-    private LinearLayout llPageFirst;
-    private LinearLayout llPageExtend;
+    public LinearLayout llMsgBottom;
+    public LinearLayout llPageFirst;
+    public LinearLayout llPageExtend;
 
     private Context context;
 
-    private MagicIndicator bottomMagicIndicator;
+    public MagicIndicator bottomMagicIndicator;
 
-    private BottomNavigatorAdapter bottomNavigatorAdapter;
+    public BottomNavigatorAdapter bottomNavigatorAdapter;
 
-    private ExtendViewPageAdaper extendViewPageAdaper;
+    public ExtendViewPageAdaper extendViewPageAdaper;
 
-    private ViewPager viewPager;
+    public ViewPager viewPager;
 
     public MainOneWordView(Context context) {
         super(context);
+        updateContext(context);
     }
 
     public MainOneWordView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        updateContext(context);
     }
 
     public MainOneWordView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        updateContext(context);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public MainOneWordView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        updateContext(context);
     }
 
-    public void initContext(Context context) {
+    public void updateContext(Context context) {
         this.context = context;
     }
 
@@ -112,6 +117,7 @@ public class MainOneWordView extends LinearLayout {
         commonNavigator.setAdapter(bottomNavigatorAdapter);
 
         bottomMagicIndicator.setNavigator(commonNavigator);
+        bottomMagicIndicator.onPageSelected(-1);
 
         llMsgBottom.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
@@ -153,8 +159,13 @@ public class MainOneWordView extends LinearLayout {
     }
 
 
+
     public void gotoPage(int index) {
+        bottomMagicIndicator.onPageSelected(index == 2 ? 3 : index);
         viewPager.setCurrentItem(index);
+        if (index == 0 || index == 1) {
+            ((ExtendViewPageAdaper) viewPager.getAdapter()).updateAndFillRecyclerView(index);
+        }
     }
 
 //    @Override

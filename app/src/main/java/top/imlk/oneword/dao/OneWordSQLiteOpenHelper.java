@@ -2,11 +2,14 @@ package top.imlk.oneword.dao;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import java.util.ArrayList;
 
 import top.imlk.oneword.Hitokoto.HitokotoBean;
 
@@ -34,8 +37,28 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
     private static final String KEY_LIKE = "[like]";
 
 
-    public OneWordSQLiteOpenHelper(Context context) {//使用versionCode作为数据库版本
-        super(context, DB_NAME, null, context.getApplicationInfo().versionCode);
+    private static OneWordSQLiteOpenHelper oneWordSQLiteOpenHelper;
+
+    public static boolean isDataBasegClosed() {
+        if (oneWordSQLiteOpenHelper == null) {
+            return true;
+        }
+        return false;
+    }
+
+    public static OneWordSQLiteOpenHelper getInstance(Context context) {
+        if (oneWordSQLiteOpenHelper == null) {
+            try {
+                oneWordSQLiteOpenHelper = new OneWordSQLiteOpenHelper(context);
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        return oneWordSQLiteOpenHelper;
+    }
+
+    private OneWordSQLiteOpenHelper(Context context) throws PackageManager.NameNotFoundException {//使用versionCode作为数据库版本
+        super(context, DB_NAME, null, context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode);
     }
 
 
@@ -88,7 +111,6 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
                 + KEY_ADDED_AT + " DATE, "
                 + "PRIMARY KEY(" + KEY_ID + "," + KEY_TYPE + "))");
 
-        db.close();
     }
 
     public long insert_to_history(HitokotoBean hitokotoBean) {
@@ -107,7 +129,6 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
 
         long t = sqLiteDatabase.insertWithOnConflict(TABLE_HISTORY, null, contentValues, CONFLICT_REPLACE);
 
-        sqLiteDatabase.close();
         return t;
     }
 
@@ -125,7 +146,6 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
         contentValues.put(KEY_ADDED_AT, System.currentTimeMillis());
 
         long t = sqLiteDatabase.insertWithOnConflict(TABLE_LIKE, null, contentValues, CONFLICT_REPLACE);
-        sqLiteDatabase.close();
         return t;
     }
 
@@ -144,20 +164,18 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
         contentValues.put(KEY_ADDED_AT, System.currentTimeMillis());
 
         long t = sqLiteDatabase.insertWithOnConflict(TABLE_READY_TO_SHOW, null, contentValues, CONFLICT_REPLACE);
-        sqLiteDatabase.close();
         return t;
     }
 
     public long remove_one_item(HitokotoBean hitokotoBean, String table_name) {
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
-        long t = sqLiteDatabase.delete(table_name, KEY_ID + " = ? and name = ?", new String[]{hitokotoBean.id + "", hitokotoBean.type});
-        sqLiteDatabase.close();
+        long t = sqLiteDatabase.delete(table_name, KEY_ID + " = ? and " + KEY_TYPE + " = ?", new String[]{hitokotoBean.id + "", hitokotoBean.type});
         return t;
     }
 
 
-    public HitokotoBean get_a_ready_to_show_item() {
+    public HitokotoBean get_a_ready_to_show_item() {//ascend
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + TABLE_READY_TO_SHOW + " ORDER BY " + KEY_ADDED_AT + " ASC LIMIT 1", null);
 
@@ -165,26 +183,51 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
             return null;
         }
 
-        HitokotoBean hitokotoBean = new HitokotoBean(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), false);//默认dislike
+        HitokotoBean hitokotoBean = new HitokotoBean(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), false);// TODO 默认dislike
 
         cursor.close();
-        sqLiteDatabase.close();
 
         remove_one_item(hitokotoBean, TABLE_READY_TO_SHOW);
 
         return hitokotoBean;
     }
 
-    public long query_one_item(HitokotoBean hitokotoBean, String table_name) {
+    public ArrayList<HitokotoBean> get_a_bundle_of_item(String table_name, int num, int start) {//descend
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + table_name + " ORDER BY " + KEY_ADDED_AT + " DESC LIMIT ? OFFSET ?", new String[]{num + "", start + ""});
+        ArrayList<HitokotoBean> arrayList = new ArrayList<>(num);
+        switch (table_name) {
+            case TABLE_HISTORY:
+                for (; cursor.moveToNext(); ) {
+                    arrayList.add(new HitokotoBean(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getInt(6) != 0));
+                }
+                break;
+            case TABLE_LIKE:
+                for (; cursor.moveToNext(); ) {
+                    arrayList.add(new HitokotoBean(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), true));
+                }
+                break;
+            case TABLE_READY_TO_SHOW:
+                for (; cursor.moveToNext(); ) {
+                    arrayList.add(new HitokotoBean(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), false));
+                }
+                break;
+        }
+
+        return arrayList;
+    }
+
+
+    public boolean query_one_item_exist(HitokotoBean hitokotoBean, String table_name) {
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + table_name + " WHERE " + KEY_ID + " =? AND " + KEY_TYPE + " =?" + " ORDER BY " + KEY_ADDED_AT + " LIMIT 1", new String[]{hitokotoBean.id + "", hitokotoBean.type});
-        if (cursor.isAfterLast()) {
-            return -1;
+        if (cursor.getCount() == 0) {
+            cursor.close();
+            return false;
+        } else {
+            cursor.close();
+            return true;
         }
-        long t = cursor.getPosition();
-        cursor.close();
-        sqLiteDatabase.close();
-        return t;
     }
 
     public void update_like(HitokotoBean hitokotoBean) {
@@ -194,7 +237,6 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
         } catch (Exception e) {
             Log.e(LOG_TAG, "update_like", e);
         }
-        sqLiteDatabase.close();
     }
 
     //数据库版本发生更新后调用

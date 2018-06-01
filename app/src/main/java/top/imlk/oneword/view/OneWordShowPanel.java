@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import top.imlk.oneword.Hitokoto.HitokotoBean;
 import top.imlk.oneword.R;
-import top.imlk.oneword.client.MainActivity;
 import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
 import top.imlk.oneword.util.BroadcastSender;
 import top.imlk.oneword.util.SharedPreferencesUtil;
@@ -23,49 +22,65 @@ import top.imlk.oneword.util.SharedPreferencesUtil;
  */
 public class OneWordShowPanel extends RelativeLayout implements View.OnClickListener {
 
-    private TextView tvMsgMain;
-    private TextView tvMsgFrom;
+    public TextView tvMsgMain;
+    public TextView tvMsgFrom;
 
-    private ImageView ivLike;
-    private ImageView ivSetIt;
+    public ImageView ivLike;
+    public ImageView ivSetIt;
 
-    private HitokotoBean curHitokotoBean;
+    public HitokotoBean curHitokotoBean;
     private Context context;
 
 
     public OneWordShowPanel(Context context) {
         super(context);
+        updateContext(context);
     }
 
     public OneWordShowPanel(Context context, AttributeSet attrs) {
         super(context, attrs);
+        updateContext(context);
     }
 
     public OneWordShowPanel(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        updateContext(context);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public OneWordShowPanel(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        updateContext(context);
     }
 
-    public void initContext(Context context) {
+    public void updateContext(Context context) {
         this.context = context;
     }
 
     public void initView() {
         this.tvMsgMain = findViewById(R.id.tv_msg_main);
         this.tvMsgFrom = findViewById(R.id.tv_msg_from);
+
         this.ivLike = findViewById(R.id.iv_msg_like);
+        this.ivLike.setOnClickListener(this);
         this.ivSetIt = findViewById(R.id.iv_msg_set);
+        this.ivSetIt.setOnClickListener(this);
 
         HitokotoBean hitokotoBean = SharedPreferencesUtil.readSavedOneWord(this.context);
         if (hitokotoBean != null) {
-            this.curHitokotoBean = hitokotoBean;
-            this.tvMsgMain.setText(hitokotoBean.hitokoto);
-            this.tvMsgMain.setText(hitokotoBean.from);
+            updateStateByBean(hitokotoBean);
         }
+    }
+
+
+    public void updateStateByBean(HitokotoBean hitokotoBean) {
+        if (OneWordSQLiteOpenHelper.getInstance(context).query_one_item_exist(hitokotoBean, OneWordSQLiteOpenHelper.TABLE_LIKE)) {
+            hitokotoBean.like = true;
+        }
+        this.updateCurHitokotoBean(hitokotoBean);
+        this.updateMsgMain(hitokotoBean.hitokoto);
+        this.updateMsgFrom(hitokotoBean.from);
+        this.updateLike(hitokotoBean.like);
     }
 
     public void updateMsgMain(String str) {
@@ -96,12 +111,12 @@ public class OneWordShowPanel extends RelativeLayout implements View.OnClickList
                 if (this.curHitokotoBean != null) {
                     if (this.curHitokotoBean.like) {
                         this.curHitokotoBean.like = false;
-                        ((MainActivity) this.context).oneWordSQLiteOpenHelper.remove_one_item(this.curHitokotoBean, OneWordSQLiteOpenHelper.TABLE_LIKE);
+                        OneWordSQLiteOpenHelper.getInstance(context).remove_one_item(this.curHitokotoBean, OneWordSQLiteOpenHelper.TABLE_LIKE);
                     } else {
                         this.curHitokotoBean.like = true;
-                        ((MainActivity) this.context).oneWordSQLiteOpenHelper.insert_to_like(this.curHitokotoBean);
+                        OneWordSQLiteOpenHelper.getInstance(context).insert_to_like(this.curHitokotoBean);
                     }
-                    ((MainActivity) this.context).oneWordSQLiteOpenHelper.update_like(this.curHitokotoBean);
+                    OneWordSQLiteOpenHelper.getInstance(context).update_like(this.curHitokotoBean);
                     this.updateLike(this.curHitokotoBean.like);
                 } else {
                     Toast.makeText(context, "还没有拉取任何一条一言哦", Toast.LENGTH_SHORT).show();
@@ -110,6 +125,9 @@ public class OneWordShowPanel extends RelativeLayout implements View.OnClickList
             case R.id.iv_msg_set:
                 if (this.curHitokotoBean != null) {
 
+                    Toast.makeText(context, "设置锁屏一言中...", Toast.LENGTH_SHORT).show();
+
+                    SharedPreferencesUtil.saveCurOneWord(context, curHitokotoBean);
                     BroadcastSender.sendSetNewLockScreenInfoBroadcast(context, this.curHitokotoBean);
                 } else {
                     Toast.makeText(context, "还没有拉取任何一条一言哦", Toast.LENGTH_SHORT).show();

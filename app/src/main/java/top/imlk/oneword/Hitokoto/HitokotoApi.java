@@ -2,6 +2,7 @@ package top.imlk.oneword.Hitokoto;
 
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableOperator;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;

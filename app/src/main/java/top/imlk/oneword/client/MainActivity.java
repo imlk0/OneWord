@@ -1,12 +1,21 @@
 package top.imlk.oneword.client;
 
+import android.app.ActivityManager;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.os.UserHandle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
+
+import net.lucode.hackware.magicindicator.MagicIndicator;
+
+import java.util.List;
 
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
@@ -18,11 +27,13 @@ import top.imlk.oneword.view.MainOneWordView;
 import top.imlk.oneword.view.OneWordShowPanel;
 import top.imlk.oneword.view.PastedNestedScrollView;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, Observer<HitokotoBean> {
+import static top.imlk.oneword.common.StaticValue.CMD_SERVICES_START_AUTO_UPDATE;
+import static top.imlk.oneword.common.StaticValue.CMD_SERVICES_STOP_SERVICE;
+
+public class MainActivity extends AppCompatActivity implements Observer<HitokotoBean> {
 
 //    private ILockSettings mLockSettingsService;
 
-    public OneWordSQLiteOpenHelper oneWordSQLiteOpenHelper;
 
 //    private Button btnSetMsg;
 //    private Button btnRequestMsg;
@@ -30,13 +41,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //    private EditText etInputMsg;
 
 
-    private PastedNestedScrollView pastedNestedScrollView;
+    public PastedNestedScrollView pastedNestedScrollView;
 
-    private MainOneWordView mainOneWordView;
+    public MainOneWordView mainOneWordView;
 
-    private OneWordShowPanel oneWordShowPanel;
-
-    private int mUserId;
+    public OneWordShowPanel oneWordShowPanel;
 
 
     @Override
@@ -44,95 +53,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        this.mUserId = UserHandle.myUserId();
-
-
         this.pastedNestedScrollView = findViewById(R.id.root_pasted_scroll_view);
 
-        this.oneWordSQLiteOpenHelper = new OneWordSQLiteOpenHelper(this);
-
-//        this.etInputMsg = findViewById(R.id.message);
-
         this.mainOneWordView = findViewById(R.id.ll_main_oneword);
-        this.mainOneWordView.initContext(this);
+        this.mainOneWordView.updateContext(this);
 
         this.oneWordShowPanel = findViewById(R.id.one_word_show_panel);
-        this.oneWordShowPanel.initContext(this);
+        this.oneWordShowPanel.updateContext(this);
         this.oneWordShowPanel.initView();
-//        upDateLP();
 
-        // TODO
-//        try {
-//            updateMsgMain(getMsgFromLockScreen());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            Toast.makeText(this, "获取当前锁屏一言失败", Toast.LENGTH_LONG).show();
-//        }
+//        killRunningServices();
 
-    }
-
-//    private ILockSettings getLockSettings() {
-//        if (this.mLockSettingsService == null) {
-//            this.mLockSettingsService = ILockSettings.Stub.asInterface(ServiceManager.getService("lock_settings"));
-//        }
-//        return this.mLockSettingsService;
-//    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-//            case R.id.btn_set_msg:
-//
-//                try {
-//                    Toast.makeText(this, "OK!!", Toast.LENGTH_LONG).show();
-//                    writeMsgToLockScreen(etInputMsg.getText().toString());
-//                } catch (RemoteException e) {
-//                    e.printStackTrace();
-//                    Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
-//                }
-//
-//                break;
-//            case R.id.btn_get_net_msg:
-//                try {
-//                    HitokotoApi.getAnime(MainActivity.this);
-//                } catch (Exception e) {
-//                    Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-//                }
-//
-//                break;
-//            case R.id.btn_write_to_lock_screen:
-//                if (this.curHitokotoBean != null) {
-//                    try {
-//                        writeMsgToLockScreen(curHitokotoBean);
-//                    } catch (RemoteException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-        }
-    }
-
-//    public void writeMsgToLockScreen(String str) throws RemoteException {
-//        getLockSettings().setString("lock_screen_owner_info", str, this.mUserId);
-//    }
-
-//    public void writeMsgToLockScreen(HitokotoBean hitokotoBean) throws RemoteException {
-//        getLockSettings().setString("lock_screen_owner_info", hitokotoBean.from, this.mUserId);
-//    }
-
-
-//    public String getMsgFromLockScreen() throws RemoteException {
-//        return getLockSettings().getString("lock_screen_owner_info", null, this.mUserId);
-//    }
-
-
-    public void updateStateByBean(HitokotoBean hitokotoBean) {
-
-        this.oneWordShowPanel.updateCurHitokotoBean(hitokotoBean);
-        this.oneWordShowPanel.updateMsgMain(hitokotoBean.hitokoto);
-        this.oneWordShowPanel.updateMsgFrom(hitokotoBean.from);
-        this.oneWordShowPanel.updateLike(hitokotoBean.like);
-
+        startAutoUpdateService();
     }
 
 
@@ -144,10 +76,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void gotoPage(int index) {
 
-        this.pastedNestedScrollView.scrollToBottom();
-        this.pastedNestedScrollView.canScroll = true;
+        if (this.mainOneWordView.viewPager.getCurrentItem() == index && this.pastedNestedScrollView.canScroll) {
+            this.pastedNestedScrollView.scrollToTop();
+        } else {
+            this.pastedNestedScrollView.scrollToBottom();
+            this.mainOneWordView.gotoPage(index);
+        }
 
-        this.mainOneWordView.gotoPage(index);
     }
 
     @Override
@@ -167,17 +102,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onNext(HitokotoBean hitokotoBean) {
 
-        if (this.oneWordSQLiteOpenHelper.query_one_item(hitokotoBean, OneWordSQLiteOpenHelper.TABLE_LIKE) != -1) {
-            hitokotoBean.like = true;
-        }
 
-        this.oneWordSQLiteOpenHelper.insert_to_history(hitokotoBean);
+        this.oneWordShowPanel.updateStateByBean(hitokotoBean);
 
-        updateStateByBean(hitokotoBean);
-
-        SharedPreferencesUtil.saveCurOneWord(this, hitokotoBean);
-
-        // TODO
+        OneWordSQLiteOpenHelper.getInstance(this).insert_to_history(hitokotoBean);
 
     }
 
@@ -197,4 +125,70 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mainOneWordView.upDateLP(getAreaView());
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        if (!OneWordSQLiteOpenHelper.isDataBasegClosed()) {
+            OneWordSQLiteOpenHelper.getInstance(this).close();
+        }
+
+        if (SharedPreferencesUtil.isUpdatingOpened(this)) {
+            startAutoUpdateService();
+        }
+        super.onDestroy();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (!this.pastedNestedScrollView.isOnTop) {
+                this.pastedNestedScrollView.scrollToTop();
+            } else {
+                finish();
+            }
+            return true;
+        } else {
+            return super.onKeyDown(keyCode, event);
+        }
+    }
+
+
+    public void killRunningServices() {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+
+                ActivityManager myAM = (ActivityManager) MainActivity.this
+                        .getSystemService(Context.ACTIVITY_SERVICE);
+                List<ActivityManager.RunningServiceInfo> myList = myAM.getRunningServices(100);
+                if (myList.size() <= 0) {
+                    return;
+                }
+                for (int i = 0; i < myList.size(); i++) {
+                    String mName = myList.get(i).service.getClassName().toString();
+                    if (mName.equals(OneWordAutoUpdateService.SERVICE_NAME)) {
+
+                        Intent intent = new Intent(MainActivity.this, OneWordAutoUpdateService.class);
+
+                        intent.setAction(CMD_SERVICES_STOP_SERVICE);
+                        startService(intent);
+                        break;
+                    }
+                }
+
+            }
+        }).run();
+
+    }
+
+
+    public void startAutoUpdateService() {
+        Intent intent = new Intent(this, OneWordAutoUpdateService.class);
+
+        intent.setAction(CMD_SERVICES_START_AUTO_UPDATE);
+        startService(intent);
+    }
+
 }

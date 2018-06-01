@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="top.imlk.oneword">
     <!--android:sharedUserId="android.uid.systemui"-->
     <!--android:process="com.android.systemui"-->
@@ -10,7 +11,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".client.MainActivity"
+        <activity
+            android:name=".client.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -18,17 +20,45 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
 
-    <meta-data
-        android:name="xposedmodule"
-        android:value="true" />
-    <meta-data
-        android:name="xposeddescription"
-        android:value="ConfessTalkKiller - 坦白说揭露者\ndeveloper: imlk\ncoolapk: https://www.coolapk.com/apk/top.imlk.confesstalk" />
-    <meta-data
-        android:name="xposedminversion"
-        android:value="36" />
+
+        <service
+            android:name=".client.OneWordAutoUpdateService"
+            android:enabled="true"
+            android:exported="false"
+            android:isolatedProcess="true"
+            android:label="@string/service_name"
+            android:process=":autoupdate">
+
+        </service>
+
+
+        <meta-data
+            android:name="xposedmodule"
+            android:value="true" />
+        <meta-data
+            android:name="xposeddescription"
+            android:value="OneWord - 锁屏一言\ndeveloper: imlk\ncoolapk: https://www.coolapk.com/apk/top.imlk.oneword" />
+        <meta-data
+            android:name="xposedminversion"
+            android:value="36" />
+
+        <!--<provider-->
+            <!--android:name="net.grandcentrix.tray.provider.TrayContentProvider"-->
+            <!--android:authorities="top.imlk.oneword.tray"-->
+            <!--android:exported="false"-->
+            <!--android:process=":service"-->
+            <!--tools:replace="process" />-->
+
+        <!--<provider-->
+            <!--android:name="net.grandcentrix.tray.provider.TrayContentProvider"-->
+            <!--android:authorities="top.imlk.oneword.tray"-->
+            <!--android:exported="false"-->
+            <!--android:process=":" />-->
+
+        <!--android:multiprocess="true"-->
+        <!--tools:replace="android:multiprocess"-->
+    </application>
 
 
     <!--<uses-permission android:name="android.permission.ACCESS_KEYGUARD_SECURE_STORAGE" />-->

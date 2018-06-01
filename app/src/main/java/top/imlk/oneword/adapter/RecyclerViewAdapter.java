@@ -13,27 +13,43 @@ import java.util.ArrayList;
 import co.dift.ui.SwipeToAction;
 import top.imlk.oneword.Hitokoto.HitokotoBean;
 import top.imlk.oneword.R;
+import top.imlk.oneword.client.MainActivity;
+import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
 
 /**
  * Created by imlk on 2018/5/21.
  */
 public class RecyclerViewAdapter extends RecyclerView.Adapter {
 
+    public enum PageType {
+        HISTORY_PAGE,
+        LIKE_PAGE,
+    }
+
+
     private Context context;
+    private PageType pageType;
 
     private ArrayList<HitokotoBean> date = new ArrayList<>();
 
 
-    public RecyclerViewAdapter(Context context) {
+    public RecyclerViewAdapter(Context context, PageType pageType) {
         this.context = context;
-
-        fillData();
+        this.pageType = pageType;
     }
 
-    private void fillData() {
-        for (int i = 0; i < 20; ++i) {
-            date.add(new HitokotoBean(i, "test " + i, "type " + i, "from " + i, "creator " + i, "create at " + i, i % 2 == 1));
+    public void updateAndFill() {
+        switch (pageType) {
+            case HISTORY_PAGE:
+                date = OneWordSQLiteOpenHelper.getInstance(context).get_a_bundle_of_item(OneWordSQLiteOpenHelper.TABLE_HISTORY, 20, 0);
+                notifyDataSetChanged();
+                break;
+            case LIKE_PAGE:
+                date = OneWordSQLiteOpenHelper.getInstance(context).get_a_bundle_of_item(OneWordSQLiteOpenHelper.TABLE_LIKE, 20, 0);
+                notifyDataSetChanged();
+                break;
         }
+
     }
 
 
@@ -50,7 +66,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
         OneWordItemHolder oneWordItemHolder = ((OneWordItemHolder) holder);
 
         ((TextView) oneWordItemHolder.itemView.findViewById(R.id.item_oneword_msg)).setText(date.get(position).hitokoto);
-        ((TextView) oneWordItemHolder.itemView.findViewById(R.id.item_oneword_from)).setText(date.get(position).from);
+        ((TextView) oneWordItemHolder.itemView.findViewById(R.id.item_oneword_from)).setText("——" + date.get(position).from);
     }
 
     @Override
@@ -65,7 +81,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
         public OneWordItemHolder(View v) {
             super(v);
         }
-
 
     }
 

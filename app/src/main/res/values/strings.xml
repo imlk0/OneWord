@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">OneWord</string>
+    <string name="app_name">锁屏一言</string>
+    <string name="service_name">锁屏一言自动刷新服务</string>
 </resources>

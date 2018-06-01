@@ -16,6 +16,8 @@ import android.widget.ScrollView;
 
 import java.lang.reflect.Field;
 
+import top.imlk.oneword.client.MainActivity;
+
 /**
  * Created by imlk on 2018/5/23.
  */
@@ -27,6 +29,8 @@ public class PastedNestedScrollView extends NestedScrollView {
 
 
     public boolean canScroll = false;
+    public boolean isOnTop = true;
+    private Context context;
 
     public PastedNestedScrollView(@NonNull Context context) {
         super(context);
@@ -34,10 +38,16 @@ public class PastedNestedScrollView extends NestedScrollView {
 
     public PastedNestedScrollView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        updateContext(context);
     }
 
     public PastedNestedScrollView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        updateContext(context);
+    }
+
+    public void updateContext(Context context) {
+        this.context = context;
     }
 
     @Override
@@ -52,14 +62,12 @@ public class PastedNestedScrollView extends NestedScrollView {
         if (ev.getAction() == MotionEvent.ACTION_UP || ev.getAction() == MotionEvent.ACTION_CANCEL) {
 
 
-            if (getScrollY() > getHeight() / 3) {
+            if (getScrollY() > 2 * getHeight() / 3) {
 
                 scrollToBottom();
-                canScroll = true;
                 return true;
             } else {
                 scrollToTop();
-                canScroll = false;
                 return true;
             }
         }
@@ -76,10 +84,13 @@ public class PastedNestedScrollView extends NestedScrollView {
 //                } catch (InterruptedException e) {
 //                    e.printStackTrace();
 //                }
+                canScroll = false;
                 fling(0);
                 smoothScrollTo(0, 0);
             }
         });
+        ((MainActivity) context).mainOneWordView.bottomMagicIndicator.onPageSelected(-1);
+        isOnTop = true;
     }
 
 
@@ -96,10 +107,14 @@ public class PastedNestedScrollView extends NestedScrollView {
 //                }
 //                fullScroll(NestedScrollView.FOCUS_DOWN);
 
+                canScroll = true;
                 fling(0);
                 smoothScrollTo(0, getHeight());
             }
         });
+
+
+        isOnTop = false;
     }
 
 

@@ -5,13 +5,11 @@ import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import co.dift.ui.SwipeToAction;
@@ -56,21 +54,31 @@ public class ExtendViewPageAdaper extends PagerAdapter {
 
         data.add((ViewGroup) LinearLayout.inflate(context, R.layout.history_page, null));
         data.add((ViewGroup) LinearLayout.inflate(context, R.layout.like_page, null));
-        data.add((ViewGroup) LinearLayout.inflate(context, R.layout.about_page, null));
+        data.add((ViewGroup) LinearLayout.inflate(context, R.layout.setting_page, null));
 
         initViewGroup(0);
         initViewGroup(1);
         initViewGroup(2);
     }
 
+    public void updateAndFillRecyclerView(int index) {
+        switch (index) {
+            case 0:
+                ((RecyclerViewAdapter) ((RecyclerView) data.get(index).findViewById(R.id.rv_on_history_page)).getAdapter()).updateAndFill();
+                break;
+            case 1:
+                ((RecyclerViewAdapter) ((RecyclerView) data.get(index).findViewById(R.id.rv_on_like_page)).getAdapter()).updateAndFill();
+                break;
+        }
+    }
 
     public void initViewGroup(int index) {
         switch (index) {
             case 0:
                 final RecyclerView recyclerView = data.get(0).findViewById(R.id.rv_on_history_page);
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
-                recyclerView.setHasFixedSize(true);// TODO
-                recyclerView.setAdapter(new RecyclerViewAdapter(context));
+                recyclerView.setHasFixedSize(true);
+                recyclerView.setAdapter(new RecyclerViewAdapter(context, RecyclerViewAdapter.PageType.HISTORY_PAGE));
                 SwipeToAction swipeToAction = new SwipeToAction(recyclerView, new SwipeToAction.SwipeListener() {
                     @Override
                     public boolean swipeLeft(Object itemData) {
@@ -112,10 +120,10 @@ public class ExtendViewPageAdaper extends PagerAdapter {
 
                 break;
             case 1:
-                RecyclerView recyclerView_1 = data.get(1).findViewById(R.id.rw_on_like_page);
+                RecyclerView recyclerView_1 = data.get(1).findViewById(R.id.rv_on_like_page);
                 recyclerView_1.setLayoutManager(new LinearLayoutManager(context));
-                recyclerView_1.setHasFixedSize(true);// TODO
-                recyclerView_1.setAdapter(new RecyclerViewAdapter(context));
+                recyclerView_1.setHasFixedSize(true);
+                recyclerView_1.setAdapter(new RecyclerViewAdapter(context, RecyclerViewAdapter.PageType.LIKE_PAGE));
                 SwipeToAction swipeToAction_1 = new SwipeToAction(recyclerView_1, new SwipeToAction.SwipeListener() {
                     @Override
                     public boolean swipeLeft(Object itemData) {
@@ -143,9 +151,9 @@ public class ExtendViewPageAdaper extends PagerAdapter {
         }
     }
 
-    public void upDateLP(int height){
+    public void upDateLP(int height) {
 
-        try{
+        try {
 
             ViewGroup.LayoutParams layoutParams;
 
@@ -156,7 +164,7 @@ public class ExtendViewPageAdaper extends PagerAdapter {
             layoutParams = data.get(1).getLayoutParams();
             layoutParams.height = height;
             data.get(1).setLayoutParams(layoutParams);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

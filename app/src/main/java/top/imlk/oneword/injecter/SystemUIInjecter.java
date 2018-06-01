@@ -1,6 +1,9 @@
 package top.imlk.oneword.injecter;
 
+import android.os.Debug;
+
 import de.robv.android.xposed.IXposedHookLoadPackage;
+import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import top.imlk.oneword.holder.SystemUIHolder;
 
@@ -10,7 +13,9 @@ import top.imlk.oneword.holder.SystemUIHolder;
 public class SystemUIInjecter implements IXposedHookLoadPackage {
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
-        if (lpparam.packageName == "com.android.systemui") {
+//        XposedBridge.log("SystemUIInjecter"+lpparam.packageName);
+        if ("com.android.systemui".equals(lpparam.packageName)) {
+//            Debug.waitForDebugger();
             SystemUIHolder.init(lpparam.classLoader);
             SystemUIHolder.doHook_onFinishInflate();
         }

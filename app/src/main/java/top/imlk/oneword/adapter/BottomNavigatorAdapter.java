@@ -47,7 +47,7 @@ public class BottomNavigatorAdapter extends CommonNavigatorAdapter implements Vi
         commonPagerTitleView.setContentView(((BottomNavigatorItem) LinearLayout.inflate(context, R.layout.item_bottom_selector, null)).setImage(R.drawable.ic_refresh_white_24dp).setBgColor(R.color.btn_bg_color_unselected).setText("再来一条").setIndex(2));
         data.add(commonPagerTitleView);
         commonPagerTitleView = new CommonPagerTitleView(context);
-        commonPagerTitleView.setContentView(((BottomNavigatorItem) LinearLayout.inflate(context, R.layout.item_bottom_selector, null)).setImage(R.drawable.ic_info_outline_white_24dp).setBgColor(R.color.btn_bg_color_unselected).setText("关于应用").setIndex(3));
+        commonPagerTitleView.setContentView(((BottomNavigatorItem) LinearLayout.inflate(context, R.layout.item_bottom_selector, null)).setImage(R.drawable.ic_info_outline_white_24dp).setBgColor(R.color.btn_bg_color_unselected).setText("设置").setIndex(3));
         data.add(commonPagerTitleView);
 
         for (int i = 0; i < data.size(); ++i) {
@@ -75,22 +75,27 @@ public class BottomNavigatorAdapter extends CommonNavigatorAdapter implements Vi
 
     @Override
     public void onClick(View v) {
-        //TODO
+        //TODO 水波纹
 
 //        ((CommonPagerTitleView) v).getChildAt(0).setBackgroundResource(R.color.btn_bg_color_selected);
 
         if (v == data.get(0)) {
             ((MainActivity) context).gotoPage(0);
+
         } else if (v == data.get(1)) {
             ((MainActivity) context).gotoPage(1);
+
         } else if (v == data.get(2)) {
 
             try {
                 HitokotoApi.getAnime((MainActivity) context);
+                ((MainActivity) context).pastedNestedScrollView.scrollToTop();
             } catch (Exception e) {
                 Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
             }
+
         } else if (v == data.get(3)) {
+
             ((MainActivity) context).gotoPage(2);
 
         }

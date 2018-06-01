@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="auto_update_time_item">
+
+            <item>每五分钟</item>
+            <item>每十分钟</item>
+            <item>每二十分钟</item>
+            <item>每三十分钟</item>
+            <item>每三十分钟</item>
+
+            <item>每一小时</item>
+            <item>每两小时</item>
+
+            <item>每次锁屏</item>
+            <item>每两次锁屏</item>
+            <item>每五次锁屏</item>
+            <item>每十次锁屏</item>
+    </string-array>
+</resources>

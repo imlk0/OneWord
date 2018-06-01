@@ -17,8 +17,8 @@ import top.imlk.oneword.R;
  * Created by imlk on 2018/5/20.
  */
 public class BottomNavigatorItem extends LinearLayout {
-    private ImageView image;
-    private TextView text;
+    public ImageView image;
+    public TextView text;
 
     public int index;
 
