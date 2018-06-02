@@ -10,7 +10,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/BaseTheme">
         <activity
             android:name=".client.MainActivity"
             android:screenOrientation="portrait">
@@ -23,12 +23,12 @@
 
 
         <service
-            android:name=".client.OneWordAutoUpdateService"
+            android:name=".client.OneWordAutoRefreshService"
             android:enabled="true"
             android:exported="false"
-            android:isolatedProcess="true"
+            android:isolatedProcess="false"
             android:label="@string/service_name"
-            android:process=":autoupdate">
+            android:process=":autorefresh">
 
         </service>
 
@@ -44,17 +44,17 @@
             android:value="36" />
 
         <!--<provider-->
-            <!--android:name="net.grandcentrix.tray.provider.TrayContentProvider"-->
-            <!--android:authorities="top.imlk.oneword.tray"-->
-            <!--android:exported="false"-->
-            <!--android:process=":service"-->
-            <!--tools:replace="process" />-->
+        <!--android:name="net.grandcentrix.tray.provider.TrayContentProvider"-->
+        <!--android:authorities="top.imlk.oneword.tray"-->
+        <!--android:exported="false"-->
+        <!--android:process=":service"-->
+        <!--tools:replace="process" />-->
 
         <!--<provider-->
-            <!--android:name="net.grandcentrix.tray.provider.TrayContentProvider"-->
-            <!--android:authorities="top.imlk.oneword.tray"-->
-            <!--android:exported="false"-->
-            <!--android:process=":" />-->
+        <!--android:name="net.grandcentrix.tray.provider.TrayContentProvider"-->
+        <!--android:authorities="top.imlk.oneword.tray"-->
+        <!--android:exported="false"-->
+        <!--android:process=":" />-->
 
         <!--android:multiprocess="true"-->
         <!--tools:replace="android:multiprocess"-->

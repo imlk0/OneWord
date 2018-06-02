@@ -9,16 +9,31 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/item_oneword_r"
-        android:tag="reveal-right">
+        android:padding="14dp"
+        android:tag="reveal-right"
+        android:visibility="gone">
+
 
         <ImageView
+            android:id="@+id/item_set"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="20dp"
-            android:src="@drawable/ic_favorite_red_500_24dp"
+            android:layout_marginRight="8dp"
+            android:src="@drawable/ic_done_white_48dp"
             android:tint="@color/item_oneword_icons_like" />
+
+        <ImageView
+            android:id="@+id/item_share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/item_set"
+            android:src="@drawable/ic_share_white_48dp"
+            android:tint="@color/item_oneword_icons_like" />
+
+
     </RelativeLayout>
 
 
@@ -27,15 +42,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/item_oneword_l"
-        android:tag="reveal-left">
+        android:padding="14dp"
+        android:tag="reveal-left"
+        android:visibility="gone">
 
         <ImageView
+            android:id="@+id/item_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="20dp"
-            android:src="@drawable/ic_delete_white_24dp"
+            android:src="@drawable/ic_delete_white_48dp"
             android:tint="@color/item_oneword_icons_delete" />
     </RelativeLayout>
 
@@ -44,7 +61,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/item_oneword_f"
+        android:background="?attr/colorPrimary"
         android:padding="@dimen/item_oneword_padding"
         android:tag="front">
 
@@ -55,19 +72,18 @@
             android:singleLine="false"
             android:textColor="@android:color/white"
             android:textSize="16dp"
-            android:background="@color/item_oneword_f"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/item_oneword_from"
-            android:layout_marginTop="3dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/item_oneword_msg"
+            android:layout_marginTop="3dp"
             android:gravity="right"
-            android:textStyle="italic"
             android:textColor="@android:color/white"
-            android:textSize="14dp" />
+            android:textSize="14dp"
+            android:textStyle="italic" />
     </RelativeLayout>
 
 
@@ -75,6 +91,6 @@
     <View
         android:layout_width="fill_parent"
         android:layout_height="0.5dp"
-        android:background="@color/item_divider" />
+        android:background="?attr/colorPrimaryDark" />
 
 </FrameLayout>

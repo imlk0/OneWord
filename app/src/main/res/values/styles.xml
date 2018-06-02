@@ -1,11 +1,235 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+
+    <style name="SwitchStyle" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Active thumb color & Active track color(30% transparency)
+            switch 打开时的拇指按钮的颜色 轨迹颜色默认为30%这个颜色 -->
+        <item name="colorControlActivated">@android:color/white</item>
+        <!-- Inactive thumb color switch关闭时的拇指按钮的颜色 -->
+        <item name="colorSwitchThumbNormal">@android:color/white</item>
+        <!-- Inactive track color(30% transparency) switch关闭时的轨迹的颜色  30%这个颜色 -->
+        <item name="android:colorForeground">@android:color/white</item>
+        <!--使用方法：
+        在布局文件中给需要自定义控件中增加app:theme="@style/MySwitch"-->
     </style>
 
+
+    <!-- Base application theme. -->
+    <style name="BaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/green_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/green_colorPrimaryDark</item>
+        <item name="primary_light">@color/green_primary_light</item>
+        <item name="colorAccent">@color/green_colorAccent</item>
+        <item name="primary_text">@color/green_primary_text</item>
+        <item name="secondary_text">@color/green_secondary_text</item>
+        <item name="icons">@color/green_icons</item>
+        <item name="divider">@color/green_divider</item>
+
+    </style>
+
+    <style name="RedTheme" parent="BaseTheme">
+        <item name="colorPrimary">@color/red_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/red_colorPrimaryDark</item>
+        <item name="primary_light">@color/red_primary_light</item>
+        <item name="colorAccent">@color/red_colorAccent</item>
+        <item name="primary_text">@color/red_primary_text</item>
+        <item name="secondary_text">@color/red_secondary_text</item>
+        <item name="icons">@color/red_icons</item>
+        <item name="divider">@color/red_divider</item>
+    </style>
+
+    <style name="AmberTheme" parent="BaseTheme">
+        <item name="colorPrimary">@color/amber_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/amber_colorPrimaryDark</item>
+        <item name="primary_light">@color/amber_primary_light</item>
+        <item name="colorAccent">@color/amber_colorAccent</item>
+        <item name="primary_text">@color/amber_primary_text</item>
+        <item name="secondary_text">@color/amber_secondary_text</item>
+        <item name="icons">@color/amber_icons</item>
+        <item name="divider">@color/amber_divider</item>
+    </style>
+
+
+    <style name="BlueTheme" parent="BaseTheme">
+        <item name="colorPrimary">@color/blue_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/blue_colorPrimaryDark</item>
+        <item name="primary_light">@color/blue_primary_light</item>
+        <item name="colorAccent">@color/blue_colorAccent</item>
+        <item name="primary_text">@color/blue_primary_text</item>
+        <item name="secondary_text">@color/blue_secondary_text</item>
+        <item name="icons">@color/blue_icons</item>
+        <item name="divider">@color/blue_divider</item>
+    </style>
+
+    <style name="BlueGrey" parent="BaseTheme">
+        <item name="colorPrimary">@color/blue_grey_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/blue_grey_colorPrimaryDark</item>
+        <item name="primary_light">@color/blue_grey_primary_light</item>
+        <item name="colorAccent">@color/blue_grey_colorAccent</item>
+        <item name="primary_text">@color/blue_grey_primary_text</item>
+        <item name="secondary_text">@color/blue_grey_secondary_text</item>
+        <item name="icons">@color/blue_grey_icons</item>
+        <item name="divider">@color/blue_grey_divider</item>
+    </style>
+
+
+    <style name="BrownTheme" parent="BaseTheme">
+        <item name="colorPrimary">@color/brown_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/brown_colorPrimaryDark</item>
+        <item name="primary_light">@color/brown_primary_light</item>
+        <item name="colorAccent">@color/brown_colorAccent</item>
+        <item name="primary_text">@color/brown_primary_text</item>
+        <item name="secondary_text">@color/brown_secondary_text</item>
+        <item name="icons">@color/brown_icons</item>
+        <item name="divider">@color/brown_divider</item>
+    </style>
+
+    <style name="CyanTheme" parent="BaseTheme">
+        <item name="colorPrimary">@color/cyan_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/cyan_colorPrimaryDark</item>
+        <item name="primary_light">@color/cyan_primary_light</item>
+        <item name="colorAccent">@color/cyan_colorAccent</item>
+        <item name="primary_text">@color/cyan_primary_text</item>
+        <item name="secondary_text">@color/cyan_secondary_text</item>
+        <item name="icons">@color/cyan_icons</item>
+        <item name="divider">@color/cyan_divider</item>
+    </style>
+
+    <style name="DeepOrangeTheme" parent="BaseTheme">
+        <item name="colorPrimary">@color/deep_orange_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/deep_orange_colorPrimaryDark</item>
+        <item name="primary_light">@color/deep_orange_primary_light</item>
+        <item name="colorAccent">@color/deep_orange_colorAccent</item>
+        <item name="primary_text">@color/deep_orange_primary_text</item>
+        <item name="secondary_text">@color/deep_orange_secondary_text</item>
+        <item name="icons">@color/deep_orange_icons</item>
+        <item name="divider">@color/deep_orange_divider</item>
+    </style>
+
+    <style name="DeepPurpleTheme" parent="BaseTheme">
+        <item name="colorPrimary">@color/deep_purple_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/deep_purple_colorPrimaryDark</item>
+        <item name="primary_light">@color/deep_purple_primary_light</item>
+        <item name="colorAccent">@color/deep_purple_colorAccent</item>
+        <item name="primary_text">@color/deep_purple_primary_text</item>
+        <item name="secondary_text">@color/deep_purple_secondary_text</item>
+        <item name="icons">@color/deep_purple_icons</item>
+        <item name="divider">@color/deep_purple_divider</item>
+    </style>
+
+    <style name="GreenTheme" parent="BaseTheme">
+        <item name="colorPrimary">@color/green_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/green_colorPrimaryDark</item>
+        <item name="primary_light">@color/green_primary_light</item>
+        <item name="colorAccent">@color/green_colorAccent</item>
+        <item name="primary_text">@color/green_primary_text</item>
+        <item name="secondary_text">@color/green_secondary_text</item>
+        <item name="icons">@color/green_icons</item>
+        <item name="divider">@color/green_divider</item>
+    </style>
+
+    <style name="GreyTheme" parent="BaseTheme">
+        <item name="colorPrimary">@color/grey_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/grey_colorPrimaryDark</item>
+        <item name="primary_light">@color/grey_primary_light</item>
+        <item name="colorAccent">@color/grey_colorAccent</item>
+        <item name="primary_text">@color/grey_primary_text</item>
+        <item name="secondary_text">@color/grey_secondary_text</item>
+        <item name="icons">@color/grey_icons</item>
+        <item name="divider">@color/grey_divider</item>
+    </style>
+
+    <style name="IndigoTheme" parent="BaseTheme">
+        <item name="colorPrimary">@color/indigo_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/indigo_colorPrimaryDark</item>
+        <item name="primary_light">@color/indigo_primary_light</item>
+        <item name="colorAccent">@color/indigo_colorAccent</item>
+        <item name="primary_text">@color/indigo_primary_text</item>
+        <item name="secondary_text">@color/indigo_secondary_text</item>
+        <item name="icons">@color/indigo_icons</item>
+        <item name="divider">@color/indigo_divider</item>
+    </style>
+
+    <style name="LightBlueTheme" parent="BaseTheme">
+        <item name="colorPrimary">@color/light_blue_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/light_blue_colorPrimaryDark</item>
+        <item name="primary_light">@color/light_blue_primary_light</item>
+        <item name="colorAccent">@color/light_blue_colorAccent</item>
+        <item name="primary_text">@color/light_blue_primary_text</item>
+        <item name="secondary_text">@color/light_blue_secondary_text</item>
+        <item name="icons">@color/light_blue_icons</item>
+        <item name="divider">@color/light_blue_divider</item>
+    </style>
+
+    <style name="LimeTheme" parent="BaseTheme">
+        <item name="colorPrimary">@color/lime_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/lime_colorPrimaryDark</item>
+        <item name="primary_light">@color/lime_primary_light</item>
+        <item name="colorAccent">@color/lime_colorAccent</item>
+        <item name="primary_text">@color/lime_primary_text</item>
+        <item name="secondary_text">@color/lime_secondary_text</item>
+        <item name="icons">@color/lime_icons</item>
+        <item name="divider">@color/lime_divider</item>
+    </style>
+
+    <style name="OrangeTheme" parent="BaseTheme">
+        <item name="colorPrimary">@color/orange_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/orange_colorPrimaryDark</item>
+        <item name="primary_light">@color/orange_primary_light</item>
+        <item name="colorAccent">@color/orange_colorAccent</item>
+        <item name="primary_text">@color/orange_primary_text</item>
+        <item name="secondary_text">@color/orange_secondary_text</item>
+        <item name="icons">@color/orange_icons</item>
+        <item name="divider">@color/orange_divider</item>
+    </style>
+
+    <style name="PinkTheme" parent="BaseTheme">
+        <item name="colorPrimary">@color/pink_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/pink_colorPrimaryDark</item>
+        <item name="primary_light">@color/pink_primary_light</item>
+        <item name="colorAccent">@color/pink_colorAccent</item>
+        <item name="primary_text">@color/pink_primary_text</item>
+        <item name="secondary_text">@color/pink_secondary_text</item>
+        <item name="icons">@color/pink_icons</item>
+        <item name="divider">@color/pink_divider</item>
+    </style>
+
+    <style name="PurpleTheme" parent="BaseTheme">
+        <item name="colorPrimary">@color/purple_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/purple_colorPrimaryDark</item>
+        <item name="primary_light">@color/purple_primary_light</item>
+        <item name="colorAccent">@color/purple_colorAccent</item>
+        <item name="primary_text">@color/purple_primary_text</item>
+        <item name="secondary_text">@color/purple_secondary_text</item>
+        <item name="icons">@color/purple_icons</item>
+        <item name="divider">@color/purple_divider</item>
+    </style>
+
+    <style name="TealTheme" parent="BaseTheme">
+        <item name="colorPrimary">@color/teal_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/teal_colorPrimaryDark</item>
+        <item name="primary_light">@color/teal_primary_light</item>
+        <item name="colorAccent">@color/teal_colorAccent</item>
+        <item name="primary_text">@color/teal_primary_text</item>
+        <item name="secondary_text">@color/teal_secondary_text</item>
+        <item name="icons">@color/teal_icons</item>
+        <item name="divider">@color/teal_divider</item>
+    </style>
+
+    <style name="YellowTheme" parent="BaseTheme">
+        <item name="colorPrimary">@color/yellow_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/yellow_colorPrimaryDark</item>
+        <item name="primary_light">@color/yellow_primary_light</item>
+        <item name="colorAccent">@color/yellow_colorAccent</item>
+        <item name="primary_text">@color/yellow_primary_text</item>
+        <item name="secondary_text">@color/yellow_secondary_text</item>
+        <item name="icons">@color/yellow_icons</item>
+        <item name="divider">@color/yellow_divider</item>
+    </style>
+
+
+
 </resources>
+
+

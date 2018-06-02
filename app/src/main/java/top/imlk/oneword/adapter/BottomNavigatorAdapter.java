@@ -1,8 +1,11 @@
 package top.imlk.oneword.adapter;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Build;
+import android.support.annotation.AttrRes;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -18,6 +21,7 @@ import java.util.ArrayList;
 import top.imlk.oneword.Hitokoto.HitokotoApi;
 import top.imlk.oneword.R;
 import top.imlk.oneword.client.MainActivity;
+import top.imlk.oneword.util.StyleHelper;
 import top.imlk.oneword.view.BottomNavigatorItem;
 
 /**
@@ -38,16 +42,16 @@ public class BottomNavigatorAdapter extends CommonNavigatorAdapter implements Vi
 
 
         commonPagerTitleView = new CommonPagerTitleView(context);
-        commonPagerTitleView.setContentView(((BottomNavigatorItem) LinearLayout.inflate(context, R.layout.item_bottom_selector, null)).setImage(R.drawable.ic_view_list_white_24dp).setBgColor(R.color.btn_bg_color_unselected).setText("历史").setIndex(0));
+        commonPagerTitleView.setContentView(((BottomNavigatorItem) LinearLayout.inflate(context, R.layout.item_bottom_selector, null)).setImage(R.drawable.ic_view_list_white_48dp).setBgByColor(StyleHelper.getColorByAttributeId(context, R.attr.colorPrimaryDark)).setText("历史").setIndex(0));
         data.add(commonPagerTitleView);
         commonPagerTitleView = new CommonPagerTitleView(context);
-        commonPagerTitleView.setContentView(((BottomNavigatorItem) LinearLayout.inflate(context, R.layout.item_bottom_selector, null)).setImage(R.drawable.ic_favorite_border_white_24dp).setBgColor(R.color.btn_bg_color_unselected).setText("喜欢的").setIndex(1));
+        commonPagerTitleView.setContentView(((BottomNavigatorItem) LinearLayout.inflate(context, R.layout.item_bottom_selector, null)).setImage(R.drawable.ic_favorite_border_white_48dp).setBgByColor(StyleHelper.getColorByAttributeId(context, R.attr.colorPrimaryDark)).setText("喜欢的").setIndex(1));
         data.add(commonPagerTitleView);
         commonPagerTitleView = new CommonPagerTitleView(context);
-        commonPagerTitleView.setContentView(((BottomNavigatorItem) LinearLayout.inflate(context, R.layout.item_bottom_selector, null)).setImage(R.drawable.ic_refresh_white_24dp).setBgColor(R.color.btn_bg_color_unselected).setText("再来一条").setIndex(2));
+        commonPagerTitleView.setContentView(((BottomNavigatorItem) LinearLayout.inflate(context, R.layout.item_bottom_selector, null)).setImage(R.drawable.ic_refresh_white_48dp).setBgByColor(StyleHelper.getColorByAttributeId(context, R.attr.colorPrimaryDark)).setText("再来一条").setIndex(2));
         data.add(commonPagerTitleView);
         commonPagerTitleView = new CommonPagerTitleView(context);
-        commonPagerTitleView.setContentView(((BottomNavigatorItem) LinearLayout.inflate(context, R.layout.item_bottom_selector, null)).setImage(R.drawable.ic_info_outline_white_24dp).setBgColor(R.color.btn_bg_color_unselected).setText("设置").setIndex(3));
+        commonPagerTitleView.setContentView(((BottomNavigatorItem) LinearLayout.inflate(context, R.layout.item_bottom_selector, null)).setImage(R.drawable.ic_info_outline_white_48dp).setBgByColor(StyleHelper.getColorByAttributeId(context, R.attr.colorPrimaryDark)).setText("设置").setIndex(3));
         data.add(commonPagerTitleView);
 
         for (int i = 0; i < data.size(); ++i) {
@@ -105,12 +109,12 @@ public class BottomNavigatorAdapter extends CommonNavigatorAdapter implements Vi
 
     @Override
     public void onSelected(int index, int totalCount) {
-        this.data.get(index).getChildAt(0).setBackgroundResource(R.color.btn_bg_color_selected);
+        this.data.get(index).getChildAt(0).setBackgroundColor(StyleHelper.getColorByAttributeId(context, R.attr.colorPrimary));
     }
 
     @Override
     public void onDeselected(int index, int totalCount) {
-        this.data.get(index).getChildAt(0).setBackgroundResource(R.color.btn_bg_color_unselected);
+        this.data.get(index).getChildAt(0).setBackgroundColor(StyleHelper.getColorByAttributeId(context, R.attr.colorPrimaryDark));
     }
 
     @Override

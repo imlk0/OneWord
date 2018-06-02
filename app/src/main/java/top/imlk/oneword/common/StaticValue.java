@@ -27,9 +27,9 @@ public class StaticValue {
     public static final String SHARED_PER_KEY_CURRENT_ONEWORD_LIKE = "current_like";
 
 
-    public static final String SHARED_PER_UPDATING_STATE = "SHARED_PER_UPDATING_STATE";
-    public static final String SHARED_PER_KEY_IS_UPDATING_OPENED = "is_updating_opened";
-    public static final String SHARED_PER_KEY_UPDATING_MODE = "times_to_update";
+    public static final String SHARED_PER_AUTO_REFRESH_STATE = "SHARED_PER_AUTO_REFRESH_STATE";
+    public static final String SHARED_PER_KEY_IS_REFRESH_OPENED = "is_refresh_opened";
+    public static final String SHARED_PER_KEY_REFRESH_MODE = "frequency_to_refresh";
 
 
 

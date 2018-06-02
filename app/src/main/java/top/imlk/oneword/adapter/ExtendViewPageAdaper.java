@@ -13,6 +13,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import co.dift.ui.SwipeToAction;
+import top.imlk.oneword.Hitokoto.HitokotoBean;
 import top.imlk.oneword.R;
 
 /**
@@ -78,25 +79,25 @@ public class ExtendViewPageAdaper extends PagerAdapter {
                 final RecyclerView recyclerView = data.get(0).findViewById(R.id.rv_on_history_page);
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
                 recyclerView.setHasFixedSize(true);
-                recyclerView.setAdapter(new RecyclerViewAdapter(context, RecyclerViewAdapter.PageType.HISTORY_PAGE));
-                SwipeToAction swipeToAction = new SwipeToAction(recyclerView, new SwipeToAction.SwipeListener() {
+                recyclerView.setAdapter(new RecyclerViewAdapter(context, RecyclerViewAdapter.PageType.HISTORY_PAGE, recyclerView));
+                SwipeToAction swipeToAction = new SwipeToAction(recyclerView, new SwipeToAction.SwipeListener<HitokotoBean>() {
                     @Override
-                    public boolean swipeLeft(Object itemData) {
-                        return true;
+                    public boolean swipeLeft(HitokotoBean itemData) {
+                        return false;
                     }
 
                     @Override
-                    public boolean swipeRight(Object itemData) {
-                        return true;
+                    public boolean swipeRight(HitokotoBean itemData) {
+                        return false;
                     }
 
                     @Override
-                    public void onClick(Object itemData) {
+                    public void onClick(HitokotoBean itemData) {
                         Toast.makeText(context, "Clicked", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
-                    public void onLongClick(Object itemData) {
+                    public void onLongClick(HitokotoBean itemData) {
                         Toast.makeText(context, "LongClicked", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -123,25 +124,26 @@ public class ExtendViewPageAdaper extends PagerAdapter {
                 RecyclerView recyclerView_1 = data.get(1).findViewById(R.id.rv_on_like_page);
                 recyclerView_1.setLayoutManager(new LinearLayoutManager(context));
                 recyclerView_1.setHasFixedSize(true);
-                recyclerView_1.setAdapter(new RecyclerViewAdapter(context, RecyclerViewAdapter.PageType.LIKE_PAGE));
-                SwipeToAction swipeToAction_1 = new SwipeToAction(recyclerView_1, new SwipeToAction.SwipeListener() {
+                recyclerView_1.setAdapter(new RecyclerViewAdapter(context, RecyclerViewAdapter.PageType.LIKE_PAGE, recyclerView_1));
+                SwipeToAction swipeToAction_1 = new SwipeToAction(recyclerView_1, new SwipeToAction.SwipeListener<HitokotoBean>() {
                     @Override
-                    public boolean swipeLeft(Object itemData) {
+                    public boolean swipeLeft(HitokotoBean itemData) {
                         return false;
                     }
 
                     @Override
-                    public boolean swipeRight(Object itemData) {
+                    public boolean swipeRight(HitokotoBean itemData) {
                         return false;
                     }
 
                     @Override
-                    public void onClick(Object itemData) {
+                    public void onClick(HitokotoBean itemData) {
+
                         Toast.makeText(context, "Clicked", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
-                    public void onLongClick(Object itemData) {
+                    public void onLongClick(HitokotoBean itemData) {
                         Toast.makeText(context, "LongClicked", Toast.LENGTH_SHORT).show();
                     }
                 });

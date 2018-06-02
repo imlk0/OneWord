@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="primary_light" format="reference" />
+    <attr name="primary_text" format="reference" />
+    <attr name="secondary_text" format="reference" />
+    <attr name="icons" format="reference" />
+    <attr name="divider" format="reference" />
+
+</resources>

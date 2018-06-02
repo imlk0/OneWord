@@ -42,6 +42,9 @@ public class HitokotoApi {
     }
 
 
+
+
+
     public static void main(String[] args) {
 
 

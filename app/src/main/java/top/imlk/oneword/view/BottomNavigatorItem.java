@@ -52,8 +52,8 @@ public class BottomNavigatorItem extends LinearLayout {
         return this;
     }
 
-    public BottomNavigatorItem setBgColor(int id) {
-        this.setBackgroundResource(id);
+    public BottomNavigatorItem setBgByColor(int color) {
+        this.setBackgroundColor(color);
         return this;
     }
 

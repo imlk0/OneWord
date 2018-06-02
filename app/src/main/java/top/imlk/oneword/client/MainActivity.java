@@ -3,17 +3,13 @@ package top.imlk.oneword.client;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Rect;
-import android.os.UserHandle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
-
-import net.lucode.hackware.magicindicator.MagicIndicator;
 
 import java.util.List;
 
@@ -51,6 +47,12 @@ public class MainActivity extends AppCompatActivity implements Observer<Hitokoto
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        killRunningServices();
+
+        setTheme(R.style.BaseTheme);
+
+
         setContentView(R.layout.activity_main);
 
         this.pastedNestedScrollView = findViewById(R.id.root_pasted_scroll_view);
@@ -62,9 +64,8 @@ public class MainActivity extends AppCompatActivity implements Observer<Hitokoto
         this.oneWordShowPanel.updateContext(this);
         this.oneWordShowPanel.initView();
 
-//        killRunningServices();
 
-        startAutoUpdateService();
+//        startAutoUpdateService();
     }
 
 
@@ -105,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements Observer<Hitokoto
 
         this.oneWordShowPanel.updateStateByBean(hitokotoBean);
 
-        OneWordSQLiteOpenHelper.getInstance(this).insert_to_history(hitokotoBean);
+        OneWordSQLiteOpenHelper.getInstance(this).insert_one_item(OneWordSQLiteOpenHelper.TABLE_HISTORY, hitokotoBean);
 
     }
 
@@ -128,14 +129,15 @@ public class MainActivity extends AppCompatActivity implements Observer<Hitokoto
 
     @Override
     protected void onDestroy() {
-        if (!OneWordSQLiteOpenHelper.isDataBasegClosed()) {
+        if (!OneWordSQLiteOpenHelper.isDataBaseClosed()) {
             OneWordSQLiteOpenHelper.getInstance(this).close();
         }
 
-        if (SharedPreferencesUtil.isUpdatingOpened(this)) {
+        if (SharedPreferencesUtil.isRefreshOpened(this)) {
             startAutoUpdateService();
         }
         super.onDestroy();
+        System.exit(0);
     }
 
     @Override
@@ -154,38 +156,22 @@ public class MainActivity extends AppCompatActivity implements Observer<Hitokoto
 
 
     public void killRunningServices() {
+//        if(SharedPreferencesUtil.isRefreshOpened(this)){
+//
+//            Intent intent = new Intent(this, OneWordAutoRefreshService.class);
+//
+//            intent.setAction(CMD_SERVICES_STOP_SERVICE);
+//            startService(intent);
+//    }
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-
-                ActivityManager myAM = (ActivityManager) MainActivity.this
-                        .getSystemService(Context.ACTIVITY_SERVICE);
-                List<ActivityManager.RunningServiceInfo> myList = myAM.getRunningServices(100);
-                if (myList.size() <= 0) {
-                    return;
-                }
-                for (int i = 0; i < myList.size(); i++) {
-                    String mName = myList.get(i).service.getClassName().toString();
-                    if (mName.equals(OneWordAutoUpdateService.SERVICE_NAME)) {
-
-                        Intent intent = new Intent(MainActivity.this, OneWordAutoUpdateService.class);
-
-                        intent.setAction(CMD_SERVICES_STOP_SERVICE);
-                        startService(intent);
-                        break;
-                    }
-                }
-
-            }
-        }).run();
+        Intent intent = new Intent(this, OneWordAutoRefreshService.class);
+        this.stopService(intent);
 
     }
 
 
     public void startAutoUpdateService() {
-        Intent intent = new Intent(this, OneWordAutoUpdateService.class);
+        Intent intent = new Intent(this, OneWordAutoRefreshService.class);
 
         intent.setAction(CMD_SERVICES_START_AUTO_UPDATE);
         startService(intent);

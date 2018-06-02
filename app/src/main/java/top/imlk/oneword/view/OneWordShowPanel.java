@@ -67,6 +67,7 @@ public class OneWordShowPanel extends RelativeLayout implements View.OnClickList
         this.ivSetIt.setOnClickListener(this);
 
         HitokotoBean hitokotoBean = SharedPreferencesUtil.readSavedOneWord(this.context);
+
         if (hitokotoBean != null) {
             updateStateByBean(hitokotoBean);
         }
@@ -74,7 +75,7 @@ public class OneWordShowPanel extends RelativeLayout implements View.OnClickList
 
 
     public void updateStateByBean(HitokotoBean hitokotoBean) {
-        if (OneWordSQLiteOpenHelper.getInstance(context).query_one_item_exist(hitokotoBean, OneWordSQLiteOpenHelper.TABLE_LIKE)) {
+        if (OneWordSQLiteOpenHelper.getInstance(context).query_one_item_exist(OneWordSQLiteOpenHelper.TABLE_LIKE, hitokotoBean)) {
             hitokotoBean.like = true;
         }
         this.updateCurHitokotoBean(hitokotoBean);
@@ -82,6 +83,21 @@ public class OneWordShowPanel extends RelativeLayout implements View.OnClickList
         this.updateMsgFrom(hitokotoBean.from);
         this.updateLike(hitokotoBean.like);
     }
+
+
+    public void afterRecyclerViewChangeLikeStateOperate(HitokotoBean hitokotoBean) {
+        if (hitokotoBean == null) {
+            return;
+        }
+        if (hitokotoBean.id == curHitokotoBean.id && hitokotoBean.type != null && hitokotoBean.type.equals(curHitokotoBean.type)) {
+            updateStateByBean(hitokotoBean);
+            HitokotoBean saved = SharedPreferencesUtil.readSavedOneWord(context);
+            if (saved != null && hitokotoBean.id == saved.id && hitokotoBean.type != null && hitokotoBean.type.equals(saved.type)) {
+                SharedPreferencesUtil.saveCurOneWord(context, hitokotoBean);
+            }
+        }
+    }
+
 
     public void updateMsgMain(String str) {
         this.tvMsgMain.setText(TextUtils.isEmpty(str) ? "当前一言" : str);
@@ -97,9 +113,9 @@ public class OneWordShowPanel extends RelativeLayout implements View.OnClickList
 
     public void updateLike(boolean like) {
         if (like) {
-            this.ivLike.setImageResource(R.drawable.ic_favorite_white_24dp);
+            this.ivLike.setImageResource(R.drawable.ic_favorite_white_48dp);
         } else {
-            this.ivLike.setImageResource(R.drawable.ic_favorite_border_white_24dp);
+            this.ivLike.setImageResource(R.drawable.ic_favorite_border_white_48dp);
         }
     }
 
@@ -111,12 +127,12 @@ public class OneWordShowPanel extends RelativeLayout implements View.OnClickList
                 if (this.curHitokotoBean != null) {
                     if (this.curHitokotoBean.like) {
                         this.curHitokotoBean.like = false;
-                        OneWordSQLiteOpenHelper.getInstance(context).remove_one_item(this.curHitokotoBean, OneWordSQLiteOpenHelper.TABLE_LIKE);
+                        OneWordSQLiteOpenHelper.getInstance(context).remove_one_item(OneWordSQLiteOpenHelper.TABLE_LIKE, this.curHitokotoBean);
                     } else {
                         this.curHitokotoBean.like = true;
-                        OneWordSQLiteOpenHelper.getInstance(context).insert_to_like(this.curHitokotoBean);
+                        OneWordSQLiteOpenHelper.getInstance(context).insert_one_item(OneWordSQLiteOpenHelper.TABLE_LIKE, this.curHitokotoBean);
                     }
-                    OneWordSQLiteOpenHelper.getInstance(context).update_like(this.curHitokotoBean);
+                    OneWordSQLiteOpenHelper.getInstance(context).refresh_like_state(this.curHitokotoBean);
                     this.updateLike(this.curHitokotoBean.like);
                 } else {
                     Toast.makeText(context, "还没有拉取任何一条一言哦", Toast.LENGTH_SHORT).show();

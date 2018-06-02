@@ -9,7 +9,7 @@
         android:id="@+id/ll_main_oneword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
+        android:background="?attr/colorPrimary"
         android:descendantFocusability="blocksDescendants"
         android:orientation="vertical">
 
@@ -67,7 +67,7 @@
                         android:layout_alignParentLeft="true"
                         android:layout_marginBottom="@dimen/iv_msg_operator_mg"
                         android:layout_marginLeft="@dimen/iv_msg_operator_mg"
-                        android:src="@drawable/ic_favorite_white_24dp" />
+                        android:src="@drawable/ic_favorite_white_48dp" />
 
                     <ImageView
                         android:id="@+id/iv_msg_set"
@@ -76,7 +76,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_marginBottom="@dimen/iv_msg_operator_mg"
                         android:layout_marginRight="@dimen/iv_msg_operator_mg"
-                        android:src="@drawable/ic_done_white_24dp" />
+                        android:src="@drawable/ic_done_white_48dp" />
 
                 </RelativeLayout>
             </top.imlk.oneword.view.OneWordShowPanel>
@@ -135,7 +135,7 @@
                     android:id="@+id/magi_bottom"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/btn_bg_color_unselected" />
+                    android:background="?attr/colorPrimaryDark" />
 
             </LinearLayout>
 

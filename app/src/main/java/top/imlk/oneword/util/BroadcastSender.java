@@ -28,7 +28,7 @@ public class BroadcastSender {
     }
 
 
-    public static void sendUpdateLockScreenInfoBySelfBroadcast(Context context) {
+    public static void sendReloadLockScreenInfoBySelfBroadcast(Context context) {
         Intent intent = new Intent();
         intent.setAction(CMD_BROADCAST_UPDATE_LOCK_SCREEN_INFO);
         context.sendBroadcast(intent);

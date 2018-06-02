@@ -36,7 +36,5 @@ dependencies {
     implementation 'co.dift.ui.swipetoaction:library:1.1'
     implementation 'com.github.hackware1993:MagicIndicator:1.5.0'
     implementation 'com.yarolegovich:lovely-dialog:1.1.0'
-    implementation 'net.grandcentrix.tray:tray:0.12.0'
-//    implementation project('vliux_tray') // 添加依赖模块
     compileOnly files('lib/api-82.jar')
 }

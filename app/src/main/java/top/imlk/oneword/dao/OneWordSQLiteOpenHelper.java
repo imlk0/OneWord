@@ -27,19 +27,20 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
     public static final String TABLE_LIKE = "[like]";
     public static final String TABLE_READY_TO_SHOW = "ready_to_show";
 
-    private static final String KEY_ID = "id";
-    private static final String KEY_MSG = "msg";
-    private static final String KEY_TYPE = "type";
-    private static final String KEY_FROM = "[from]";
-    private static final String KEY_CREATOR = "creator";
-    private static final String KEY_CREATED_AT = "created_at";
-    private static final String KEY_ADDED_AT = "added_at";
-    private static final String KEY_LIKE = "[like]";
+    public static final String KEY_ID = "id";
+    public static final String KEY_MSG = "msg";
+    public static final String KEY_TYPE = "type";
+    public static final String KEY_FROM = "[from]";
+    public static final String KEY_CREATOR = "creator";
+    public static final String KEY_CREATED_AT = "created_at";
+    public static final String KEY_ADDED_AT = "added_at";
+    public static final String KEY_LIKE = "[like]";
 
 
     private static OneWordSQLiteOpenHelper oneWordSQLiteOpenHelper;
 
-    public static boolean isDataBasegClosed() {
+    public synchronized static boolean isDataBaseClosed() {
+
         if (oneWordSQLiteOpenHelper == null) {
             return true;
         }
@@ -101,7 +102,8 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
                 + KEY_CREATED_AT + " DATE,"
                 + KEY_ADDED_AT + " DATE,"
                 + "PRIMARY KEY(" + KEY_ID + "," + KEY_TYPE + "))");
-        db.execSQL("create table " + TABLE_READY_TO_SHOW + " ("
+        db.execSQL("create table "
+                + TABLE_READY_TO_SHOW + " ("
                 + KEY_ID + " integer NOT NULL,"
                 + KEY_MSG + " NTEXT,"
                 + KEY_TYPE + " CHAR(1),"
@@ -113,61 +115,46 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
 
     }
 
-    public long insert_to_history(HitokotoBean hitokotoBean) {
+    public long insert_one_item(String tableName, HitokotoBean hitokotoBean) {
+        synchronized (this) {
 
-        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+            SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(KEY_ID, hitokotoBean.id);
-        contentValues.put(KEY_MSG, hitokotoBean.hitokoto);
-        contentValues.put(KEY_TYPE, hitokotoBean.type);
-        contentValues.put(KEY_FROM, hitokotoBean.from);
-        contentValues.put(KEY_CREATOR, hitokotoBean.creator);
-        contentValues.put(KEY_CREATED_AT, hitokotoBean.created_at);
-        contentValues.put(KEY_ADDED_AT, System.currentTimeMillis());
-        contentValues.put(KEY_LIKE, hitokotoBean.like);
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(KEY_ID, hitokotoBean.id);
+            contentValues.put(KEY_MSG, hitokotoBean.hitokoto);
+            contentValues.put(KEY_TYPE, hitokotoBean.type);
+            contentValues.put(KEY_FROM, hitokotoBean.from);
+            contentValues.put(KEY_CREATOR, hitokotoBean.creator);
+            contentValues.put(KEY_CREATED_AT, hitokotoBean.created_at);
+            contentValues.put(KEY_ADDED_AT, System.currentTimeMillis());
 
-        long t = sqLiteDatabase.insertWithOnConflict(TABLE_HISTORY, null, contentValues, CONFLICT_REPLACE);
+            if (OneWordSQLiteOpenHelper.TABLE_HISTORY.equals(tableName)) {
+                contentValues.put(KEY_LIKE, hitokotoBean.like);
+            }
 
-        return t;
+            return sqLiteDatabase.insertWithOnConflict(tableName, null, contentValues, CONFLICT_REPLACE);
+
+        }
     }
 
-    public long insert_to_like(HitokotoBean hitokotoBean) {
+    public long count_a_table(String tableName) {
+        synchronized (this) {
 
-        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+            SQLiteDatabase sqLiteDatabase = getReadableDatabase();
 
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(KEY_ID, hitokotoBean.id);
-        contentValues.put(KEY_MSG, hitokotoBean.hitokoto);
-        contentValues.put(KEY_TYPE, hitokotoBean.type);
-        contentValues.put(KEY_FROM, hitokotoBean.from);
-        contentValues.put(KEY_CREATOR, hitokotoBean.creator);
-        contentValues.put(KEY_CREATED_AT, hitokotoBean.created_at);
-        contentValues.put(KEY_ADDED_AT, System.currentTimeMillis());
+            Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + tableName, null);
 
-        long t = sqLiteDatabase.insertWithOnConflict(TABLE_LIKE, null, contentValues, CONFLICT_REPLACE);
-        return t;
+            int t = cursor.getCount();
+            cursor.close();
+            return t;
+        }
     }
 
-
-    public long insert_to_ready(HitokotoBean hitokotoBean) {
-
-        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
-
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(KEY_ID, hitokotoBean.id);
-        contentValues.put(KEY_MSG, hitokotoBean.hitokoto);
-        contentValues.put(KEY_TYPE, hitokotoBean.type);
-        contentValues.put(KEY_FROM, hitokotoBean.from);
-        contentValues.put(KEY_CREATOR, hitokotoBean.creator);
-        contentValues.put(KEY_CREATED_AT, hitokotoBean.created_at);
-        contentValues.put(KEY_ADDED_AT, System.currentTimeMillis());
-
-        long t = sqLiteDatabase.insertWithOnConflict(TABLE_READY_TO_SHOW, null, contentValues, CONFLICT_REPLACE);
-        return t;
-    }
-
-    public long remove_one_item(HitokotoBean hitokotoBean, String table_name) {
+    public long remove_one_item(String table_name, HitokotoBean hitokotoBean) {
+        if (hitokotoBean == null) {
+            return -1;
+        }
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
         long t = sqLiteDatabase.delete(table_name, KEY_ID + " = ? and " + KEY_TYPE + " = ?", new String[]{hitokotoBean.id + "", hitokotoBean.type});
@@ -175,67 +162,105 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 
 
-    public HitokotoBean get_a_ready_to_show_item() {//ascend
-        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
-        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + TABLE_READY_TO_SHOW + " ORDER BY " + KEY_ADDED_AT + " ASC LIMIT 1", null);
+    public HitokotoBean get_a_item_order_by(String tableName, String order) {//ascend
+        synchronized (this) {
 
-        if (cursor.isAfterLast()) {
-            return null;
-        }
+            SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+            Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + tableName + " ORDER BY " + order + " LIMIT 1", null);
 
-        HitokotoBean hitokotoBean = new HitokotoBean(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), false);// TODO 默认dislike
+            if (cursor.getCount() == 0) {
+                return null;
+            }
 
-        cursor.close();
-
-        remove_one_item(hitokotoBean, TABLE_READY_TO_SHOW);
-
-        return hitokotoBean;
-    }
-
-    public ArrayList<HitokotoBean> get_a_bundle_of_item(String table_name, int num, int start) {//descend
-        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
-        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + table_name + " ORDER BY " + KEY_ADDED_AT + " DESC LIMIT ? OFFSET ?", new String[]{num + "", start + ""});
-        ArrayList<HitokotoBean> arrayList = new ArrayList<>(num);
-        switch (table_name) {
-            case TABLE_HISTORY:
-                for (; cursor.moveToNext(); ) {
-                    arrayList.add(new HitokotoBean(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getInt(6) != 0));
-                }
-                break;
-            case TABLE_LIKE:
-                for (; cursor.moveToNext(); ) {
-                    arrayList.add(new HitokotoBean(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), true));
-                }
-                break;
-            case TABLE_READY_TO_SHOW:
-                for (; cursor.moveToNext(); ) {
-                    arrayList.add(new HitokotoBean(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), false));
-                }
-                break;
-        }
-
-        return arrayList;
-    }
+            cursor.moveToNext();
 
 
-    public boolean query_one_item_exist(HitokotoBean hitokotoBean, String table_name) {
-        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
-        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + table_name + " WHERE " + KEY_ID + " =? AND " + KEY_TYPE + " =?" + " ORDER BY " + KEY_ADDED_AT + " LIMIT 1", new String[]{hitokotoBean.id + "", hitokotoBean.type});
-        if (cursor.getCount() == 0) {
+            HitokotoBean hitokotoBean = null;
+            switch (tableName) {
+                case TABLE_HISTORY:
+                    hitokotoBean = new HitokotoBean(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getInt(6) != 0);
+                    break;
+                case TABLE_LIKE:
+                    hitokotoBean = new HitokotoBean(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), true);
+                    break;
+                case TABLE_READY_TO_SHOW:
+                    hitokotoBean = new HitokotoBean(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), false);
+                    break;
+            }
             cursor.close();
-            return false;
-        } else {
-            cursor.close();
-            return true;
+
+            return hitokotoBean;
         }
     }
 
-    public void update_like(HitokotoBean hitokotoBean) {
-        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
-        try {
-            sqLiteDatabase.execSQL("UPDATE " + TABLE_HISTORY + " SET " + KEY_LIKE + " =? WHERE " + KEY_ID + " =? AND " + KEY_TYPE + " =?", new String[]{hitokotoBean.like + "", hitokotoBean.id + "", hitokotoBean.type});
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "update_like", e);
+    public ArrayList<HitokotoBean> get_a_bundle_of_item(String tableName, int num, int start) {//descend
+        synchronized (this) {
+
+            SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+            Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + tableName + " ORDER BY " + KEY_ADDED_AT + " DESC LIMIT ? OFFSET ?", new String[]{num + "", start + ""});
+            ArrayList<HitokotoBean> arrayList = new ArrayList<>(num);
+            switch (tableName) {
+                case TABLE_HISTORY:
+                    for (; cursor.moveToNext(); ) {
+                        arrayList.add(new HitokotoBean(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getInt(6) != 0));
+                    }
+                    break;
+                case TABLE_LIKE:
+                    for (; cursor.moveToNext(); ) {
+                        arrayList.add(new HitokotoBean(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), true));
+                    }
+                    break;
+                case TABLE_READY_TO_SHOW:
+                    for (; cursor.moveToNext(); ) {
+                        arrayList.add(new HitokotoBean(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), false));
+                    }
+                    break;
+            }
+
+            cursor.close();
+
+            return arrayList;
+        }
+    }
+
+
+    public boolean query_one_item_exist(String table_name, HitokotoBean hitokotoBean) {
+        synchronized (this) {
+
+            SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+            Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + table_name + " WHERE " + KEY_ID + " =? AND " + KEY_TYPE + " =?" + " ORDER BY " + KEY_ADDED_AT + " LIMIT 1", new String[]{hitokotoBean.id + "", hitokotoBean.type});
+            if (cursor.getCount() == 0) {
+                cursor.close();
+                return false;
+            } else {
+                cursor.close();
+                return true;
+            }
+        }
+    }
+
+    public void refresh_like_state(HitokotoBean hitokotoBean) {
+        synchronized (this) {
+
+            SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+            try {
+                sqLiteDatabase.execSQL("UPDATE " + TABLE_HISTORY + " SET " + KEY_LIKE + " =? WHERE " + KEY_ID + " =? AND " + KEY_TYPE + " =?", new String[]{hitokotoBean.like + "", hitokotoBean.id + "", hitokotoBean.type});
+            } catch (Exception e) {
+                Log.e(LOG_TAG, "refresh_like_state", e);
+            }
+        }
+    }
+
+    public void refresh_addedTime_state(String tableName, HitokotoBean hitokotoBean) {
+        synchronized (this) {
+
+            SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+            try {
+
+                sqLiteDatabase.execSQL("UPDATE " + tableName + " SET " + KEY_ADDED_AT + " =? WHERE " + KEY_ID + " =? AND " + KEY_TYPE + " =?", new String[]{System.currentTimeMillis() + "", hitokotoBean.id + "", hitokotoBean.type});
+            } catch (Exception e) {
+                Log.e(LOG_TAG, "refresh_like_state", e);
+            }
         }
     }
 

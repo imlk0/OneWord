@@ -2,15 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?attr/colorPrimary"
     android:orientation="vertical">
 
 
-    <android.support.v7.widget.RecyclerView
+    <top.imlk.oneword.view.FixExceptionRecycleView
         android:id="@+id/rv_on_history_page"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    </android.support.v7.widget.RecyclerView>
+    </top.imlk.oneword.view.FixExceptionRecycleView>
 
     <TextView
         android:layout_width="match_parent"
