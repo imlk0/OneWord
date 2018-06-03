@@ -34,11 +34,6 @@ public class FixExceptionRecycleView extends RecyclerView {
     }
 
 
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent e) {
-        return true;
-    }
-
     static class FixExceptionOnTouchListener implements OnTouchListener {
 
         private final OnTouchListener proxyedListener;

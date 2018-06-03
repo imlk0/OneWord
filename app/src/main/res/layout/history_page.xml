@@ -6,16 +6,19 @@
     android:orientation="vertical">
 
 
-    <top.imlk.oneword.view.FixExceptionRecycleView
-        android:id="@+id/rv_on_history_page"
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-    </top.imlk.oneword.view.FixExceptionRecycleView>
+        <top.imlk.oneword.view.FixExceptionRecycleView
+            android:id="@+id/rv_on_history_page"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="拉一下加载更多" />
+        </top.imlk.oneword.view.FixExceptionRecycleView>
+
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
 
 </LinearLayout>

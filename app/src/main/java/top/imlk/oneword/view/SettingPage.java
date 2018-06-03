@@ -1,24 +1,22 @@
 package top.imlk.oneword.view;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.SwitchCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
-import android.widget.Switch;
-
-import com.yarolegovich.lovelydialog.LovelyChoiceDialog;
+import android.widget.TextView;
 
 import top.imlk.oneword.R;
-import top.imlk.oneword.client.OneWordAutoRefreshService;
+import top.imlk.oneword.util.ApplicationInfoUtil;
 import top.imlk.oneword.util.SharedPreferencesUtil;
-import top.imlk.oneword.util.StyleHelper;
+import top.imlk.oneword.util.ShowDialogUtil;
 
 /**
  * Created by imlk on 2018/5/30.
@@ -30,6 +28,13 @@ public class SettingPage extends LinearLayout implements View.OnClickListener, C
     public SwitchCompat swOpenAutoRefresh;
     public LinearLayout llOpenAutoRefresh;
     public LinearLayout llSetRefreshMode;
+    public LinearLayout llSetOneWordType;
+    public LinearLayout llShowAboutApp;
+    public LinearLayout llShowDonate;
+    public LinearLayout llCoolapkMarket;
+    public LinearLayout llShowThxHitokoto;
+    public LinearLayout llShowThxOpenSource;
+    public LinearLayout llVersion;
 
 
     public SettingPage(Context context) {
@@ -64,45 +69,76 @@ public class SettingPage extends LinearLayout implements View.OnClickListener, C
 
         swOpenAutoRefresh = findViewById(R.id.sw_open_auto_refresh);
         swOpenAutoRefresh.setOnCheckedChangeListener(this);
-
+        swOpenAutoRefresh.setChecked(SharedPreferencesUtil.isRefreshOpened(context));
         llOpenAutoRefresh = findViewById(R.id.ll_open_auto_refresh);
         llOpenAutoRefresh.setOnClickListener(this);
 
         llSetRefreshMode = findViewById(R.id.ll_set_refresh_mode);
         llSetRefreshMode.setOnClickListener(this);
 
-        swOpenAutoRefresh.setChecked(SharedPreferencesUtil.isRefreshOpened(context));
+        llSetOneWordType = findViewById(R.id.ll_set_oneword_type);
+        llSetOneWordType.setOnClickListener(this);
+
+        llShowAboutApp = findViewById(R.id.ll_show_about_app);
+        llShowAboutApp.setOnClickListener(this);
+
+        llShowDonate = findViewById(R.id.ll_show_donate);
+        llShowDonate.setOnClickListener(this);
+
+        llCoolapkMarket = findViewById(R.id.ll_coolapk_market);
+        llCoolapkMarket.setOnClickListener(this);
+
+        llShowThxHitokoto = findViewById(R.id.ll_show_thx_hitokoto);
+        llShowThxHitokoto.setOnClickListener(this);
+
+        llShowThxOpenSource = findViewById(R.id.ll_show_thx_open_source);
+        llShowThxOpenSource.setOnClickListener(this);
+
+        llVersion = findViewById(R.id.ll_version);
+//        llVersion.setOnClickListener(this);
+
+        ((TextView) llVersion.findViewById(R.id.tv_version_code)).setText(ApplicationInfoUtil.getAppVersionName(context) + "[" + ApplicationInfoUtil.getAppVersionCode(context) + "]");
+
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.ll_set_refresh_mode:
-
-
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter(context, R.layout.item_dialog_choose_refresh_mode, R.id.tv_item_name, context.getResources().getStringArray(R.array.auto_update_time_item));
-                new LovelyChoiceDialog(context)
-                        .setTopColor(StyleHelper.getColorByAttributeId(context, R.attr.colorPrimary))
-                        .setTitle("选择刷新频率（当前频率：" + context.getResources().getStringArray(R.array.auto_update_time_item)[SharedPreferencesUtil.getRefreshMode(context).ordinal()])
-                        .setIcon(R.drawable.ic_av_timer_white_48dp)
-                        .setMessage("从下面的选项中选一个刷新频率，若您启用了自动刷新选项，那么在应用退出后，锁屏一言将会在的时间里自动刷新")
-                        .setItems(arrayAdapter, new LovelyChoiceDialog.OnItemSelectedListener<String>() {
-                            @Override
-                            public void onItemSelected(int position, String item) {
-                                Log.e("SettingPage", "position -> " + position);
-                                SharedPreferencesUtil.setRefreshMode(context, OneWordAutoRefreshService.Mode.values()[position]);
-                            }
-
-                        })
-                        .setCancelable(true)
-                        .show();
-                break;
-
             case R.id.ll_open_auto_refresh:
                 swOpenAutoRefresh.setChecked(!swOpenAutoRefresh.isChecked());
                 break;
 
+            case R.id.ll_set_refresh_mode:
+
+                ShowDialogUtil.showSelectRefreshModeDialog(context);
+                break;
+
+
+            case R.id.ll_set_oneword_type:
+
+                ShowDialogUtil.showSelectOneWordTypeDialog(context);
+                break;
+
+            case R.id.ll_show_about_app:
+                ShowDialogUtil.showAboutAppDialog(context);
+                break;
+
+            case R.id.ll_show_donate:
+                ShowDialogUtil.showDonateDialog(context);
+                break;
+            case R.id.ll_coolapk_market:
+                context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.coolapk.com/apk/top.imlk.oneword")));
+                break;
+            case R.id.ll_show_thx_hitokoto:
+                context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://hitokoto.cn/about")));
+                break;
+            case R.id.ll_show_thx_open_source:
+                ShowDialogUtil.showOpenSourceProjectDialog(context);
+                break;
+
+
         }
+
 
     }
 
@@ -114,4 +150,5 @@ public class SettingPage extends LinearLayout implements View.OnClickListener, C
                 break;
         }
     }
+
 }

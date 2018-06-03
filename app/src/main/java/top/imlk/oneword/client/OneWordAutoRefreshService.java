@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -68,43 +69,59 @@ public class OneWordAutoRefreshService extends Service implements Observer<Hitok
     @Override
     public void onCreate() {
         Log.i(LOG_TAG, "onCreate");
+
+
+        if (!SharedPreferencesUtil.isRefreshOpened(this)) {
+            Log.e(LOG_TAG, "自动更新开关未启动，搞毛线啊");
+            Log.i(LOG_TAG, "Bye~");
+            this.stopSelf();
+        }
+
+
+        //更新c_Array_custom数组
+        if (HitokotoApi.Parameter.c_Array_custom == null) {
+            HitokotoApi.refreshCustomArray(SharedPreferencesUtil.readOneWordTypes(this));
+        }
+
         super.onCreate();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.i(LOG_TAG, "Hello~");
 
-        switch (intent.getAction()) {
-            //TODO
-            case StaticValue.CMD_SERVICES_START_AUTO_UPDATE:
-                Log.i(LOG_TAG, "Hello~");
-
-                Log.e("isRefreshOpened()", SharedPreferencesUtil.isRefreshOpened(this) + "");
-
-                if (SharedPreferencesUtil.isRefreshOpened(this)) {
-
-                    currentMode = SharedPreferencesUtil.getRefreshMode(this);
-
-                    Log.e(LOG_TAG, intent.getAction());
-
-                    parseMode();
+        Log.e(LOG_TAG, intent == null ? "intent is null" : intent.getAction() + "");
 
 
-                } else {
-                    Log.e(LOG_TAG, "自动更新开关未启动，搞毛线啊");
-                    Log.i(LOG_TAG, "Bye~");
-                    this.stopSelf();
-                }
+        if (intent == null || TextUtils.isEmpty(intent.getAction()) || StaticValue.CMD_SERVICES_START_AUTO_REFRESH_SERVICE.equals(intent.getAction())) {
 
-                break;
-            case StaticValue.CMD_SERVICES_STOP_SERVICE:
+            Log.e("isRefreshOpened()", SharedPreferencesUtil.isRefreshOpened(this) + "");
+
+            if (SharedPreferencesUtil.isRefreshOpened(this)) {
+
+                currentMode = SharedPreferencesUtil.getRefreshMode(this);
+
+                parseMode();
+
+
+            } else {
+                Log.e(LOG_TAG, "自动更新开关未启动，搞毛线啊");
                 Log.i(LOG_TAG, "Bye~");
                 this.stopSelf();
-                break;
+            }
+        } else if (StaticValue.CMD_SERVICES_STOP_SERVICE.equals(intent.getAction())) {
+
+
+            Log.i(LOG_TAG, "Bye~");
+            this.stopSelf();
+        } else {
+            Log.i(LOG_TAG, "NO match command!!!");
+
         }
 
 
-        return super.onStartCommand(intent, flags, startId);
+        return START_REDELIVER_INTENT;
+
     }
 
     private void parseMode() {
@@ -171,7 +188,7 @@ public class OneWordAutoRefreshService extends Service implements Observer<Hitok
 
         if (updateByLockTimes) {
             IntentFilter intentFilter = new IntentFilter();
-            intentFilter.addAction(Intent.ACTION_USER_PRESENT);
+            intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
             mUserPresentBroadCastReceiver = new UserPresentBroadCastReceiver();
             lockTimeCount = 0;
             this.registerReceiver(mUserPresentBroadCastReceiver, intentFilter);
@@ -214,12 +231,13 @@ public class OneWordAutoRefreshService extends Service implements Observer<Hitok
     private void getSomeOneWord(int count) {
 
         for (int i = 0; i < count; ++i) {
-            HitokotoApi.getAnime(this);
+            HitokotoApi.requestOneWord(this);
         }
 
     }
 
     private void doClockEvent() {
+        Log.i(LOG_TAG, "锁屏一言自动更新服务");
         HitokotoBean bean = OneWordSQLiteOpenHelper.getInstance(this).get_a_item_order_by(TABLE_READY_TO_SHOW, OneWordSQLiteOpenHelper.KEY_ADDED_AT + " ASC");
         OneWordSQLiteOpenHelper.getInstance(this).remove_one_item(TABLE_READY_TO_SHOW, bean);
 
@@ -254,6 +272,7 @@ public class OneWordAutoRefreshService extends Service implements Observer<Hitok
     @Override
     public void onDestroy() {
 
+        Log.e(LOG_TAG, "onDestroy");
         if (mTimer != null) {
             mTimer.cancel();
             mTimer = null;
@@ -284,6 +303,8 @@ public class OneWordAutoRefreshService extends Service implements Observer<Hitok
 
     @Override
     public void onNext(HitokotoBean hitokotoBean) {
+
+        Log.i(LOG_TAG, "成功获取到一言");
 
         OneWordSQLiteOpenHelper.getInstance(this).insert_one_item(TABLE_READY_TO_SHOW, hitokotoBean);
 

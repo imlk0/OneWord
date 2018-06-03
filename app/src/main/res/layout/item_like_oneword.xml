@@ -8,30 +8,30 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/item_oneword_r"
-        android:padding="14dp"
+        android:background="?attr/primary_light"
         android:tag="reveal-right"
+        android:paddingLeft="16dp"
         android:visibility="gone">
 
 
         <ImageView
             android:id="@+id/item_set"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/iv_msg_operator_size"
+            android:layout_height="@dimen/iv_msg_operator_size"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="8dp"
-            android:src="@drawable/ic_done_white_48dp"
-            android:tint="@color/item_oneword_icons_like" />
+            android:layout_marginRight="12dp"
+            android:background="@drawable/bg_circle_botton"
+            android:src="@drawable/ic_done_white_48dp" />
 
         <ImageView
             android:id="@+id/item_share"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/iv_msg_operator_size"
+            android:layout_height="@dimen/iv_msg_operator_size"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/item_set"
-            android:src="@drawable/ic_share_white_48dp"
-            android:tint="@color/item_oneword_icons_like" />
+            android:background="@drawable/bg_circle_botton"
+            android:src="@drawable/ic_share_white_48dp" />
 
 
     </RelativeLayout>
@@ -41,19 +41,19 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/item_oneword_l"
-        android:padding="14dp"
+        android:background="@color/item_oneword_r"
+        android:paddingRight="16dp"
         android:tag="reveal-left"
         android:visibility="gone">
 
         <ImageView
             android:id="@+id/item_delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/iv_msg_operator_size"
+            android:layout_height="@dimen/iv_msg_operator_size"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_delete_white_48dp"
-            android:tint="@color/item_oneword_icons_delete" />
+            android:background="@drawable/bg_circle_botton"
+            android:src="@drawable/ic_delete_white_48dp" />
     </RelativeLayout>
 
 
@@ -62,13 +62,32 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?attr/colorPrimary"
-        android:padding="@dimen/item_oneword_padding"
+        android:paddingBottom="20dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="20dp"
+        android:paddingTop="8dp"
+
         android:tag="front">
+
+        <ImageView
+            android:id="@+id/iv_quote"
+            android:layout_width="32sp"
+            android:layout_height="32sp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:minHeight="32sp"
+            android:minWidth="32sp"
+            android:rotation="180"
+            android:src="@drawable/ic_format_quote_white_48dp"
+            android:tint="?attr/primary_light" />
 
         <TextView
             android:id="@+id/item_oneword_msg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="10dp"
+            android:layout_toRightOf="@id/iv_quote"
             android:singleLine="false"
             android:textColor="@android:color/white"
             android:textSize="16dp"

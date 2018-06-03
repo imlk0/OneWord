@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="tv_msg_mgside">50dp</dimen>
+    <dimen name="tv_msg_mg_r_side">50dp</dimen>
+    <dimen name="tv_msg_mg_l_side">0dp</dimen>
     <dimen name="tv_msg_from_mgtop">16dp</dimen>
     <dimen name="tv_msg_from_mgside">30dp</dimen>
     <dimen name="tv_msg_textsize">30sp</dimen>

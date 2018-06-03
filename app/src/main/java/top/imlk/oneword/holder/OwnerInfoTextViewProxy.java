@@ -1,7 +1,9 @@
 package top.imlk.oneword.holder;
 
 import android.annotation.SuppressLint;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
@@ -9,6 +11,7 @@ import android.text.InputType;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -17,11 +20,13 @@ import org.w3c.dom.Text;
 
 import top.imlk.oneword.R;
 
+import static top.imlk.oneword.common.StaticValue.SPILITER;
+
 /**
  * Created by imlk on 2018/5/28.
  */
 @SuppressLint("AppCompatCustomView")
-public class OwnerInfoTextViewProxy extends TextView {
+public class OwnerInfoTextViewProxy extends TextView implements View.OnClickListener {
 
     private TextView proxyedTextView;
     private TextView customTextView;
@@ -29,6 +34,7 @@ public class OwnerInfoTextViewProxy extends TextView {
     public OwnerInfoTextViewProxy(Context context, TextView proxyedTextView) {
         super(context);
         this.proxyedTextView = proxyedTextView;
+        this.proxyedTextView.setOnClickListener(this);
     }
 
     public OwnerInfoTextViewProxy(Context context, @Nullable AttributeSet attrs) {
@@ -59,7 +65,7 @@ public class OwnerInfoTextViewProxy extends TextView {
 //            }
 //            customTextView.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
             customTextView.setSingleLine(true);
-//            customTextView.setTextScaleX(-0.5f);//设置字体右斜
+//            customTextView.setTextScaleX(-0.5f);//设置字体右斜,会造成错误
             customTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, proxyedTextView.getTextSize());
             customTextView.setTextColor(proxyedTextView.getCurrentTextColor());
             customTextView.setGravity(Gravity.RIGHT);
@@ -68,6 +74,7 @@ public class OwnerInfoTextViewProxy extends TextView {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 customTextView.setLetterSpacing(0.05f);
             }
+            customTextView.setOnClickListener(this);
         }
         return customTextView;
     }
@@ -85,9 +92,13 @@ public class OwnerInfoTextViewProxy extends TextView {
 
     @Override
     public void setText(CharSequence text, BufferType type) {
-        String[] strings = text.toString().split("\n——");
+        String[] strings = text.toString().split(SPILITER);
         if (getProxyedTextView() != null) {
-            proxyedTextView.setText(strings[0]);
+            String strForProxy = strings[0];
+            for (int i = 1; i < strings.length - 1; ++i) {
+                strForProxy = strForProxy + SPILITER + strings[i];
+            }
+            proxyedTextView.setText(strForProxy);
         }
 
         if (strings.length == 1) {
@@ -96,7 +107,7 @@ public class OwnerInfoTextViewProxy extends TextView {
             }
         } else {
             if (getCustomTextView() != null) {
-                customTextView.setText("——" + strings[1]);
+                customTextView.setText("——" + strings[strings.length - 1]);
             }
         }
 
@@ -131,4 +142,14 @@ public class OwnerInfoTextViewProxy extends TextView {
         return proxyedTextView;
     }
 
+    @Override
+    public void onClick(View v) {
+
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        ComponentName cn = new ComponentName("top.imlk.oneword", "top.imlk.oneword.client.MainActivity");
+        intent.setComponent(cn);
+        v.getContext().startActivity(intent);
+
+    }
 }

@@ -2,6 +2,7 @@ package top.imlk.oneword.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.text.TextUtils;
 
 
@@ -9,6 +10,7 @@ import top.imlk.oneword.Hitokoto.HitokotoBean;
 import top.imlk.oneword.client.OneWordAutoRefreshService;
 import top.imlk.oneword.common.StaticValue;
 
+import static top.imlk.oneword.common.StaticValue.SHARED_PER_KEY_APP_VERSION_CODE;
 import static top.imlk.oneword.common.StaticValue.SHARED_PER_KEY_CURRENT_ONEWORD_CREATOR;
 import static top.imlk.oneword.common.StaticValue.SHARED_PER_KEY_CURRENT_ONEWORD_CREAT_AT;
 import static top.imlk.oneword.common.StaticValue.SHARED_PER_KEY_CURRENT_ONEWORD_FROM;
@@ -16,7 +18,15 @@ import static top.imlk.oneword.common.StaticValue.SHARED_PER_KEY_CURRENT_ONEWORD
 import static top.imlk.oneword.common.StaticValue.SHARED_PER_KEY_CURRENT_ONEWORD_LIKE;
 import static top.imlk.oneword.common.StaticValue.SHARED_PER_KEY_CURRENT_ONEWORD_MSG;
 import static top.imlk.oneword.common.StaticValue.SHARED_PER_KEY_CURRENT_ONEWORD_TYPE;
+import static top.imlk.oneword.common.StaticValue.SHARED_PER_KEY_FIRSTTIME_INSTALL;
 import static top.imlk.oneword.common.StaticValue.SHARED_PER_KEY_IS_REFRESH_OPENED;
+import static top.imlk.oneword.common.StaticValue.SHARED_PER_KEY_ONEWORD_TYPE_ANIME;
+import static top.imlk.oneword.common.StaticValue.SHARED_PER_KEY_ONEWORD_TYPE_COMIC;
+import static top.imlk.oneword.common.StaticValue.SHARED_PER_KEY_ONEWORD_TYPE_GAME;
+import static top.imlk.oneword.common.StaticValue.SHARED_PER_KEY_ONEWORD_TYPE_INTERNET;
+import static top.imlk.oneword.common.StaticValue.SHARED_PER_KEY_ONEWORD_TYPE_MYSELF;
+import static top.imlk.oneword.common.StaticValue.SHARED_PER_KEY_ONEWORD_TYPE_NOVEL;
+import static top.imlk.oneword.common.StaticValue.SHARED_PER_KEY_ONEWORD_TYPE_OTHER;
 import static top.imlk.oneword.common.StaticValue.SHARED_PER_KEY_REFRESH_MODE;
 
 /**
@@ -63,6 +73,7 @@ public class SharedPreferencesUtil {
         return null;
     }
 
+
     public static void saveCurOneWord(Context context, HitokotoBean hitokotoBean) {
 
         SharedPreferences sharedPreferences = context.getSharedPreferences(StaticValue.SHARED_PER_CURRENT_STATE, Context.MODE_PRIVATE);
@@ -81,6 +92,36 @@ public class SharedPreferencesUtil {
 
     }
 
+
+    public static boolean[] readOneWordTypes(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(StaticValue.SHARED_PER_ONEWORD_TYPE_SELECT_STATE, Context.MODE_PRIVATE);
+        boolean a = sharedPreferences.getBoolean(SHARED_PER_KEY_ONEWORD_TYPE_ANIME, true);
+        boolean b = sharedPreferences.getBoolean(SHARED_PER_KEY_ONEWORD_TYPE_COMIC, true);
+        boolean c = sharedPreferences.getBoolean(SHARED_PER_KEY_ONEWORD_TYPE_GAME, true);
+        boolean d = sharedPreferences.getBoolean(SHARED_PER_KEY_ONEWORD_TYPE_NOVEL, true);
+        boolean e = sharedPreferences.getBoolean(SHARED_PER_KEY_ONEWORD_TYPE_MYSELF, true);
+        boolean f = sharedPreferences.getBoolean(SHARED_PER_KEY_ONEWORD_TYPE_INTERNET, true);
+        boolean g = sharedPreferences.getBoolean(SHARED_PER_KEY_ONEWORD_TYPE_OTHER, true);
+
+        return new boolean[]{a, b, c, d, e, f, g,};
+
+    }
+
+    public static void saveOneWordTypes(Context context, boolean selectState[]) {
+
+        SharedPreferences sharedPreferences = context.getSharedPreferences(StaticValue.SHARED_PER_ONEWORD_TYPE_SELECT_STATE, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putBoolean(SHARED_PER_KEY_ONEWORD_TYPE_ANIME, selectState[0]);
+        editor.putBoolean(SHARED_PER_KEY_ONEWORD_TYPE_COMIC, selectState[1]);
+        editor.putBoolean(SHARED_PER_KEY_ONEWORD_TYPE_GAME, selectState[2]);
+        editor.putBoolean(SHARED_PER_KEY_ONEWORD_TYPE_NOVEL, selectState[3]);
+        editor.putBoolean(SHARED_PER_KEY_ONEWORD_TYPE_MYSELF, selectState[4]);
+        editor.putBoolean(SHARED_PER_KEY_ONEWORD_TYPE_INTERNET, selectState[5]);
+        editor.putBoolean(SHARED_PER_KEY_ONEWORD_TYPE_OTHER, selectState[6]);
+
+        editor.commit();
+    }
 
     public static boolean isRefreshOpened(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(StaticValue.SHARED_PER_AUTO_REFRESH_STATE, Context.MODE_PRIVATE);
@@ -104,7 +145,7 @@ public class SharedPreferencesUtil {
     public static OneWordAutoRefreshService.Mode getRefreshMode(Context context) {
 
         SharedPreferences sharedPreferences = context.getSharedPreferences(StaticValue.SHARED_PER_AUTO_REFRESH_STATE, Context.MODE_PRIVATE);
-        return OneWordAutoRefreshService.Mode.valueOf(sharedPreferences.getString(SHARED_PER_KEY_REFRESH_MODE, OneWordAutoRefreshService.Mode.EVERY_LOCK.toString()));
+        return OneWordAutoRefreshService.Mode.valueOf(sharedPreferences.getString(SHARED_PER_KEY_REFRESH_MODE, OneWordAutoRefreshService.Mode.TWICE_LOCK.toString()));
 
     }
 
@@ -117,6 +158,27 @@ public class SharedPreferencesUtil {
         editor.putString(SHARED_PER_KEY_REFRESH_MODE, mode.toString());
 
         editor.commit();
+
+    }
+
+    public static boolean isFirstTimeUse(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(StaticValue.SHARED_PER_USER_INF, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        boolean firstTime = sharedPreferences.getBoolean(SHARED_PER_KEY_FIRSTTIME_INSTALL, true);
+        if (firstTime) {
+            editor.putBoolean(SHARED_PER_KEY_FIRSTTIME_INSTALL, false);
+        }
+
+
+        int versionCode = ApplicationInfoUtil.getAppVersionCode(context);
+        if (versionCode > sharedPreferences.getInt(SHARED_PER_KEY_APP_VERSION_CODE, 0)) {
+            editor.putInt(SHARED_PER_KEY_APP_VERSION_CODE, versionCode);
+            editor.commit();
+        }
+
+
+        return firstTime;
 
     }
 

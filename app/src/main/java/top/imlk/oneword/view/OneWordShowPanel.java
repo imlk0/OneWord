@@ -100,11 +100,11 @@ public class OneWordShowPanel extends RelativeLayout implements View.OnClickList
 
 
     public void updateMsgMain(String str) {
-        this.tvMsgMain.setText(TextUtils.isEmpty(str) ? "当前一言" : str);
+        this.tvMsgMain.setText(TextUtils.isEmpty(str) ? "  当前一言" : "  " + str);
     }
 
     public void updateMsgFrom(String str) {
-        this.tvMsgFrom.setText("——" + (TextUtils.isEmpty(str) ? "出处" : str));
+        this.tvMsgFrom.setText("——" + (TextUtils.isEmpty(str) ? "出处 " : str + " "));
     }
 
     public void updateCurHitokotoBean(HitokotoBean hitokotoBean) {

@@ -1,11 +1,7 @@
 package top.imlk.oneword.adapter;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Rect;
-import android.os.Build;
-import android.support.annotation.AttrRes;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -86,17 +82,14 @@ public class BottomNavigatorAdapter extends CommonNavigatorAdapter implements Vi
         if (v == data.get(0)) {
             ((MainActivity) context).gotoPage(0);
 
+
         } else if (v == data.get(1)) {
             ((MainActivity) context).gotoPage(1);
 
         } else if (v == data.get(2)) {
 
-            try {
-                HitokotoApi.getAnime((MainActivity) context);
-                ((MainActivity) context).pastedNestedScrollView.scrollToTop();
-            } catch (Exception e) {
-                Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-            }
+//            ((MainActivity) context).startAnOneWordRequest();
+            ((MainActivity) context).refreshLayout.autoRefresh(0, 200, 1);
 
         } else if (v == data.get(3)) {
 

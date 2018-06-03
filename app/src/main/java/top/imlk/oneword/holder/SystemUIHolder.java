@@ -21,6 +21,7 @@ import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 
 import static top.imlk.oneword.common.StaticValue.CMD_BROADCAST_SET_NEW_LOCK_SCREEN_INFO;
+import static top.imlk.oneword.common.StaticValue.SPILITER;
 import static top.imlk.oneword.common.StaticValue.THE_NEW_LOCK_SCREEN_INFO_FROM;
 import static top.imlk.oneword.common.StaticValue.THE_NEW_LOCK_SCREEN_INFO_MSG;
 import static top.imlk.oneword.common.StaticValue.CMD_BROADCAST_UPDATE_LOCK_SCREEN_INFO;
@@ -129,14 +130,14 @@ public class SystemUIHolder {
             switch (intent.getAction()) {
                 case CMD_BROADCAST_SET_NEW_LOCK_SCREEN_INFO:
                     if (ref_mLockPatternUtils.get().isDeviceOwnerInfoEnabled()) {
-                        ref_mLockPatternUtils.get().setDeviceOwnerInfo(butifyString(intent.getStringExtra(THE_NEW_LOCK_SCREEN_INFO_MSG)) + "\n——" + intent.getStringExtra(THE_NEW_LOCK_SCREEN_INFO_FROM));
+                        ref_mLockPatternUtils.get().setDeviceOwnerInfo(butifyString(intent.getStringExtra(THE_NEW_LOCK_SCREEN_INFO_MSG)) + SPILITER + intent.getStringExtra(THE_NEW_LOCK_SCREEN_INFO_FROM));
                     } else {
                         try {
 
                             if (!ref_mLockPatternUtils.get().isOwnerInfoEnabled((Integer) method_com_android_keyguard_KeyguardUpdateMonitor_getCurrentUser.invoke(null))) {
                                 ref_mLockPatternUtils.get().setOwnerInfoEnabled(true, (Integer) method_com_android_keyguard_KeyguardUpdateMonitor_getCurrentUser.invoke(null));
                             }
-                            ref_mLockPatternUtils.get().setOwnerInfo(butifyString(intent.getStringExtra(THE_NEW_LOCK_SCREEN_INFO_MSG)) + "\n——" + intent.getStringExtra(THE_NEW_LOCK_SCREEN_INFO_FROM), (Integer) method_com_android_keyguard_KeyguardUpdateMonitor_getCurrentUser.invoke(null));
+                            ref_mLockPatternUtils.get().setOwnerInfo(butifyString(intent.getStringExtra(THE_NEW_LOCK_SCREEN_INFO_MSG)) + SPILITER + intent.getStringExtra(THE_NEW_LOCK_SCREEN_INFO_FROM), (Integer) method_com_android_keyguard_KeyguardUpdateMonitor_getCurrentUser.invoke(null));
 
                         } catch (IllegalAccessException e) {
                             e.printStackTrace();
@@ -166,7 +167,28 @@ public class SystemUIHolder {
             if (s0 == null) {
                 return "";
             }
-            String s1 = s0.replace(" ", "").replace("\n", "").replace("；", "；\n").replace(";", ";\n").replace("。", "。\n");
+
+
+            String s1 = s0
+//                    .replace(" ", "\n")
+                    .replace("；", "；\n")
+                    .replace(";", ";\n")
+                    .replace("?", "?\n")
+                    .replace("？", "？\n")
+                    .replace("!", "!\n")
+                    .replace("！", "！\n");
+
+            int count = 0;
+            for (int i = 0; i < s1.length(); ++i) {
+                if (s1.charAt(i) == '，') {
+                    count++;
+                }
+            }
+            if (count <= 6) {
+                s1 = s1.replace("，", "，\n");
+            }
+            s1 = s1.replace("。", "。\n");
+
             return s1.trim();
         }
 

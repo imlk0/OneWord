@@ -2,6 +2,7 @@ package top.imlk.oneword.dao;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.DatabaseErrorHandler;
@@ -12,6 +13,7 @@ import android.util.Log;
 import java.util.ArrayList;
 
 import top.imlk.oneword.Hitokoto.HitokotoBean;
+import top.imlk.oneword.util.ApplicationInfoUtil;
 
 import static android.database.sqlite.SQLiteDatabase.CONFLICT_REPLACE;
 
@@ -49,17 +51,14 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
 
     public static OneWordSQLiteOpenHelper getInstance(Context context) {
         if (oneWordSQLiteOpenHelper == null) {
-            try {
-                oneWordSQLiteOpenHelper = new OneWordSQLiteOpenHelper(context);
-            } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
-            }
+            oneWordSQLiteOpenHelper = new OneWordSQLiteOpenHelper(context);
+
         }
         return oneWordSQLiteOpenHelper;
     }
 
-    private OneWordSQLiteOpenHelper(Context context) throws PackageManager.NameNotFoundException {//使用versionCode作为数据库版本
-        super(context, DB_NAME, null, context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode);
+    private OneWordSQLiteOpenHelper(Context context) {//使用versionCode作为数据库版本
+        super(context, DB_NAME, null, ApplicationInfoUtil.getAppVersionCode(context));
     }
 
 
@@ -178,7 +177,7 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
             HitokotoBean hitokotoBean = null;
             switch (tableName) {
                 case TABLE_HISTORY:
-                    hitokotoBean = new HitokotoBean(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getInt(6) != 0);
+                    hitokotoBean = new HitokotoBean(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getInt(7) != 0);
                     break;
                 case TABLE_LIKE:
                     hitokotoBean = new HitokotoBean(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), true);
@@ -202,7 +201,7 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
             switch (tableName) {
                 case TABLE_HISTORY:
                     for (; cursor.moveToNext(); ) {
-                        arrayList.add(new HitokotoBean(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getInt(6) != 0));
+                        arrayList.add(new HitokotoBean(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getInt(7) != 0));
                     }
                     break;
                 case TABLE_LIKE:
@@ -244,7 +243,7 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
 
             SQLiteDatabase sqLiteDatabase = getWritableDatabase();
             try {
-                sqLiteDatabase.execSQL("UPDATE " + TABLE_HISTORY + " SET " + KEY_LIKE + " =? WHERE " + KEY_ID + " =? AND " + KEY_TYPE + " =?", new String[]{hitokotoBean.like + "", hitokotoBean.id + "", hitokotoBean.type});
+                sqLiteDatabase.execSQL("UPDATE " + TABLE_HISTORY + " SET " + KEY_LIKE + " =? WHERE " + KEY_ID + " =? AND " + KEY_TYPE + " =?", new String[]{hitokotoBean.like ? "1" : "0", hitokotoBean.id + "", hitokotoBean.type});
             } catch (Exception e) {
                 Log.e(LOG_TAG, "refresh_like_state", e);
             }

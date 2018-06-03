@@ -1,162 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<top.imlk.oneword.view.PastedNestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/root_pasted_scroll_view"
+<com.scwang.smartrefresh.layout.SmartRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/refreshLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <top.imlk.oneword.view.MainOneWordView
-        android:id="@+id/ll_main_oneword"
+    <top.imlk.oneword.view.PastedNestedScrollView
+        android:id="@+id/pasted_scroll_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:descendantFocusability="blocksDescendants"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/ll_page_first"
+        <top.imlk.oneword.view.MainOneWordView
+            android:id="@+id/ll_main_oneword"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:descendantFocusability="blocksDescendants"
             android:orientation="vertical">
 
-            <top.imlk.oneword.view.OneWordShowPanel
-                android:id="@+id/one_word_show_panel"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
-
-                <TextView
-                    android:id="@+id/tv_msg_main"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_marginLeft="@dimen/tv_msg_mgside"
-                    android:layout_marginRight="@dimen/tv_msg_mgside"
-                    android:gravity="center"
-                    android:text="当前一言"
-                    android:textColor="@android:color/white"
-                    android:textIsSelectable="true"
-                    android:textSize="@dimen/tv_msg_textsize"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_msg_from"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/tv_msg_main"
-                    android:layout_marginLeft="@dimen/tv_msg_from_mgside"
-                    android:layout_marginRight="@dimen/tv_msg_from_mgside"
-                    android:layout_marginTop="@dimen/tv_msg_from_mgtop"
-                    android:gravity="right"
-                    android:paddingRight="6dp"
-                    android:text="——出处"
-                    android:textColor="@android:color/white"
-                    android:textIsSelectable="true"
-                    android:textSize="@dimen/tv_msg_from_textsize"
-                    android:textStyle="italic" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true">
-
-                    <ImageView
-                        android:id="@+id/iv_msg_like"
-                        android:layout_width="@dimen/iv_msg_operator_size"
-                        android:layout_height="@dimen/iv_msg_operator_size"
-                        android:layout_alignParentLeft="true"
-                        android:layout_marginBottom="@dimen/iv_msg_operator_mg"
-                        android:layout_marginLeft="@dimen/iv_msg_operator_mg"
-                        android:src="@drawable/ic_favorite_white_48dp" />
-
-                    <ImageView
-                        android:id="@+id/iv_msg_set"
-                        android:layout_width="@dimen/iv_msg_operator_size"
-                        android:layout_height="@dimen/iv_msg_operator_size"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginBottom="@dimen/iv_msg_operator_mg"
-                        android:layout_marginRight="@dimen/iv_msg_operator_mg"
-                        android:src="@drawable/ic_done_white_48dp" />
-
-                </RelativeLayout>
-            </top.imlk.oneword.view.OneWordShowPanel>
-
-            <!--<EditText-->
-            <!--android:id="@+id/message"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content" />-->
-
             <LinearLayout
-                android:id="@+id/ll_msg_bottom"
+                android:id="@+id/ll_page_first"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-                <!--<Button-->
-                <!--android:id="@+id/btn_set_msg"-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_weight="1"-->
-                <!--android:background="@color/btn_bg_color"-->
-                <!--android:paddingBottom="@dimen/btn_mgbtm"-->
-                <!--android:paddingTop="@dimen/btn_mgtop"-->
-                <!--android:text="设置自定义"-->
-                <!--android:textColor="@android:color/white"-->
-                <!--android:textSize="16sp"-->
-                <!--android:textStyle="bold" />-->
+                <top.imlk.oneword.view.OneWordShowPanel
+                    android:id="@+id/one_word_show_panel"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
 
-                <!--<Button-->
-                <!--android:id="@+id/btn_get_net_msg"-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_weight="1"-->
-                <!--android:background="@color/btn_bg_color_selected"-->
-                <!--android:paddingBottom="@dimen/btn_mgbtm"-->
-                <!--android:paddingTop="@dimen/btn_mgtop"-->
-                <!--android:text="获取一条一言"-->
-                <!--android:textColor="@android:color/white"-->
-                <!--android:textSize="16sp"-->
-                <!--android:textStyle="bold" />-->
+                    <ImageView
+                        android:layout_width="56sp"
+                        android:layout_height="56sp"
+                        android:layout_alignTop="@id/tv_msg_main"
+                        android:layout_marginLeft="@dimen/tv_msg_mg_l_side"
+                        android:layout_marginRight="-24sp"
+                        android:layout_marginTop="-24sp"
+                        android:layout_toLeftOf="@id/tv_msg_main"
+                        android:minHeight="40sp"
+                        android:minWidth="40sp"
+                        android:rotation="180"
+                        android:src="@drawable/ic_format_quote_white_48dp"
+                        android:tint="?attr/primary_light" />
 
-                <!--<Button-->
-                <!--android:id="@+id/btn_write_to_lock_screen"-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_weight="1"-->
-                <!--android:background="@color/btn_bg_color_selected"-->
-                <!--android:paddingBottom="@dimen/btn_mgbtm"-->
-                <!--android:paddingTop="@dimen/btn_mgtop"-->
-                <!--android:text="设为锁屏一言"-->
-                <!--android:textColor="@android:color/white"-->
-                <!--android:textSize="16sp"-->
-                <!--android:textStyle="bold" />-->
+                    <TextView
+                        android:id="@+id/tv_msg_main"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
 
-                <net.lucode.hackware.magicindicator.MagicIndicator
-                    android:id="@+id/magi_bottom"
+                        android:layout_centerInParent="true"
+                        android:layout_marginRight="@dimen/tv_msg_mg_r_side"
+                        android:gravity="center"
+                        android:text="  当前一言"
+                        android:textColor="@android:color/white"
+                        android:textIsSelectable="true"
+                        android:textSize="@dimen/tv_msg_textsize"
+                        android:textStyle="bold" />
+
+
+                    <TextView
+                        android:id="@+id/tv_msg_from"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tv_msg_main"
+                        android:layout_marginLeft="@dimen/tv_msg_from_mgside"
+                        android:layout_marginRight="@dimen/tv_msg_from_mgside"
+                        android:layout_marginTop="@dimen/tv_msg_from_mgtop"
+                        android:gravity="right"
+                        android:text="——出处 "
+                        android:textColor="@android:color/white"
+                        android:textIsSelectable="true"
+                        android:textSize="@dimen/tv_msg_from_textsize"
+                        android:textStyle="italic" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true">
+
+                        <ImageView
+                            android:id="@+id/iv_msg_like"
+                            android:layout_width="@dimen/iv_msg_operator_size"
+                            android:layout_height="@dimen/iv_msg_operator_size"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginBottom="@dimen/iv_msg_operator_mg"
+                            android:layout_marginLeft="@dimen/iv_msg_operator_mg"
+                            android:background="@drawable/bg_circle_botton"
+                            android:src="@drawable/ic_favorite_white_48dp" />
+
+                        <ImageView
+                            android:id="@+id/iv_msg_set"
+                            android:layout_width="@dimen/iv_msg_operator_size"
+                            android:layout_height="@dimen/iv_msg_operator_size"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginBottom="@dimen/iv_msg_operator_mg"
+                            android:layout_marginRight="@dimen/iv_msg_operator_mg"
+                            android:background="@drawable/bg_circle_botton"
+                            android:src="@drawable/ic_done_white_48dp" />
+
+                    </RelativeLayout>
+                </top.imlk.oneword.view.OneWordShowPanel>
+
+
+                <LinearLayout
+                    android:id="@+id/ll_msg_bottom"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="?attr/colorPrimaryDark" />
+                    android:orientation="horizontal">
+
+
+                    <net.lucode.hackware.magicindicator.MagicIndicator
+                        android:id="@+id/magi_bottom"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/colorPrimaryDark" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_page_extend"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/white">
-
-            <top.imlk.oneword.view.UnScrollableViewPaper
-                android:id="@+id/vp_page_extend"
+            <LinearLayout
+                android:id="@+id/ll_page_extend"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="@android:color/white">
 
-            </top.imlk.oneword.view.UnScrollableViewPaper>
+                <top.imlk.oneword.view.UnScrollableViewPaper
+                    android:id="@+id/vp_page_extend"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-        </LinearLayout>
+                </top.imlk.oneword.view.UnScrollableViewPaper>
 
-    </top.imlk.oneword.view.MainOneWordView>
+            </LinearLayout>
+
+        </top.imlk.oneword.view.MainOneWordView>
 
 
-</top.imlk.oneword.view.PastedNestedScrollView>
+    </top.imlk.oneword.view.PastedNestedScrollView>
+</com.scwang.smartrefresh.layout.SmartRefreshLayout>

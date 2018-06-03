@@ -17,10 +17,10 @@
     <!-- Base application theme. -->
     <style name="BaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/green_colorPrimary</item>
-        <item name="colorPrimaryDark">@color/green_colorPrimaryDark</item>
+        <item name="colorPrimary">@android:color/white</item>
+        <item name="colorPrimaryDark">@android:color/white</item>
         <item name="primary_light">@color/green_primary_light</item>
-        <item name="colorAccent">@color/green_colorAccent</item>
+        <item name="colorAccent">@android:color/white</item>
         <item name="primary_text">@color/green_primary_text</item>
         <item name="secondary_text">@color/green_secondary_text</item>
         <item name="icons">@color/green_icons</item>
@@ -62,7 +62,7 @@
         <item name="divider">@color/blue_divider</item>
     </style>
 
-    <style name="BlueGrey" parent="BaseTheme">
+    <style name="BlueGreyTheme" parent="BaseTheme">
         <item name="colorPrimary">@color/blue_grey_colorPrimary</item>
         <item name="colorPrimaryDark">@color/blue_grey_colorPrimaryDark</item>
         <item name="primary_light">@color/blue_grey_primary_light</item>

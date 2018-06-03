@@ -1,40 +1,33 @@
 package top.imlk.oneword.client;
 
-import android.app.ActivityManager;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Rect;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Window;
 import android.widget.Toast;
 
-import java.util.List;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
+import top.imlk.oneword.Hitokoto.HitokotoApi;
 import top.imlk.oneword.R;
 import top.imlk.oneword.Hitokoto.HitokotoBean;
 import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
 import top.imlk.oneword.util.SharedPreferencesUtil;
+import top.imlk.oneword.util.ShowDialogUtil;
+import top.imlk.oneword.util.StyleHelper;
 import top.imlk.oneword.view.MainOneWordView;
 import top.imlk.oneword.view.OneWordShowPanel;
 import top.imlk.oneword.view.PastedNestedScrollView;
 
-import static top.imlk.oneword.common.StaticValue.CMD_SERVICES_START_AUTO_UPDATE;
-import static top.imlk.oneword.common.StaticValue.CMD_SERVICES_STOP_SERVICE;
+import static top.imlk.oneword.common.StaticValue.CMD_SERVICES_START_AUTO_REFRESH_SERVICE;
 
-public class MainActivity extends AppCompatActivity implements Observer<HitokotoBean> {
-
-//    private ILockSettings mLockSettingsService;
-
-
-//    private Button btnSetMsg;
-//    private Button btnRequestMsg;
-
-//    private EditText etInputMsg;
+public class MainActivity extends AppCompatActivity implements Observer<HitokotoBean>, OnRefreshListener {
 
 
     public PastedNestedScrollView pastedNestedScrollView;
@@ -43,6 +36,8 @@ public class MainActivity extends AppCompatActivity implements Observer<Hitokoto
 
     public OneWordShowPanel oneWordShowPanel;
 
+    public RefreshLayout refreshLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,12 +45,33 @@ public class MainActivity extends AppCompatActivity implements Observer<Hitokoto
 
         killRunningServices();
 
-        setTheme(R.style.BaseTheme);
+        int themes[] = {
+                R.style.RedTheme,
+                R.style.AmberTheme,
+                R.style.BlueTheme,
+                R.style.BlueGreyTheme,
+                R.style.BrownTheme,
+                R.style.CyanTheme,
+                R.style.DeepOrangeTheme,
+                R.style.DeepPurpleTheme,
+                R.style.GreenTheme,
+                R.style.GreyTheme,
+                R.style.IndigoTheme,
+                R.style.LightBlueTheme,
+                R.style.LimeTheme,
+                R.style.OrangeTheme,
+                R.style.PinkTheme,
+                R.style.PurpleTheme,
+                R.style.TealTheme,
+                R.style.YellowTheme,
+        };
+
+        setTheme(themes[((int) (Math.random() * themes.length))]);
 
 
         setContentView(R.layout.activity_main);
 
-        this.pastedNestedScrollView = findViewById(R.id.root_pasted_scroll_view);
+        this.pastedNestedScrollView = findViewById(R.id.pasted_scroll_view);
 
         this.mainOneWordView = findViewById(R.id.ll_main_oneword);
         this.mainOneWordView.updateContext(this);
@@ -64,6 +80,26 @@ public class MainActivity extends AppCompatActivity implements Observer<Hitokoto
         this.oneWordShowPanel.updateContext(this);
         this.oneWordShowPanel.initView();
 
+        this.refreshLayout = findViewById(R.id.refreshLayout);
+        this.refreshLayout.setOnRefreshListener(this);
+        this.refreshLayout.setEnableLoadMore(false);
+
+        refreshLayout.setPrimaryColors(
+                StyleHelper.getColorByAttributeId(this, R.attr.primary_light),
+                StyleHelper.getColorByAttributeId(this, R.attr.colorPrimaryDark));
+
+        //更新c_Array_custom数组
+        if (HitokotoApi.Parameter.c_Array_custom == null) {
+            HitokotoApi.refreshCustomArray(SharedPreferencesUtil.readOneWordTypes(this));
+        }
+
+        if (SharedPreferencesUtil.isFirstTimeUse(this)) {
+
+
+            ShowDialogUtil.showAboutAppDialog(this);
+
+
+        }
 
 //        startAutoUpdateService();
     }
@@ -95,6 +131,8 @@ public class MainActivity extends AppCompatActivity implements Observer<Hitokoto
     }
 
 
+    //implement from Observer
+
     @Override
     public void onSubscribe(Disposable d) {
 
@@ -108,11 +146,14 @@ public class MainActivity extends AppCompatActivity implements Observer<Hitokoto
 
         OneWordSQLiteOpenHelper.getInstance(this).insert_one_item(OneWordSQLiteOpenHelper.TABLE_HISTORY, hitokotoBean);
 
+        refreshLayout.finishRefresh(300, true);
+
     }
 
     @Override
     public void onError(Throwable e) {
         Toast.makeText(MainActivity.this, "网络异常，获取失败", Toast.LENGTH_LONG).show();
+        refreshLayout.finishRefresh(0, false);
 
     }
 
@@ -173,8 +214,26 @@ public class MainActivity extends AppCompatActivity implements Observer<Hitokoto
     public void startAutoUpdateService() {
         Intent intent = new Intent(this, OneWordAutoRefreshService.class);
 
-        intent.setAction(CMD_SERVICES_START_AUTO_UPDATE);
+        intent.setAction(CMD_SERVICES_START_AUTO_REFRESH_SERVICE);
         startService(intent);
+    }
+
+
+    @Override
+    public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+
+        startAnOneWordRequest();
+
+    }
+
+    public void startAnOneWordRequest() {
+        try {
+            HitokotoApi.requestOneWord(this);
+            this.pastedNestedScrollView.scrollToTop();
+        } catch (Exception e) {
+            Toast.makeText(this, "发生错误:\n" + e.getMessage(), Toast.LENGTH_LONG).show();
+            refreshLayout.finishRefresh(500, false);
+        }
     }
 
 }

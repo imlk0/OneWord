@@ -6,14 +6,14 @@
 
     <!--<color name="btn_bg_color_selected">?attr/colorPrimary</color>-->
 
-    <color name="item_oneword_r">#aaaaaa</color>
+    <!--<color name="item_oneword_r">#aaaaaa</color>-->
     <!--<color name="item_oneword_f"></color>-->
-    <color name="item_oneword_l">#ff403d</color>
+    <color name="item_oneword_r">#ff403d</color>
 
 
     <!--<color name="item_divider"></color>-->
-    <color name="item_oneword_icons_delete">#ffffff</color>
-    <color name="item_oneword_icons_like">#ffffff</color>
+    <!--<color name="item_oneword_icons_delete">#ffffff</color>-->
+    <!--<color name="item_oneword_icons_like">#ffffff</color>-->
 
 
 

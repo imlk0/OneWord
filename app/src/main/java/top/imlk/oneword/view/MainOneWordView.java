@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.os.Build;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
@@ -164,7 +163,7 @@ public class MainOneWordView extends LinearLayout {
         bottomMagicIndicator.onPageSelected(index == 2 ? 3 : index);
         viewPager.setCurrentItem(index);
         if (index == 0 || index == 1) {
-            ((ExtendViewPageAdaper) viewPager.getAdapter()).updateAndFillRecyclerView(index);
+            ((ExtendViewPageAdaper) viewPager.getAdapter()).clearAndFillRecyclerView(index);
         }
     }
 
