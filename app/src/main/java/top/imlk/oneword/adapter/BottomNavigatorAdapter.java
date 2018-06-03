@@ -75,7 +75,6 @@ public class BottomNavigatorAdapter extends CommonNavigatorAdapter implements Vi
 
     @Override
     public void onClick(View v) {
-        //TODO 水波纹
 
 //        ((CommonPagerTitleView) v).getChildAt(0).setBackgroundResource(R.color.btn_bg_color_selected);
 

@@ -22,6 +22,7 @@
                 android:id="@+id/ll_open_auto_refresh"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
                 android:orientation="horizontal"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp">
@@ -78,6 +79,7 @@
                 android:id="@+id/ll_set_refresh_mode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
                 android:orientation="horizontal"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp">
@@ -120,6 +122,7 @@
                 android:id="@+id/ll_set_oneword_type"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
                 android:orientation="horizontal"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp">
@@ -161,6 +164,7 @@
                 android:id="@+id/ll_show_about_app"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
                 android:orientation="horizontal"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp">
@@ -202,6 +206,7 @@
                 android:id="@+id/ll_show_donate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
                 android:orientation="horizontal"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp">
@@ -243,6 +248,7 @@
                 android:id="@+id/ll_coolapk_market"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
                 android:orientation="horizontal"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp">
@@ -284,6 +290,7 @@
                 android:id="@+id/ll_show_thx_hitokoto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
                 android:orientation="horizontal"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp">
@@ -326,6 +333,7 @@
                 android:id="@+id/ll_show_thx_open_source"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
                 android:orientation="horizontal"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp">
@@ -366,6 +374,7 @@
                 android:id="@+id/ll_version"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
                 android:orientation="horizontal"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp">

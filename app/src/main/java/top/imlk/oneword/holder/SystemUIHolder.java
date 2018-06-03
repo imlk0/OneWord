@@ -94,7 +94,7 @@ public class SystemUIHolder {
 
                 viewGroup = null;
 
-                //TODO test multiline
+
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     ref_mOwnerInfo.get().setElegantTextHeight(true);
                 }
