@@ -22,8 +22,8 @@ import java.util.List;
 
 import top.imlk.oneword.net.Hitokoto.HitokotoApi;
 import top.imlk.oneword.R;
-import top.imlk.oneword.application.adapter.TitleAndSummaryArrayAdapter;
-import top.imlk.oneword.bean.TitleAndSummary;
+import top.imlk.oneword.application.adapter.WordArrayAdapter;
+import top.imlk.oneword.bean.Word;
 import top.imlk.oneword.application.client.service.OneWordAutoRefreshService;
 
 /**
@@ -166,29 +166,29 @@ public class ShowDialogUtil {
 
     public static void showOpenSourceProjectDialog(final Context context) {
 
-        ArrayList<TitleAndSummary> titleAndSummaries = new ArrayList<>();
+        ArrayList<Word> titleAndSummaries = new ArrayList<>();
 
-        titleAndSummaries.add(new TitleAndSummary("Xposed", "http://repo.xposed.info/"));
-        titleAndSummaries.add(new TitleAndSummary("OkHttp", "https://github.com/square/okhttp"));
-        titleAndSummaries.add(new TitleAndSummary("Retrofit", "https://github.com/square/retrofit"));
-        titleAndSummaries.add(new TitleAndSummary("RxAndroid", "https://github.com/ReactiveX/RxAndroid"));
-        titleAndSummaries.add(new TitleAndSummary("RxJava", "https://github.com/ReactiveX/RxJava"));
-        titleAndSummaries.add(new TitleAndSummary("Gson", "https://github.com/google/gson"));
-        titleAndSummaries.add(new TitleAndSummary("MagicIndicator", "https://github.com/hackware1993/MagicIndicator"));
-        titleAndSummaries.add(new TitleAndSummary("LovelyDialog", "https://github.com/yarolegovich/LovelyDialog"));
-        titleAndSummaries.add(new TitleAndSummary("SmartRefreshLayout", "https://github.com/scwang90/SmartRefreshLayout"));
-        titleAndSummaries.add(new TitleAndSummary("SwipeToAction", "https://github.com/KB5201314/SwipeToAction"));
-        titleAndSummaries.add(new TitleAndSummary("AndroidDonate", "https://github.com/didikee/AndroidDonate"));
-        titleAndSummaries.add(new TitleAndSummary("material-design-icons", "https://github.com/google/material-design-icons"));
+        titleAndSummaries.add(new Word("Xposed", "http://repo.xposed.info/"));
+        titleAndSummaries.add(new Word("OkHttp", "https://github.com/square/okhttp"));
+        titleAndSummaries.add(new Word("Retrofit", "https://github.com/square/retrofit"));
+        titleAndSummaries.add(new Word("RxAndroid", "https://github.com/ReactiveX/RxAndroid"));
+        titleAndSummaries.add(new Word("RxJava", "https://github.com/ReactiveX/RxJava"));
+        titleAndSummaries.add(new Word("Gson", "https://github.com/google/gson"));
+        titleAndSummaries.add(new Word("MagicIndicator", "https://github.com/hackware1993/MagicIndicator"));
+        titleAndSummaries.add(new Word("LovelyDialog", "https://github.com/yarolegovich/LovelyDialog"));
+        titleAndSummaries.add(new Word("SmartRefreshLayout", "https://github.com/scwang90/SmartRefreshLayout"));
+        titleAndSummaries.add(new Word("SwipeToAction", "https://github.com/KB5201314/SwipeToAction"));
+        titleAndSummaries.add(new Word("AndroidDonate", "https://github.com/didikee/AndroidDonate"));
+        titleAndSummaries.add(new Word("material-design-icons", "https://github.com/google/material-design-icons"));
 
 
-        TitleAndSummaryArrayAdapter titleAndSummaryArrayAdapter = new TitleAndSummaryArrayAdapter(context, titleAndSummaries);
+        WordArrayAdapter wordArrayAdapter = new WordArrayAdapter(context, titleAndSummaries);
 
         ListView listView = new ListView(context);
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 500);
-        listView.setAdapter(titleAndSummaryArrayAdapter);
+        listView.setAdapter(wordArrayAdapter);
         listView.setLayoutParams(layoutParams);
-        listView.setOnItemClickListener(titleAndSummaryArrayAdapter);
+        listView.setOnItemClickListener(wordArrayAdapter);
 
         new LovelyCustomDialog(context)
                 .setView(listView)

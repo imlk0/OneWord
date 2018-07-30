@@ -16,7 +16,7 @@
         android:paddingTop="16dp">
 
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/from"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="标题"
@@ -24,7 +24,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/summary"
+            android:id="@+id/content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="摘要"

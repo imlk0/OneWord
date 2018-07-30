@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity implements Observer<Hitokoto
 
         int themes[] = {
                 R.style.RedTheme,
-                R.style.AmberTheme,
                 R.style.BlueTheme,
                 R.style.BlueGreyTheme,
                 R.style.BrownTheme,

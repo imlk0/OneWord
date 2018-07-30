@@ -13,17 +13,17 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import top.imlk.oneword.R;
-import top.imlk.oneword.bean.TitleAndSummary;
+import top.imlk.oneword.bean.Word;
 
 /**
  * Created by imlk on 2018/6/3.
  */
-public class TitleAndSummaryArrayAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
+public class WordArrayAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
 
     private Context context;
-    private ArrayList<TitleAndSummary> tittleAndSummaries;
+    private ArrayList<Word> tittleAndSummaries;
 
-    public TitleAndSummaryArrayAdapter(Context context, ArrayList<TitleAndSummary> tittleAndSummaries) {
+    public WordArrayAdapter(Context context, ArrayList<Word> tittleAndSummaries) {
         this.context = context;
 
         this.tittleAndSummaries = tittleAndSummaries;
@@ -50,8 +50,8 @@ public class TitleAndSummaryArrayAdapter extends BaseAdapter implements AdapterV
             convertView = LinearLayout.inflate(context, R.layout.item_title_and_summary, null);
         }
 
-        ((TextView) convertView.findViewById(R.id.title)).setText(tittleAndSummaries.get(position).tittle);
-        ((TextView) convertView.findViewById(R.id.summary)).setText(tittleAndSummaries.get(position).summary);
+        ((TextView) convertView.findViewById(R.id.from)).setText(tittleAndSummaries.get(position).from);
+        ((TextView) convertView.findViewById(R.id.content)).setText(tittleAndSummaries.get(position).content);
 
         return convertView;
     }
@@ -59,6 +59,6 @@ public class TitleAndSummaryArrayAdapter extends BaseAdapter implements AdapterV
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(tittleAndSummaries.get(position).summary)));
+        context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(tittleAndSummaries.get(position).content)));
     }
 }

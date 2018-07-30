@@ -39,16 +39,16 @@
         <item name="divider">@color/red_divider</item>
     </style>
 
-    <style name="AmberTheme" parent="BaseTheme">
-        <item name="colorPrimary">@color/amber_colorPrimary</item>
-        <item name="colorPrimaryDark">@color/amber_colorPrimaryDark</item>
-        <item name="primary_light">@color/amber_primary_light</item>
-        <item name="colorAccent">@color/amber_colorAccent</item>
-        <item name="primary_text">@color/amber_primary_text</item>
-        <item name="secondary_text">@color/amber_secondary_text</item>
-        <item name="icons">@color/amber_icons</item>
-        <item name="divider">@color/amber_divider</item>
-    </style>
+    <!--<style name="AmberTheme" parent="BaseTheme">-->
+    <!--<item name="colorPrimary">@color/amber_colorPrimary</item>-->
+    <!--<item name="colorPrimaryDark">@color/amber_colorPrimaryDark</item>-->
+    <!--<item name="primary_light">@color/amber_primary_light</item>-->
+    <!--<item name="colorAccent">@color/amber_colorAccent</item>-->
+    <!--<item name="primary_text">@color/amber_primary_text</item>-->
+    <!--<item name="secondary_text">@color/amber_secondary_text</item>-->
+    <!--<item name="icons">@color/amber_icons</item>-->
+    <!--<item name="divider">@color/amber_divider</item>-->
+    <!--</style>-->
 
 
     <style name="BlueTheme" parent="BaseTheme">
@@ -227,7 +227,6 @@
         <item name="icons">@color/yellow_icons</item>
         <item name="divider">@color/yellow_divider</item>
     </style>
-
 
 
 </resources>

@@ -40,4 +40,6 @@ dependencies {
     compileOnly files('lib/api-82.jar')
     implementation project(':SwipeToAction')
     implementation 'com.github.didikee:AndroidDonate:0.1.0'
+
+//    implementation 'com.tencent.bugly:crashreport:latest.release'
 }

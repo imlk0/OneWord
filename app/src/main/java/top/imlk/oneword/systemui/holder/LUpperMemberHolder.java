@@ -4,12 +4,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build;
-import android.text.InputType;
-import android.view.ViewGroup;
+import android.view.View;
 import android.widget.TextView;
 
 import com.android.internal.widget.LockPatternUtils;
+
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
@@ -19,7 +18,10 @@ import java.lang.reflect.Method;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
+import top.imlk.oneword.systemui.uifixer.AOSPUIFixer;
+import top.imlk.oneword.systemui.uifixer.UIFixer;
 import top.imlk.oneword.systemui.view.OwnerInfoTextViewProxy;
+import top.imlk.oneword.util.BugUtil;
 
 import static top.imlk.oneword.StaticValue.CMD_BROADCAST_SET_NEW_LOCK_SCREEN_INFO;
 import static top.imlk.oneword.StaticValue.SPILITER;
@@ -30,7 +32,7 @@ import static top.imlk.oneword.StaticValue.CMD_BROADCAST_UPDATE_LOCK_SCREEN_INFO
 /**
  * Created by imlk on 2018/5/24.
  */
-public class MemberHolder {
+public class LUpperMemberHolder {
 
     public static Class class_com_android_keyguard_KeyguardStatusView;
     public static Class class_com_android_keyguard_KeyguardUpdateMonitor;
@@ -68,45 +70,38 @@ public class MemberHolder {
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 super.afterHookedMethod(param);
 
-                ref_mOwnerInfo = new WeakReference(field_com_android_keyguard_KeyguardStatusView_mOwnerInfo.get(param.thisObject));
+//                CrashReport.initCrashReport(((View) param.thisObject).getContext().getApplicationContext(), "03e888691d", false);
+//
+//                CrashReport.testJavaCrash();
 
-                ViewGroup.MarginLayoutParams marginLayoutParams = ((ViewGroup.MarginLayoutParams) ref_mOwnerInfo.get().getLayoutParams());
-                marginLayoutParams.leftMargin *= 2;
-                marginLayoutParams.rightMargin *= 2;
+                try {
 
-                ref_mOwnerInfo.get().setLayoutParams(marginLayoutParams);
+                    XposedBridge.log("doHook_onFinishInflate()");
+
+                    ref_mOwnerInfo = new WeakReference(field_com_android_keyguard_KeyguardStatusView_mOwnerInfo.get(param.thisObject));
+                    ref_mLockPatternUtils = new WeakReference(field_com_android_keyguard_KeyguardStatusView_mLockPatternUtils.get(param.thisObject));
+                    ref_keyguardStatusView = new WeakReference(param.thisObject);
+
+                    OwnerInfoTextViewProxy proxyView = new OwnerInfoTextViewProxy(ref_mOwnerInfo.get().getContext());
+
+                    UIFixer uiFixer = new AOSPUIFixer(ref_mOwnerInfo.get());
+                    uiFixer.fixUI(ref_mOwnerInfo.get());
+
+                    proxyView.setUiFixer(uiFixer);
+
+                    ref_OwnerInfoTextViewProxy = new WeakReference<>(proxyView);
 
 
-                ref_mLockPatternUtils = new WeakReference(field_com_android_keyguard_KeyguardStatusView_mLockPatternUtils.get(param.thisObject));
-                ref_keyguardStatusView = new WeakReference(param.thisObject);
-                ref_OwnerInfoTextViewProxy = new WeakReference<>(new OwnerInfoTextViewProxy(ref_mOwnerInfo.get().getContext(), ref_mOwnerInfo.get()));
+                    field_com_android_keyguard_KeyguardStatusView_mOwnerInfo.set(param.thisObject, ref_OwnerInfoTextViewProxy.get());
 
-                field_com_android_keyguard_KeyguardStatusView_mOwnerInfo.set(param.thisObject, ref_OwnerInfoTextViewProxy.get());
 
-                //添加到现有视图中
-                ViewGroup viewGroup = ((ViewGroup) ref_mOwnerInfo.get().getParent());
-                int i;
-                for (i = 0; i < viewGroup.getChildCount(); ++i) {
-                    if (viewGroup.getChildAt(i) == ref_mOwnerInfo.get()) {
-                        break;
-                    }
+                    method_com_android_keyguard_KeyguardStatusView_updateOwnerInfo.invoke(ref_keyguardStatusView.get());
+
+                    registerBroadcastReceiver();
+                } catch (Exception e) {
+                    BugUtil.saveCrashInfo2File(e);
                 }
 
-                ((ViewGroup) ref_mOwnerInfo.get().getParent()).addView(ref_OwnerInfoTextViewProxy.get().getCustomTextView(), i + 1);
-
-                viewGroup = null;
-
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    ref_mOwnerInfo.get().setElegantTextHeight(true);
-                }
-                ref_mOwnerInfo.get().setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-                ref_mOwnerInfo.get().setSingleLine(false);
-
-
-                method_com_android_keyguard_KeyguardStatusView_updateOwnerInfo.invoke(ref_keyguardStatusView.get());
-
-                registerBroadcastReceiver();
             }
         });
     }
@@ -130,38 +125,44 @@ public class MemberHolder {
 
             XposedBridge.log("SystemUICmdBroadcastReceiver -> onReceive" + intent.getAction());
 
-            switch (intent.getAction()) {
-                case CMD_BROADCAST_SET_NEW_LOCK_SCREEN_INFO:
-                    if (ref_mLockPatternUtils.get().isDeviceOwnerInfoEnabled()) {
-                        ref_mLockPatternUtils.get().setDeviceOwnerInfo(butifyString(intent.getStringExtra(THE_NEW_LOCK_SCREEN_INFO_MSG)) + SPILITER + intent.getStringExtra(THE_NEW_LOCK_SCREEN_INFO_FROM));
-                    } else {
-                        try {
+            try {
+                switch (intent.getAction()) {
+                    case CMD_BROADCAST_SET_NEW_LOCK_SCREEN_INFO:
+                        if (ref_mLockPatternUtils.get().isDeviceOwnerInfoEnabled()) {
+                            // TODO 直接写入json
+                            ref_mLockPatternUtils.get().setDeviceOwnerInfo(butifyString(intent.getStringExtra(THE_NEW_LOCK_SCREEN_INFO_MSG)) + SPILITER + intent.getStringExtra(THE_NEW_LOCK_SCREEN_INFO_FROM));
+                        } else {
+                            try {
 
-                            if (!ref_mLockPatternUtils.get().isOwnerInfoEnabled((Integer) method_com_android_keyguard_KeyguardUpdateMonitor_getCurrentUser.invoke(null))) {
-                                ref_mLockPatternUtils.get().setOwnerInfoEnabled(true, (Integer) method_com_android_keyguard_KeyguardUpdateMonitor_getCurrentUser.invoke(null));
+                                if (!ref_mLockPatternUtils.get().isOwnerInfoEnabled((Integer) method_com_android_keyguard_KeyguardUpdateMonitor_getCurrentUser.invoke(null))) {
+                                    ref_mLockPatternUtils.get().setOwnerInfoEnabled(true, (Integer) method_com_android_keyguard_KeyguardUpdateMonitor_getCurrentUser.invoke(null));
+                                }
+                                ref_mLockPatternUtils.get().setOwnerInfo(butifyString(intent.getStringExtra(THE_NEW_LOCK_SCREEN_INFO_MSG)) + SPILITER + intent.getStringExtra(THE_NEW_LOCK_SCREEN_INFO_FROM), (Integer) method_com_android_keyguard_KeyguardUpdateMonitor_getCurrentUser.invoke(null));
+
+                            } catch (IllegalAccessException e) {
+                                e.printStackTrace();
+                            } catch (InvocationTargetException e) {
+                                e.printStackTrace();
                             }
-                            ref_mLockPatternUtils.get().setOwnerInfo(butifyString(intent.getStringExtra(THE_NEW_LOCK_SCREEN_INFO_MSG)) + SPILITER + intent.getStringExtra(THE_NEW_LOCK_SCREEN_INFO_FROM), (Integer) method_com_android_keyguard_KeyguardUpdateMonitor_getCurrentUser.invoke(null));
+
+                        }
+
+                    case CMD_BROADCAST_UPDATE_LOCK_SCREEN_INFO:
+                        try {
+                            method_com_android_keyguard_KeyguardStatusView_updateOwnerInfo.invoke(ref_keyguardStatusView.get());
 
                         } catch (IllegalAccessException e) {
                             e.printStackTrace();
+
                         } catch (InvocationTargetException e) {
                             e.printStackTrace();
                         }
 
-                    }
+                        break;
+                }
+            } catch (Exception e) {
 
-                case CMD_BROADCAST_UPDATE_LOCK_SCREEN_INFO:
-                    try {
-                        method_com_android_keyguard_KeyguardStatusView_updateOwnerInfo.invoke(ref_keyguardStatusView.get());
-
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-
-                    } catch (InvocationTargetException e) {
-                        e.printStackTrace();
-                    }
-
-                    break;
+                BugUtil.saveCrashInfo2File(e);
             }
         }
 
@@ -198,7 +199,7 @@ public class MemberHolder {
 
         public static void reportException(Context context, Exception e) {
             e.printStackTrace();
-
+            // TODO 错误上报
 
         }
     }
