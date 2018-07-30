@@ -1,20 +1,12 @@
 package top.imlk.oneword.util;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.didikee.donate.AlipayDonate;
-import android.didikee.donate.WeiXinDonate;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -23,20 +15,16 @@ import android.widget.Toast;
 import com.yarolegovich.lovelydialog.LovelyChoiceDialog;
 import com.yarolegovich.lovelydialog.LovelyCustomDialog;
 import com.yarolegovich.lovelydialog.LovelyInfoDialog;
-import com.yarolegovich.lovelydialog.LovelyStandardDialog;
 import com.yarolegovich.lovelydialog.ViewConfigurator;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import top.imlk.oneword.Hitokoto.HitokotoApi;
+import top.imlk.oneword.net.Hitokoto.HitokotoApi;
 import top.imlk.oneword.R;
-import top.imlk.oneword.adapter.TitleAndSummaryArrayAdapter;
+import top.imlk.oneword.application.adapter.TitleAndSummaryArrayAdapter;
 import top.imlk.oneword.bean.TitleAndSummary;
-import top.imlk.oneword.client.OneWordAutoRefreshService;
+import top.imlk.oneword.application.client.service.OneWordAutoRefreshService;
 
 /**
  * Created by imlk on 2018/6/3.

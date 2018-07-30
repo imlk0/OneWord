@@ -2,17 +2,14 @@ package top.imlk.oneword.dao;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
 
-import top.imlk.oneword.Hitokoto.HitokotoBean;
+import top.imlk.oneword.net.Hitokoto.HitokotoBean;
 import top.imlk.oneword.util.ApplicationInfoUtil;
 
 import static android.database.sqlite.SQLiteDatabase.CONFLICT_REPLACE;

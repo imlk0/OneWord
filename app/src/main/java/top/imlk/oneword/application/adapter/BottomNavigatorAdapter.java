@@ -1,11 +1,10 @@
-package top.imlk.oneword.adapter;
+package top.imlk.oneword.application.adapter;
 
 import android.content.Context;
 import android.graphics.Rect;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator;
@@ -14,11 +13,10 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.Common
 
 import java.util.ArrayList;
 
-import top.imlk.oneword.Hitokoto.HitokotoApi;
 import top.imlk.oneword.R;
-import top.imlk.oneword.client.MainActivity;
+import top.imlk.oneword.application.client.activity.MainActivity;
 import top.imlk.oneword.util.StyleHelper;
-import top.imlk.oneword.view.BottomNavigatorItem;
+import top.imlk.oneword.application.view.BottomNavigatorItem;
 
 /**
  * Created by imlk on 2018/5/20.

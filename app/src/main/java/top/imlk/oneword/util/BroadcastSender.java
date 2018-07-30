@@ -3,12 +3,12 @@ package top.imlk.oneword.util;
 import android.content.Context;
 import android.content.Intent;
 
-import top.imlk.oneword.Hitokoto.HitokotoBean;
+import top.imlk.oneword.net.Hitokoto.HitokotoBean;
 
-import static top.imlk.oneword.common.StaticValue.CMD_BROADCAST_SET_NEW_LOCK_SCREEN_INFO;
-import static top.imlk.oneword.common.StaticValue.THE_NEW_LOCK_SCREEN_INFO_FROM;
-import static top.imlk.oneword.common.StaticValue.THE_NEW_LOCK_SCREEN_INFO_MSG;
-import static top.imlk.oneword.common.StaticValue.CMD_BROADCAST_UPDATE_LOCK_SCREEN_INFO;
+import static top.imlk.oneword.StaticValue.CMD_BROADCAST_SET_NEW_LOCK_SCREEN_INFO;
+import static top.imlk.oneword.StaticValue.THE_NEW_LOCK_SCREEN_INFO_FROM;
+import static top.imlk.oneword.StaticValue.THE_NEW_LOCK_SCREEN_INFO_MSG;
+import static top.imlk.oneword.StaticValue.CMD_BROADCAST_UPDATE_LOCK_SCREEN_INFO;
 
 /**
  * Created by imlk on 2018/5/26.

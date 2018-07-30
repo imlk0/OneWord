@@ -1,4 +1,4 @@
-package top.imlk.oneword.holder;
+package top.imlk.oneword.systemui.view;
 
 import android.annotation.SuppressLint;
 import android.content.ComponentName;
@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
-import android.text.InputType;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -16,11 +15,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
-import top.imlk.oneword.R;
-
-import static top.imlk.oneword.common.StaticValue.SPILITER;
+import static top.imlk.oneword.StaticValue.SPILITER;
 
 /**
  * Created by imlk on 2018/5/28.
@@ -147,7 +142,7 @@ public class OwnerInfoTextViewProxy extends TextView implements View.OnClickList
 
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
-        ComponentName cn = new ComponentName("top.imlk.oneword", "top.imlk.oneword.client.MainActivity");
+        ComponentName cn = new ComponentName("top.imlk.oneword", "top.imlk.oneword.application.client.activity.MainActivity");
         intent.setComponent(cn);
         v.getContext().startActivity(intent);
 

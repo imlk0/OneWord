@@ -1,4 +1,4 @@
-package top.imlk.oneword.view;
+package top.imlk.oneword.application.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -16,9 +16,9 @@ import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator;
 
 import top.imlk.oneword.R;
-import top.imlk.oneword.adapter.BottomNavigatorAdapter;
-import top.imlk.oneword.adapter.ExtendViewPageAdaper;
-import top.imlk.oneword.client.MainActivity;
+import top.imlk.oneword.application.adapter.BottomNavigatorAdapter;
+import top.imlk.oneword.application.adapter.ExtendViewPageAdaper;
+import top.imlk.oneword.application.client.activity.MainActivity;
 
 /**
  * Created by imlk on 2018/5/20.

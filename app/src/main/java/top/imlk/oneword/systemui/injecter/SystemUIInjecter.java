@@ -1,11 +1,8 @@
-package top.imlk.oneword.injecter;
-
-import android.os.Debug;
+package top.imlk.oneword.systemui.injecter;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
-import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
-import top.imlk.oneword.holder.SystemUIHolder;
+import top.imlk.oneword.systemui.holder.MemberHolder;
 
 /**
  * Created by imlk on 2018/5/24.
@@ -16,8 +13,8 @@ public class SystemUIInjecter implements IXposedHookLoadPackage {
 //        XposedBridge.log("SystemUIInjecter"+lpparam.packageName);
         if ("com.android.systemui".equals(lpparam.packageName)) {
 //            Debug.waitForDebugger();
-            SystemUIHolder.init(lpparam.classLoader);
-            SystemUIHolder.doHook_onFinishInflate();
+            MemberHolder.init(lpparam.classLoader);
+            MemberHolder.doHook_onFinishInflate();
         }
 
     }

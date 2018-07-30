@@ -2,32 +2,31 @@ package top.imlk.oneword.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.text.TextUtils;
 
 
-import top.imlk.oneword.Hitokoto.HitokotoBean;
-import top.imlk.oneword.client.OneWordAutoRefreshService;
-import top.imlk.oneword.common.StaticValue;
+import top.imlk.oneword.net.Hitokoto.HitokotoBean;
+import top.imlk.oneword.application.client.service.OneWordAutoRefreshService;
+import top.imlk.oneword.StaticValue;
 
-import static top.imlk.oneword.common.StaticValue.SHARED_PER_KEY_APP_VERSION_CODE;
-import static top.imlk.oneword.common.StaticValue.SHARED_PER_KEY_CURRENT_ONEWORD_CREATOR;
-import static top.imlk.oneword.common.StaticValue.SHARED_PER_KEY_CURRENT_ONEWORD_CREAT_AT;
-import static top.imlk.oneword.common.StaticValue.SHARED_PER_KEY_CURRENT_ONEWORD_FROM;
-import static top.imlk.oneword.common.StaticValue.SHARED_PER_KEY_CURRENT_ONEWORD_ID;
-import static top.imlk.oneword.common.StaticValue.SHARED_PER_KEY_CURRENT_ONEWORD_LIKE;
-import static top.imlk.oneword.common.StaticValue.SHARED_PER_KEY_CURRENT_ONEWORD_MSG;
-import static top.imlk.oneword.common.StaticValue.SHARED_PER_KEY_CURRENT_ONEWORD_TYPE;
-import static top.imlk.oneword.common.StaticValue.SHARED_PER_KEY_FIRSTTIME_INSTALL;
-import static top.imlk.oneword.common.StaticValue.SHARED_PER_KEY_IS_REFRESH_OPENED;
-import static top.imlk.oneword.common.StaticValue.SHARED_PER_KEY_ONEWORD_TYPE_ANIME;
-import static top.imlk.oneword.common.StaticValue.SHARED_PER_KEY_ONEWORD_TYPE_COMIC;
-import static top.imlk.oneword.common.StaticValue.SHARED_PER_KEY_ONEWORD_TYPE_GAME;
-import static top.imlk.oneword.common.StaticValue.SHARED_PER_KEY_ONEWORD_TYPE_INTERNET;
-import static top.imlk.oneword.common.StaticValue.SHARED_PER_KEY_ONEWORD_TYPE_MYSELF;
-import static top.imlk.oneword.common.StaticValue.SHARED_PER_KEY_ONEWORD_TYPE_NOVEL;
-import static top.imlk.oneword.common.StaticValue.SHARED_PER_KEY_ONEWORD_TYPE_OTHER;
-import static top.imlk.oneword.common.StaticValue.SHARED_PER_KEY_REFRESH_MODE;
+import static top.imlk.oneword.StaticValue.SHARED_PER_KEY_APP_VERSION_CODE;
+import static top.imlk.oneword.StaticValue.SHARED_PER_KEY_CURRENT_ONEWORD_CREATOR;
+import static top.imlk.oneword.StaticValue.SHARED_PER_KEY_CURRENT_ONEWORD_CREAT_AT;
+import static top.imlk.oneword.StaticValue.SHARED_PER_KEY_CURRENT_ONEWORD_FROM;
+import static top.imlk.oneword.StaticValue.SHARED_PER_KEY_CURRENT_ONEWORD_ID;
+import static top.imlk.oneword.StaticValue.SHARED_PER_KEY_CURRENT_ONEWORD_LIKE;
+import static top.imlk.oneword.StaticValue.SHARED_PER_KEY_CURRENT_ONEWORD_MSG;
+import static top.imlk.oneword.StaticValue.SHARED_PER_KEY_CURRENT_ONEWORD_TYPE;
+import static top.imlk.oneword.StaticValue.SHARED_PER_KEY_FIRSTTIME_INSTALL;
+import static top.imlk.oneword.StaticValue.SHARED_PER_KEY_IS_REFRESH_OPENED;
+import static top.imlk.oneword.StaticValue.SHARED_PER_KEY_ONEWORD_TYPE_ANIME;
+import static top.imlk.oneword.StaticValue.SHARED_PER_KEY_ONEWORD_TYPE_COMIC;
+import static top.imlk.oneword.StaticValue.SHARED_PER_KEY_ONEWORD_TYPE_GAME;
+import static top.imlk.oneword.StaticValue.SHARED_PER_KEY_ONEWORD_TYPE_INTERNET;
+import static top.imlk.oneword.StaticValue.SHARED_PER_KEY_ONEWORD_TYPE_MYSELF;
+import static top.imlk.oneword.StaticValue.SHARED_PER_KEY_ONEWORD_TYPE_NOVEL;
+import static top.imlk.oneword.StaticValue.SHARED_PER_KEY_ONEWORD_TYPE_OTHER;
+import static top.imlk.oneword.StaticValue.SHARED_PER_KEY_REFRESH_MODE;
 
 /**
  * Created by imlk on 2018/5/26.

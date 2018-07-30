@@ -1,4 +1,4 @@
-package top.imlk.oneword.view;
+package top.imlk.oneword.application.view;
 
 import android.content.Context;
 import android.support.annotation.Nullable;

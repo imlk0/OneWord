@@ -1,4 +1,4 @@
-package top.imlk.oneword.adapter;
+package top.imlk.oneword.application.adapter;
 
 import android.content.Context;
 import android.content.Intent;

@@ -1,4 +1,4 @@
-package top.imlk.oneword.holder;
+package top.imlk.oneword.systemui.holder;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -19,17 +19,18 @@ import java.lang.reflect.Method;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
+import top.imlk.oneword.systemui.view.OwnerInfoTextViewProxy;
 
-import static top.imlk.oneword.common.StaticValue.CMD_BROADCAST_SET_NEW_LOCK_SCREEN_INFO;
-import static top.imlk.oneword.common.StaticValue.SPILITER;
-import static top.imlk.oneword.common.StaticValue.THE_NEW_LOCK_SCREEN_INFO_FROM;
-import static top.imlk.oneword.common.StaticValue.THE_NEW_LOCK_SCREEN_INFO_MSG;
-import static top.imlk.oneword.common.StaticValue.CMD_BROADCAST_UPDATE_LOCK_SCREEN_INFO;
+import static top.imlk.oneword.StaticValue.CMD_BROADCAST_SET_NEW_LOCK_SCREEN_INFO;
+import static top.imlk.oneword.StaticValue.SPILITER;
+import static top.imlk.oneword.StaticValue.THE_NEW_LOCK_SCREEN_INFO_FROM;
+import static top.imlk.oneword.StaticValue.THE_NEW_LOCK_SCREEN_INFO_MSG;
+import static top.imlk.oneword.StaticValue.CMD_BROADCAST_UPDATE_LOCK_SCREEN_INFO;
 
 /**
  * Created by imlk on 2018/5/24.
  */
-public class SystemUIHolder {
+public class MemberHolder {
 
     public static Class class_com_android_keyguard_KeyguardStatusView;
     public static Class class_com_android_keyguard_KeyguardUpdateMonitor;
@@ -58,6 +59,7 @@ public class SystemUIHolder {
         method_com_android_keyguard_KeyguardStatusView_updateOwnerInfo = XposedHelpers.findMethodExact(class_com_android_keyguard_KeyguardStatusView, "updateOwnerInfo");
         method_com_android_keyguard_KeyguardStatusView_getOwnerInfo = XposedHelpers.findMethodExact(class_com_android_keyguard_KeyguardStatusView, "getOwnerInfo");
         method_com_android_keyguard_KeyguardUpdateMonitor_getCurrentUser = XposedHelpers.findMethodExact(class_com_android_keyguard_KeyguardUpdateMonitor, "getCurrentUser");
+
     }
 
     public static void doHook_onFinishInflate() {
@@ -100,6 +102,7 @@ public class SystemUIHolder {
                 }
                 ref_mOwnerInfo.get().setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                 ref_mOwnerInfo.get().setSingleLine(false);
+
 
                 method_com_android_keyguard_KeyguardStatusView_updateOwnerInfo.invoke(ref_keyguardStatusView.get());
 
@@ -191,6 +194,7 @@ public class SystemUIHolder {
 
             return s1.trim();
         }
+
 
         public static void reportException(Context context, Exception e) {
             e.printStackTrace();

@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/BaseTheme">
         <activity
-            android:name=".client.MainActivity"
+            android:name=".application.client.activity.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,7 +24,7 @@
 
 
         <service
-            android:name=".client.OneWordAutoRefreshService"
+            android:name=".application.client.service.OneWordAutoRefreshService"
             android:enabled="true"
             android:exported="false"
             android:isolatedProcess="false"
@@ -35,7 +35,7 @@
         </service>
 
         <receiver
-            android:name=".client.BootCompletedBroadCastReceiver">
+            android:name=".systemui.receiver.BootCompletedBroadCastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"></action>
             </intent-filter>

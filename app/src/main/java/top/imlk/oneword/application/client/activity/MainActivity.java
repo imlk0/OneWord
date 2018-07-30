@@ -1,4 +1,4 @@
-package top.imlk.oneword.client;
+package top.imlk.oneword.application.client.activity;
 
 import android.content.Intent;
 import android.graphics.Rect;
@@ -14,18 +14,19 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
-import top.imlk.oneword.Hitokoto.HitokotoApi;
+import top.imlk.oneword.application.client.service.OneWordAutoRefreshService;
+import top.imlk.oneword.net.Hitokoto.HitokotoApi;
 import top.imlk.oneword.R;
-import top.imlk.oneword.Hitokoto.HitokotoBean;
+import top.imlk.oneword.net.Hitokoto.HitokotoBean;
 import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
 import top.imlk.oneword.util.SharedPreferencesUtil;
 import top.imlk.oneword.util.ShowDialogUtil;
 import top.imlk.oneword.util.StyleHelper;
-import top.imlk.oneword.view.MainOneWordView;
-import top.imlk.oneword.view.OneWordShowPanel;
-import top.imlk.oneword.view.PastedNestedScrollView;
+import top.imlk.oneword.application.view.MainOneWordView;
+import top.imlk.oneword.application.view.OneWordShowPanel;
+import top.imlk.oneword.application.view.PastedNestedScrollView;
 
-import static top.imlk.oneword.common.StaticValue.CMD_SERVICES_START_AUTO_REFRESH_SERVICE;
+import static top.imlk.oneword.StaticValue.CMD_SERVICES_START_AUTO_REFRESH_SERVICE;
 
 public class MainActivity extends AppCompatActivity implements Observer<HitokotoBean>, OnRefreshListener {
 

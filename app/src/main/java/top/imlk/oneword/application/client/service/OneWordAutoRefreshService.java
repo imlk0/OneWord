@@ -1,4 +1,4 @@
-package top.imlk.oneword.client;
+package top.imlk.oneword.application.client.service;
 
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -16,9 +16,9 @@ import java.util.TimerTask;
 
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
-import top.imlk.oneword.Hitokoto.HitokotoApi;
-import top.imlk.oneword.Hitokoto.HitokotoBean;
-import top.imlk.oneword.common.StaticValue;
+import top.imlk.oneword.net.Hitokoto.HitokotoApi;
+import top.imlk.oneword.net.Hitokoto.HitokotoBean;
+import top.imlk.oneword.StaticValue;
 import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
 import top.imlk.oneword.util.BroadcastSender;
 import top.imlk.oneword.util.SharedPreferencesUtil;

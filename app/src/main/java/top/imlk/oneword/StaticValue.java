@@ -1,4 +1,4 @@
-package top.imlk.oneword.common;
+package top.imlk.oneword;
 
 /**
  * Created by imlk on 2018/5/24.

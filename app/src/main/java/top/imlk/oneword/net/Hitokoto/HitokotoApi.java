@@ -1,17 +1,11 @@
-package top.imlk.oneword.Hitokoto;
+package top.imlk.oneword.net.Hitokoto;
 
-
-import android.widget.ArrayAdapter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import top.imlk.oneword.net.NetHelper;
-import top.imlk.oneword.util.SharedPreferencesUtil;
 
 /**
  * Created by imlk on 2018/5/19.

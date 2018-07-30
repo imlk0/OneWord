@@ -40,6 +40,6 @@
 -keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
 
 
--keep public class top.imlk.oneword.injecter.SystemUIInjecter
+-keep public class top.imlk.oneword.systemui.injecter.SystemUIInjecter
 
--keep public class top.imlk.oneword.Hitokoto.HitokotoBean {*;}
+-keep public class top.imlk.oneword.net.Hitokoto.HitokotoBean {*;}

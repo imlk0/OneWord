@@ -1,4 +1,4 @@
-package top.imlk.oneword.view;
+package top.imlk.oneword.application.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -8,8 +8,6 @@ import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView;
 
 import top.imlk.oneword.R;
 

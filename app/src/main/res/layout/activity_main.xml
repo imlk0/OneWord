@@ -4,13 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <top.imlk.oneword.view.PastedNestedScrollView
+    <top.imlk.oneword.application.view.PastedNestedScrollView
         android:id="@+id/pasted_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <top.imlk.oneword.view.MainOneWordView
+        <top.imlk.oneword.application.view.MainOneWordView
             android:id="@+id/ll_main_oneword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -24,7 +24,7 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <top.imlk.oneword.view.OneWordShowPanel
+                <top.imlk.oneword.application.view.OneWordShowPanel
                     android:id="@+id/one_word_show_panel"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
@@ -100,7 +100,7 @@
                             android:src="@drawable/ic_done_white_48dp" />
 
                     </RelativeLayout>
-                </top.imlk.oneword.view.OneWordShowPanel>
+                </top.imlk.oneword.application.view.OneWordShowPanel>
 
 
                 <LinearLayout
@@ -126,17 +126,17 @@
                 android:layout_height="wrap_content"
                 android:background="@android:color/white">
 
-                <top.imlk.oneword.view.UnScrollableViewPaper
+                <top.imlk.oneword.application.view.UnScrollableViewPaper
                     android:id="@+id/vp_page_extend"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                </top.imlk.oneword.view.UnScrollableViewPaper>
+                </top.imlk.oneword.application.view.UnScrollableViewPaper>
 
             </LinearLayout>
 
-        </top.imlk.oneword.view.MainOneWordView>
+        </top.imlk.oneword.application.view.MainOneWordView>
 
 
-    </top.imlk.oneword.view.PastedNestedScrollView>
+    </top.imlk.oneword.application.view.PastedNestedScrollView>
 </com.scwang.smartrefresh.layout.SmartRefreshLayout>

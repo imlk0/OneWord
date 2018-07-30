@@ -11,12 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <top.imlk.oneword.view.FixExceptionRecycleView
+        <top.imlk.oneword.application.view.FixExceptionRecycleView
             android:id="@+id/rv_on_history_page"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        </top.imlk.oneword.view.FixExceptionRecycleView>
+        </top.imlk.oneword.application.view.FixExceptionRecycleView>
 
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 

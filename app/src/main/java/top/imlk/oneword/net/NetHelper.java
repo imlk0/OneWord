@@ -3,7 +3,7 @@ package top.imlk.oneword.net;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import top.imlk.oneword.Hitokoto.HitokotoApi;
+import top.imlk.oneword.net.Hitokoto.HitokotoApi;
 
 /**
  * Created by imlk on 2018/5/19.

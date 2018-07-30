@@ -1,4 +1,4 @@
-package top.imlk.oneword.view;
+package top.imlk.oneword.application.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -11,7 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import top.imlk.oneword.Hitokoto.HitokotoBean;
+import top.imlk.oneword.net.Hitokoto.HitokotoBean;
 import top.imlk.oneword.R;
 import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
 import top.imlk.oneword.util.BroadcastSender;

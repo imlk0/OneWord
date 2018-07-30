@@ -1,4 +1,4 @@
-package top.imlk.oneword.adapter;
+package top.imlk.oneword.application.adapter;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,9 +18,9 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import java.util.ArrayList;
 
 import co.dift.ui.SwipeToAction;
-import top.imlk.oneword.Hitokoto.HitokotoBean;
+import top.imlk.oneword.net.Hitokoto.HitokotoBean;
 import top.imlk.oneword.R;
-import top.imlk.oneword.client.MainActivity;
+import top.imlk.oneword.application.client.activity.MainActivity;
 import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
 import top.imlk.oneword.util.BroadcastSender;
 import top.imlk.oneword.util.SharedPreferencesUtil;

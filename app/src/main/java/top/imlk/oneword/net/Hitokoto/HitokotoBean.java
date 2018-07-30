@@ -1,4 +1,4 @@
-package top.imlk.oneword.Hitokoto;
+package top.imlk.oneword.net.Hitokoto;
 
 /**
  * Created by imlk on 2018/5/19.

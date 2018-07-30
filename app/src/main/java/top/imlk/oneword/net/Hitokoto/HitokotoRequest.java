@@ -1,4 +1,4 @@
-package top.imlk.oneword.Hitokoto;
+package top.imlk.oneword.net.Hitokoto;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;
