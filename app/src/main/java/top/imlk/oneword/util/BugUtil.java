@@ -18,7 +18,7 @@ import java.util.Date;
 public class BugUtil {
 
     private static DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
-    private static String logFileName = "module_log.txt";
+//    private static String logFileName = "module_log.txt";
 
     public static String saveCrashInfo2File(Throwable ex) {
 
@@ -43,20 +43,25 @@ public class BugUtil {
         try {
             long timestamp = System.currentTimeMillis();
             String time = formatter.format(new Date());
-            String logTime = "\n\n\n" + time + "-" + timestamp + "\n\n\n";
+            String logTime = time + "-" + timestamp;
             if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
 
-                String path = Environment.getExternalStorageDirectory() + "/oneword_crash_log/";
-                File dir = new File(path + logFileName);
+                String path = Environment.getExternalStorageDirectory() + "/Download/oneword_crash_log/";
+
+                File dir = new File(path);
                 if (!dir.exists()) {
                     dir.mkdirs();
                 }
-                FileOutputStream fos = new FileOutputStream(path + "emm", true);
+
+                path = path + logTime + ".log";
+                FileOutputStream fos = new FileOutputStream(path, true);
                 fos.write(logTime.getBytes());
+                fos.write("\n\n\n".getBytes());
                 fos.write(sb.toString().getBytes());
+                fos.write("\n\n\n".getBytes());
                 fos.close();
 
-                return path + logFileName;
+                return path;
             }
         } catch (Exception e) {
             Log.e(BugUtil.class.getSimpleName(), "an error occured while writing file...", e);

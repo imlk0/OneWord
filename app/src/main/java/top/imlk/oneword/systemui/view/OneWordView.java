@@ -35,6 +35,7 @@ public class OneWordView extends LinearLayout {
 
         // 正文View的样式
         contentTextView = new TextView(context);
+        contentTextView.setText("句子正文，\n喵喵喵喵喵喵喵喵");
         contentTextView.setGravity(Gravity.LEFT);
 
         LinearLayout.LayoutParams contentLP = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -68,6 +69,7 @@ public class OneWordView extends LinearLayout {
 
         // 设置来源TextView
         fromTextView = new TextView(context);
+        fromTextView.setText("——来源");
         fromTextView.setGravity(Gravity.RIGHT);
 
         LinearLayout.LayoutParams fromLP = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);

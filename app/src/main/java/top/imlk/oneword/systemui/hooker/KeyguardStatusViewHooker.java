@@ -1,4 +1,4 @@
-package top.imlk.oneword.systemui.holder;
+package top.imlk.oneword.systemui.hooker;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.internal.widget.LockPatternUtils;
 
@@ -32,7 +33,7 @@ import static top.imlk.oneword.StaticValue.CMD_BROADCAST_UPDATE_LOCK_SCREEN_INFO
 /**
  * Created by imlk on 2018/5/24.
  */
-public class LUpperMemberHolder {
+public class KeyguardStatusViewHooker {
 
     public static Class class_com_android_keyguard_KeyguardStatusView;
     public static Class class_com_android_keyguard_KeyguardUpdateMonitor;
@@ -40,9 +41,9 @@ public class LUpperMemberHolder {
     public static Field field_com_android_keyguard_KeyguardStatusView_mOwnerInfo;
     public static Field field_com_android_keyguard_KeyguardStatusView_mLockPatternUtils;
 
-    public static Method method_com_android_keyguard_KeyguardStatusView_updateOwnerInfo;
+    //    public static Method method_com_android_keyguard_KeyguardStatusView_updateOwnerInfo;
     public static Method method_com_android_keyguard_KeyguardStatusView_getOwnerInfo;
-    public static Method method_com_android_keyguard_KeyguardUpdateMonitor_getCurrentUser;
+//    public static Method method_com_android_keyguard_KeyguardUpdateMonitor_getCurrentUser;
 
     public static WeakReference<TextView> ref_mOwnerInfo;
     public static WeakReference<Object> ref_keyguardStatusView;
@@ -52,17 +53,28 @@ public class LUpperMemberHolder {
 
     public static void init(ClassLoader classLoader) throws NoSuchFieldException {
 
-        class_com_android_keyguard_KeyguardStatusView = XposedHelpers.findClass("com.android.keyguard.KeyguardStatusView", classLoader);
-        class_com_android_keyguard_KeyguardUpdateMonitor = XposedHelpers.findClass("com.android.keyguard.KeyguardUpdateMonitor", classLoader);
+        try {
 
-        field_com_android_keyguard_KeyguardStatusView_mOwnerInfo = XposedHelpers.findField(class_com_android_keyguard_KeyguardStatusView, "mOwnerInfo");
-        field_com_android_keyguard_KeyguardStatusView_mLockPatternUtils = XposedHelpers.findField(class_com_android_keyguard_KeyguardStatusView, "mLockPatternUtils");
 
-        method_com_android_keyguard_KeyguardStatusView_updateOwnerInfo = XposedHelpers.findMethodExact(class_com_android_keyguard_KeyguardStatusView, "updateOwnerInfo");
-        method_com_android_keyguard_KeyguardStatusView_getOwnerInfo = XposedHelpers.findMethodExact(class_com_android_keyguard_KeyguardStatusView, "getOwnerInfo");
-        method_com_android_keyguard_KeyguardUpdateMonitor_getCurrentUser = XposedHelpers.findMethodExact(class_com_android_keyguard_KeyguardUpdateMonitor, "getCurrentUser");
+            class_com_android_keyguard_KeyguardStatusView = XposedHelpers.findClass("com.android.keyguard.KeyguardStatusView", classLoader);
+            class_com_android_keyguard_KeyguardUpdateMonitor = XposedHelpers.findClass("com.android.keyguard.KeyguardUpdateMonitor", classLoader);
 
+            field_com_android_keyguard_KeyguardStatusView_mOwnerInfo = XposedHelpers.findField(class_com_android_keyguard_KeyguardStatusView, "mOwnerInfo");
+            field_com_android_keyguard_KeyguardStatusView_mLockPatternUtils = XposedHelpers.findField(class_com_android_keyguard_KeyguardStatusView, "mLockPatternUtils");
+
+//            method_com_android_keyguard_KeyguardStatusView_updateOwnerInfo = XposedHelpers.findMethodExact(class_com_android_keyguard_KeyguardStatusView, "updateOwnerInfo");
+            method_com_android_keyguard_KeyguardStatusView_getOwnerInfo = XposedHelpers.findMethodExact(class_com_android_keyguard_KeyguardStatusView, "getOwnerInfo");
+//        method_com_android_keyguard_KeyguardUpdateMonitor_getCurrentUser = XposedHelpers.findMethodExact(class_com_android_keyguard_KeyguardUpdateMonitor, "getCurrentUser");
+
+//            throw new Throwable();
+        } catch (Throwable e) {
+            XposedBridge.log(e);
+            String logPath = BugUtil.saveCrashInfo2File(e);
+//            Toast.makeText(((View) param.thisObject).getContext(), String.format("Hook时发生异常，可能是系统兼容性问题，日志产生在:\n%s", logPath), Toast.LENGTH_LONG).show();
+
+        }
     }
+
 
     public static void doHook_onFinishInflate() {
         XposedHelpers.findAndHookMethod(class_com_android_keyguard_KeyguardStatusView, "onFinishInflate", new XC_MethodHook() {
@@ -95,11 +107,14 @@ public class LUpperMemberHolder {
                     field_com_android_keyguard_KeyguardStatusView_mOwnerInfo.set(param.thisObject, ref_OwnerInfoTextViewProxy.get());
 
 
-                    method_com_android_keyguard_KeyguardStatusView_updateOwnerInfo.invoke(ref_keyguardStatusView.get());
+                    ref_OwnerInfoTextViewProxy.get().setText(KeyguardStatusViewHelper.getOwnerInfo());
 
                     registerBroadcastReceiver();
-                } catch (Exception e) {
-                    BugUtil.saveCrashInfo2File(e);
+                } catch (Throwable e) {
+                    XposedBridge.log(e);
+                    String logPath = BugUtil.saveCrashInfo2File(e);
+                    Toast.makeText(((View) param.thisObject).getContext(), String.format("Hook后的操作发生异常，日志产生在:\n%s", logPath), Toast.LENGTH_LONG).show();
+
                 }
 
             }
@@ -128,41 +143,33 @@ public class LUpperMemberHolder {
             try {
                 switch (intent.getAction()) {
                     case CMD_BROADCAST_SET_NEW_LOCK_SCREEN_INFO:
-                        if (ref_mLockPatternUtils.get().isDeviceOwnerInfoEnabled()) {
-                            // TODO 直接写入json
-                            ref_mLockPatternUtils.get().setDeviceOwnerInfo(butifyString(intent.getStringExtra(THE_NEW_LOCK_SCREEN_INFO_MSG)) + SPILITER + intent.getStringExtra(THE_NEW_LOCK_SCREEN_INFO_FROM));
-                        } else {
-                            try {
 
-                                if (!ref_mLockPatternUtils.get().isOwnerInfoEnabled((Integer) method_com_android_keyguard_KeyguardUpdateMonitor_getCurrentUser.invoke(null))) {
-                                    ref_mLockPatternUtils.get().setOwnerInfoEnabled(true, (Integer) method_com_android_keyguard_KeyguardUpdateMonitor_getCurrentUser.invoke(null));
-                                }
-                                ref_mLockPatternUtils.get().setOwnerInfo(butifyString(intent.getStringExtra(THE_NEW_LOCK_SCREEN_INFO_MSG)) + SPILITER + intent.getStringExtra(THE_NEW_LOCK_SCREEN_INFO_FROM), (Integer) method_com_android_keyguard_KeyguardUpdateMonitor_getCurrentUser.invoke(null));
+                        XposedBridge.log("received");
+                        XposedBridge.log(intent.getStringExtra(THE_NEW_LOCK_SCREEN_INFO_MSG) + SPILITER + intent.getStringExtra(THE_NEW_LOCK_SCREEN_INFO_FROM));
 
-                            } catch (IllegalAccessException e) {
-                                e.printStackTrace();
-                            } catch (InvocationTargetException e) {
-                                e.printStackTrace();
-                            }
+                        KeyguardStatusViewHelper.setOwnerInfo(context, intent);
 
-                        }
+                        XposedBridge.log("resolved");
+
+                        Toast.makeText(context, "一言已经写好啦，可以展示了", Toast.LENGTH_SHORT).show();
+
 
                     case CMD_BROADCAST_UPDATE_LOCK_SCREEN_INFO:
-                        try {
-                            method_com_android_keyguard_KeyguardStatusView_updateOwnerInfo.invoke(ref_keyguardStatusView.get());
 
-                        } catch (IllegalAccessException e) {
-                            e.printStackTrace();
+                        // 更新OwnerInfo信息到界面
+                        ref_OwnerInfoTextViewProxy.get().setText(KeyguardStatusViewHelper.getOwnerInfo());
 
-                        } catch (InvocationTargetException e) {
-                            e.printStackTrace();
-                        }
+                        XposedBridge.log("updated");
 
                         break;
                 }
-            } catch (Exception e) {
+            } catch (Throwable e) {
+                XposedBridge.log(e);
 
-                BugUtil.saveCrashInfo2File(e);
+                String logPath = BugUtil.saveCrashInfo2File(e);
+
+                Toast.makeText(context, String.format("写入一言的时候不小心搞崩了,灰常抱歉，日志在\n%s", logPath), Toast.LENGTH_LONG).show();
+
             }
         }
 

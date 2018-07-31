@@ -1,21 +1,12 @@
 package top.imlk.oneword.systemui.injecter;
 
-import android.app.Activity;
-import android.os.Debug;
-import android.widget.FrameLayout;
-
 
 import java.io.File;
 
 import dalvik.system.PathClassLoader;
 import de.robv.android.xposed.IXposedHookLoadPackage;
-import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XposedBridge;
-import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
-import top.imlk.oneword.systemui.holder.LUpperMemberHolder;
-
-import static android.security.KeyStore.getApplicationContext;
+import top.imlk.oneword.systemui.hooker.KeyguardStatusViewHooker;
 
 /**
  * Created by imlk on 2018/5/24.
@@ -36,7 +27,7 @@ public class AppInjecter implements IXposedHookLoadPackage {
             }
         }
 
-        XposedBridge.log("file exist: " + (file == null ? false : file.exists()));
+//        XposedBridge.log("file exist: " + file == null ? null : file.getAbsolutePath());
 
 
         if (file != null && file.exists())
@@ -48,7 +39,7 @@ public class AppInjecter implements IXposedHookLoadPackage {
             Class aimClass = pathClassLoader.loadClass(AppInjecter.class.getName());
             aimClass.getDeclaredMethod("handleLoadPackage_Out", XC_LoadPackage.LoadPackageParam.class).invoke(aimClass.newInstance(), lpparam);
 
-            XposedBridge.log("Module loaded");
+//            XposedBridge.log("Module loaded");
         }
 
     }
@@ -61,8 +52,8 @@ public class AppInjecter implements IXposedHookLoadPackage {
 
         } else if ("com.android.systemui".equals(lpparam.packageName)) {
 //            Debug.waitForDebugger();
-            LUpperMemberHolder.init(lpparam.classLoader);
-            LUpperMemberHolder.doHook_onFinishInflate();
+            KeyguardStatusViewHooker.init(lpparam.classLoader);
+            KeyguardStatusViewHooker.doHook_onFinishInflate();
         }
 
     }
