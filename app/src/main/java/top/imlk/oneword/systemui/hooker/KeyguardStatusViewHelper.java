@@ -1,7 +1,5 @@
 package top.imlk.oneword.systemui.hooker;
 
-import android.content.Context;
-import android.content.Intent;
 
 import com.android.internal.widget.LockPatternUtils;
 
@@ -9,10 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import de.robv.android.xposed.XposedHelpers;
 
-import static top.imlk.oneword.StaticValue.SPILITER;
-import static top.imlk.oneword.StaticValue.THE_NEW_LOCK_SCREEN_INFO_FROM;
-import static top.imlk.oneword.StaticValue.THE_NEW_LOCK_SCREEN_INFO_MSG;
-import static top.imlk.oneword.systemui.hooker.KeyguardStatusViewHooker.SystemUICmdBroadcastReceiver.butifyString;
+
 import static top.imlk.oneword.systemui.hooker.KeyguardStatusViewHooker.class_com_android_keyguard_KeyguardUpdateMonitor;
 import static top.imlk.oneword.systemui.hooker.KeyguardStatusViewHooker.ref_mLockPatternUtils;
 
@@ -33,23 +28,23 @@ public class KeyguardStatusViewHelper {
     }
 
 
-    public static void setOwnerInfo(Context context, Intent intent) throws InvocationTargetException, IllegalAccessException {
+    public static void setOwnerInfo(String str) throws InvocationTargetException, IllegalAccessException {
 
         if (isfullMultiUserSys) {
-            setOwnerInfoInFullMUSys(context, intent);
+            setOwnerInfoInFullMUSys(str);
 
         } else {
-            setOwnerInfoInNOTFullMUSys(context, intent);
+            setOwnerInfoInNOTFullMUSys(str);
         }
 
     }
 
 
-    public static void setOwnerInfoInFullMUSys(Context context, Intent intent) throws InvocationTargetException, IllegalAccessException {
+    public static void setOwnerInfoInFullMUSys(String str) throws InvocationTargetException, IllegalAccessException {
 
         if (ref_mLockPatternUtils.get().isDeviceOwnerInfoEnabled()) {
             // TODO 直接写入json
-            ref_mLockPatternUtils.get().setDeviceOwnerInfo(butifyString(intent.getStringExtra(THE_NEW_LOCK_SCREEN_INFO_MSG)) + SPILITER + intent.getStringExtra(THE_NEW_LOCK_SCREEN_INFO_FROM));
+            ref_mLockPatternUtils.get().setDeviceOwnerInfo(str);
         } else {
 
             int currentUser = (int) XposedHelpers.findMethodExact(class_com_android_keyguard_KeyguardUpdateMonitor, "getCurrentUser").invoke(null);
@@ -57,13 +52,13 @@ public class KeyguardStatusViewHelper {
             if (!ref_mLockPatternUtils.get().isOwnerInfoEnabled(currentUser)) {
                 ref_mLockPatternUtils.get().setOwnerInfoEnabled(true, currentUser);
             }
-            ref_mLockPatternUtils.get().setOwnerInfo(butifyString(intent.getStringExtra(THE_NEW_LOCK_SCREEN_INFO_MSG)) + SPILITER + intent.getStringExtra(THE_NEW_LOCK_SCREEN_INFO_FROM), currentUser);
+            ref_mLockPatternUtils.get().setOwnerInfo(str, currentUser);
         }
 
     }
 
 
-    public static void setOwnerInfoInNOTFullMUSys(Context context, Intent intent) throws InvocationTargetException, IllegalAccessException {
+    public static void setOwnerInfoInNOTFullMUSys(String str) throws InvocationTargetException, IllegalAccessException {
         ;
         if ((boolean) XposedHelpers.findMethodBestMatch(LockPatternUtils.class, "isOwnerInfoEnabled").invoke(ref_mLockPatternUtils.get())) {
             XposedHelpers.findMethodBestMatch(LockPatternUtils.class, "setOwnerInfoEnabled", boolean.class).invoke(ref_mLockPatternUtils.get(), true);
@@ -71,9 +66,7 @@ public class KeyguardStatusViewHelper {
 
         int currentUser = (int) XposedHelpers.findMethodBestMatch(LockPatternUtils.class, "getCurrentUser").invoke(ref_mLockPatternUtils.get());
 
-        ref_mLockPatternUtils.get().setOwnerInfo(
-                butifyString(intent.getStringExtra(THE_NEW_LOCK_SCREEN_INFO_MSG)) + SPILITER + intent.getStringExtra(THE_NEW_LOCK_SCREEN_INFO_FROM),
-                currentUser);
+        ref_mLockPatternUtils.get().setOwnerInfo(str, currentUser);
 
     }
 

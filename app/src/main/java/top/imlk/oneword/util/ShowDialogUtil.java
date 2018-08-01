@@ -22,8 +22,7 @@ import java.util.List;
 
 import top.imlk.oneword.net.Hitokoto.HitokotoApi;
 import top.imlk.oneword.R;
-import top.imlk.oneword.application.adapter.WordArrayAdapter;
-import top.imlk.oneword.bean.Word;
+import top.imlk.oneword.application.adapter.ItemArrayAdapter;
 import top.imlk.oneword.application.client.service.OneWordAutoRefreshService;
 
 /**
@@ -116,7 +115,7 @@ public class ShowDialogUtil {
                                 if (hasInstalledAlipayClient) {
                                     AlipayDonate.startAlipayClient(((Activity) context), "FKX093049UCVM4EEN8WV84");
                                     Toast.makeText(context, "蟹蟹，你的鼓励是我的最大动力", Toast.LENGTH_SHORT).show();
-                                }else{
+                                } else {
                                     Toast.makeText(context, "您好像没有安装支付宝勒，换个支付方式？？？？", Toast.LENGTH_SHORT).show();
                                 }
                                 break;
@@ -166,29 +165,29 @@ public class ShowDialogUtil {
 
     public static void showOpenSourceProjectDialog(final Context context) {
 
-        ArrayList<Word> titleAndSummaries = new ArrayList<>();
+        ArrayList<TitleAndSummary> titleAndSummaries = new ArrayList<>();
 
-        titleAndSummaries.add(new Word("Xposed", "http://repo.xposed.info/"));
-        titleAndSummaries.add(new Word("OkHttp", "https://github.com/square/okhttp"));
-        titleAndSummaries.add(new Word("Retrofit", "https://github.com/square/retrofit"));
-        titleAndSummaries.add(new Word("RxAndroid", "https://github.com/ReactiveX/RxAndroid"));
-        titleAndSummaries.add(new Word("RxJava", "https://github.com/ReactiveX/RxJava"));
-        titleAndSummaries.add(new Word("Gson", "https://github.com/google/gson"));
-        titleAndSummaries.add(new Word("MagicIndicator", "https://github.com/hackware1993/MagicIndicator"));
-        titleAndSummaries.add(new Word("LovelyDialog", "https://github.com/yarolegovich/LovelyDialog"));
-        titleAndSummaries.add(new Word("SmartRefreshLayout", "https://github.com/scwang90/SmartRefreshLayout"));
-        titleAndSummaries.add(new Word("SwipeToAction", "https://github.com/KB5201314/SwipeToAction"));
-        titleAndSummaries.add(new Word("AndroidDonate", "https://github.com/didikee/AndroidDonate"));
-        titleAndSummaries.add(new Word("material-design-icons", "https://github.com/google/material-design-icons"));
+        titleAndSummaries.add(new TitleAndSummary("Xposed", "http://repo.xposed.info/"));
+        titleAndSummaries.add(new TitleAndSummary("OkHttp", "https://github.com/square/okhttp"));
+        titleAndSummaries.add(new TitleAndSummary("Retrofit", "https://github.com/square/retrofit"));
+        titleAndSummaries.add(new TitleAndSummary("RxAndroid", "https://github.com/ReactiveX/RxAndroid"));
+        titleAndSummaries.add(new TitleAndSummary("RxJava", "https://github.com/ReactiveX/RxJava"));
+        titleAndSummaries.add(new TitleAndSummary("Gson", "https://github.com/google/gson"));
+        titleAndSummaries.add(new TitleAndSummary("MagicIndicator", "https://github.com/hackware1993/MagicIndicator"));
+        titleAndSummaries.add(new TitleAndSummary("LovelyDialog", "https://github.com/yarolegovich/LovelyDialog"));
+        titleAndSummaries.add(new TitleAndSummary("SmartRefreshLayout", "https://github.com/scwang90/SmartRefreshLayout"));
+        titleAndSummaries.add(new TitleAndSummary("SwipeToAction", "https://github.com/KB5201314/SwipeToAction"));
+        titleAndSummaries.add(new TitleAndSummary("AndroidDonate", "https://github.com/didikee/AndroidDonate"));
+        titleAndSummaries.add(new TitleAndSummary("material-design-icons", "https://github.com/google/material-design-icons"));
 
 
-        WordArrayAdapter wordArrayAdapter = new WordArrayAdapter(context, titleAndSummaries);
+        ItemArrayAdapter itemArrayAdapter = new ItemArrayAdapter(context, titleAndSummaries);
 
         ListView listView = new ListView(context);
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 500);
-        listView.setAdapter(wordArrayAdapter);
+        listView.setAdapter(itemArrayAdapter);
         listView.setLayoutParams(layoutParams);
-        listView.setOnItemClickListener(wordArrayAdapter);
+        listView.setOnItemClickListener(itemArrayAdapter);
 
         new LovelyCustomDialog(context)
                 .setView(listView)
@@ -198,5 +197,16 @@ public class ShowDialogUtil {
                 .setMessage("在开发过程中，这些开源项目使我学到了很多")
                 .setCancelable(true)
                 .show();
+    }
+
+
+    public static class TitleAndSummary {
+        public String title;
+        public String summary;
+
+        public TitleAndSummary(String title, String summary) {
+            this.title = title;
+            this.summary = summary;
+        }
     }
 }

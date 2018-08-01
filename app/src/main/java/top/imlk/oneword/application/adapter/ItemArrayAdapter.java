@@ -13,17 +13,17 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import top.imlk.oneword.R;
-import top.imlk.oneword.bean.Word;
+import top.imlk.oneword.util.ShowDialogUtil;
 
 /**
  * Created by imlk on 2018/6/3.
  */
-public class WordArrayAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
+public class ItemArrayAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
 
     private Context context;
-    private ArrayList<Word> tittleAndSummaries;
+    private ArrayList<ShowDialogUtil.TitleAndSummary> tittleAndSummaries;
 
-    public WordArrayAdapter(Context context, ArrayList<Word> tittleAndSummaries) {
+    public ItemArrayAdapter(Context context, ArrayList<ShowDialogUtil.TitleAndSummary> tittleAndSummaries) {
         this.context = context;
 
         this.tittleAndSummaries = tittleAndSummaries;
@@ -50,8 +50,8 @@ public class WordArrayAdapter extends BaseAdapter implements AdapterView.OnItemC
             convertView = LinearLayout.inflate(context, R.layout.item_title_and_summary, null);
         }
 
-        ((TextView) convertView.findViewById(R.id.from)).setText(tittleAndSummaries.get(position).from);
-        ((TextView) convertView.findViewById(R.id.content)).setText(tittleAndSummaries.get(position).content);
+        ((TextView) convertView.findViewById(R.id.tv_title)).setText(tittleAndSummaries.get(position).title);
+        ((TextView) convertView.findViewById(R.id.tv_summary)).setText(tittleAndSummaries.get(position).summary);
 
         return convertView;
     }
@@ -59,6 +59,6 @@ public class WordArrayAdapter extends BaseAdapter implements AdapterView.OnItemC
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(tittleAndSummaries.get(position).content)));
+        context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(tittleAndSummaries.get(position).summary)));
     }
 }

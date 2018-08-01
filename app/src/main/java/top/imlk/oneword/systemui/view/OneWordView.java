@@ -1,19 +1,14 @@
 package top.imlk.oneword.systemui.view;
 
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 import android.text.InputType;
-import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import top.imlk.oneword.bean.Word;
+import top.imlk.oneword.bean.WordBean;
 
 /**
  * Created by imlk on 2018/7/30.
@@ -35,7 +30,6 @@ public class OneWordView extends LinearLayout {
 
         // 正文View的样式
         contentTextView = new TextView(context);
-        contentTextView.setText("句子正文，\n喵喵喵喵喵喵喵喵");
         contentTextView.setGravity(Gravity.LEFT);
 
         LinearLayout.LayoutParams contentLP = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -69,7 +63,6 @@ public class OneWordView extends LinearLayout {
 
         // 设置来源TextView
         fromTextView = new TextView(context);
-        fromTextView.setText("——来源");
         fromTextView.setGravity(Gravity.RIGHT);
 
         LinearLayout.LayoutParams fromLP = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
@@ -100,9 +93,18 @@ public class OneWordView extends LinearLayout {
     }
 
 
-    public void setOneWord(Word word) {
-        contentTextView.setText(word.content);
-        fromTextView.setText("——" + word.from);
+    public void setOneWord(WordBean wordBean) {
+        if (wordBean != null) {
+            contentTextView.setText(wordBean.content);
+            fromTextView.setText("——" + wordBean.from);
+        } else {
+            defaultSetOneWord();
+        }
+    }
+
+    public void defaultSetOneWord() {
+        contentTextView.setText("句子正文，\n喵喵喵喵喵喵喵喵");
+        fromTextView.setText("——来源");
     }
 
     public void setTextSize(int unit, float size) {

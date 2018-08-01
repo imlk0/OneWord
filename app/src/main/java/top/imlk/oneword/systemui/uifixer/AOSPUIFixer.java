@@ -4,9 +4,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import de.robv.android.xposed.XposedBridge;
 
-import static top.imlk.oneword.StaticValue.SPILITER;
 
 /**
  * Created by imlk on 2018/7/30.

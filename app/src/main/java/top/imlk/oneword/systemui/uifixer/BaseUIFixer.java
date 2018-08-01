@@ -1,15 +1,15 @@
 package top.imlk.oneword.systemui.uifixer;
 
-import android.annotation.CallSuper;
 import android.util.TypedValue;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import org.w3c.dom.Text;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
-import top.imlk.oneword.bean.Word;
+import top.imlk.oneword.bean.WordBean;
 import top.imlk.oneword.systemui.view.OneWordView;
 
-import static top.imlk.oneword.StaticValue.SPILITER;
 
 /**
  * Created by imlk on 2018/7/30.
@@ -36,26 +36,21 @@ public class BaseUIFixer implements UIFixer {
     @Override
     public void onSetText(CharSequence text, TextView.BufferType type) {
 
-        Word word = new Word();
-
-        String[] strings = text.toString().split(SPILITER);
-        String strForProxy = strings[0];
-        for (int i = 1; i < strings.length - 1; ++i) {
-            strForProxy = strForProxy + SPILITER + strings[i];
+        if (oneWordView == null) {
+            return;
         }
 
-        word.content = strForProxy;
+        WordBean wordBean = null;
 
-        if (strings.length == 1) {
-            word.from = "";
-        } else {
-            word.from = strings[strings.length - 1];
+        try {
+            wordBean = new Gson().fromJson(text.toString(), WordBean.class);
+        } catch (JsonSyntaxException e) {
+            // TODO 增加软件更新后重启提示
+
+            Toast.makeText(oneWordView.getContext(), "解析保存的一言失败，去设置一言？", Toast.LENGTH_SHORT).show();
         }
 
-
-        if (oneWordView != null) {
-            oneWordView.setOneWord(word);
-        }
+        oneWordView.setOneWord(wordBean);
     }
 
     @Override

@@ -1,23 +1,15 @@
 package top.imlk.oneword.systemui.view;
 
 import android.annotation.SuppressLint;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
-import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import top.imlk.oneword.systemui.uifixer.UIFixer;
 
-import static top.imlk.oneword.StaticValue.SPILITER;
 
 /**
  * Created by imlk on 2018/5/28.

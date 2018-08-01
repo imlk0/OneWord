@@ -25,9 +25,7 @@ import top.imlk.oneword.systemui.view.OwnerInfoTextViewProxy;
 import top.imlk.oneword.util.BugUtil;
 
 import static top.imlk.oneword.StaticValue.CMD_BROADCAST_SET_NEW_LOCK_SCREEN_INFO;
-import static top.imlk.oneword.StaticValue.SPILITER;
-import static top.imlk.oneword.StaticValue.THE_NEW_LOCK_SCREEN_INFO_FROM;
-import static top.imlk.oneword.StaticValue.THE_NEW_LOCK_SCREEN_INFO_MSG;
+import static top.imlk.oneword.StaticValue.THE_NEW_LOCK_SCREEN_INFO_JSON;
 import static top.imlk.oneword.StaticValue.CMD_BROADCAST_UPDATE_LOCK_SCREEN_INFO;
 
 /**
@@ -110,6 +108,8 @@ public class KeyguardStatusViewHooker {
                     ref_OwnerInfoTextViewProxy.get().setText(KeyguardStatusViewHelper.getOwnerInfo());
 
                     registerBroadcastReceiver();
+
+
                 } catch (Throwable e) {
                     XposedBridge.log(e);
                     String logPath = BugUtil.saveCrashInfo2File(e);
@@ -145,9 +145,9 @@ public class KeyguardStatusViewHooker {
                     case CMD_BROADCAST_SET_NEW_LOCK_SCREEN_INFO:
 
                         XposedBridge.log("received");
-                        XposedBridge.log(intent.getStringExtra(THE_NEW_LOCK_SCREEN_INFO_MSG) + SPILITER + intent.getStringExtra(THE_NEW_LOCK_SCREEN_INFO_FROM));
+                        XposedBridge.log(intent.getStringExtra(THE_NEW_LOCK_SCREEN_INFO_JSON));
 
-                        KeyguardStatusViewHelper.setOwnerInfo(context, intent);
+                        KeyguardStatusViewHelper.setOwnerInfo(intent.getStringExtra(THE_NEW_LOCK_SCREEN_INFO_JSON));
 
                         XposedBridge.log("resolved");
 
@@ -171,36 +171,6 @@ public class KeyguardStatusViewHooker {
                 Toast.makeText(context, String.format("写入一言的时候不小心搞崩了,灰常抱歉，日志在\n%s", logPath), Toast.LENGTH_LONG).show();
 
             }
-        }
-
-
-        public static String butifyString(String s0) {
-            if (s0 == null) {
-                return "";
-            }
-
-
-            String s1 = s0
-//                    .replace(" ", "\n")
-                    .replace("；", "；\n")
-                    .replace(";", ";\n")
-                    .replace("?", "?\n")
-                    .replace("？", "？\n")
-                    .replace("!", "!\n")
-                    .replace("！", "！\n");
-
-            int count = 0;
-            for (int i = 0; i < s1.length(); ++i) {
-                if (s1.charAt(i) == '，') {
-                    count++;
-                }
-            }
-            if (count <= 6) {
-                s1 = s1.replace("，", "，\n");
-            }
-            s1 = s1.replace("。", "。\n");
-
-            return s1.trim();
         }
 
 

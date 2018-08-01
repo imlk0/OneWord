@@ -5,8 +5,12 @@ package top.imlk.oneword;
  */
 public class StaticValue {
     public static final String CMD_BROADCAST_SET_NEW_LOCK_SCREEN_INFO = "top.imlk.oneword.set_new_lock_screen_info";
-    public static final String THE_NEW_LOCK_SCREEN_INFO_MSG = "top.imlk.oneword.the_new_lock_screen_info_msg";
-    public static final String THE_NEW_LOCK_SCREEN_INFO_FROM = "top.imlk.oneword.the_new_lock_screen_info_from";
+//    public static final String THE_NEW_LOCK_SCREEN_INFO_MSG = "top.imlk.oneword.the_new_lock_screen_info_msg";
+//    public static final String THE_NEW_LOCK_SCREEN_INFO_FROM = "top.imlk.oneword.the_new_lock_screen_info_from";
+
+
+    public static final String THE_NEW_LOCK_SCREEN_INFO_JSON = "top.imlk.oneword.the_new_lock_screen_info_json";
+
 
     public static final String CMD_SERVICES_START_AUTO_REFRESH_SERVICE = "top.imlk.oneword.start_auto_refresh_service";
     public static final String CMD_SERVICES_STOP_SERVICE = "top.imlk.oneword.stop_service";
@@ -46,6 +50,5 @@ public class StaticValue {
     public static final String SHARED_PER_KEY_APP_VERSION_CODE = "versionCode";
 
 
-
-    public static final String SPILITER = "\n\n——";
+//    public static final String SPILITER = "\n\n——";
 }
