@@ -116,6 +116,7 @@ public class SettingPage extends LinearLayout implements View.OnClickListener, C
 
             case R.id.ll_set_oneword_type:
 
+                //TODO API编辑
                 ShowDialogUtil.showSelectOneWordTypeDialog(context);
                 break;
 

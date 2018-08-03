@@ -49,33 +49,33 @@ public class ShowDialogUtil {
                 .show();
     }
 
-    public static void showSelectOneWordTypeDialog(final Context context) {
-
-        String[] items = context.getResources().getStringArray(R.array.oneword_type);
-
-        new LovelyChoiceDialog(context)
-                .setTopColor(StyleHelper.getColorByAttributeId(context, R.attr.colorPrimary))
-                .setTitle("选择你想要的类型的一言（多选）")
-                .setMessage("您可以选择你想要看到的一言类型，若什么都不选则默认全选")
-                .setIcon(R.drawable.ic_clear_all_white_48dp)
-                .setItemsMultiChoice(items, SharedPreferencesUtil.readOneWordTypes(context), new LovelyChoiceDialog.OnItemsSelectedListener<String>() {
-                    @Override
-                    public void onItemsSelected(List<Integer> positions, List<String> items) {
-                        boolean[] selectState = new boolean[HitokotoApi.Parameter.c_Array_ALL.length];
-                        for (int i = 0; i < selectState.length; ++i) {
-                            selectState[i] = false;
-                        }
-                        for (int i = 0; i < positions.size(); ++i) {
-                            selectState[positions.get(i)] = true;
-                        }
-
-                        SharedPreferencesUtil.saveOneWordTypes(context, selectState);
-                        HitokotoApi.refreshCustomArray(selectState);
-                    }
-                })
-                .setConfirmButtonText("确定")
-                .show();
-    }
+//    public static void showSelectOneWordTypeDialog(final Context context) {
+//
+//        String[] items = context.getResources().getStringArray(R.array.oneword_type);
+//
+//        new LovelyChoiceDialog(context)
+//                .setTopColor(StyleHelper.getColorByAttributeId(context, R.attr.colorPrimary))
+//                .setTitle("选择你想要的类型的一言（多选）")
+//                .setMessage("您可以选择你想要看到的一言类型，若什么都不选则默认全选")
+//                .setIcon(R.drawable.ic_clear_all_white_48dp)
+//                .setItemsMultiChoice(items, SharedPreferencesUtil.readOneWordTypes(context), new LovelyChoiceDialog.OnItemsSelectedListener<String>() {
+//                    @Override
+//                    public void onItemsSelected(List<Integer> positions, List<String> items) {
+//                        boolean[] selectState = new boolean[HitokotoApi.Parameter.c_Array_ALL.length];
+//                        for (int i = 0; i < selectState.length; ++i) {
+//                            selectState[i] = false;
+//                        }
+//                        for (int i = 0; i < positions.size(); ++i) {
+//                            selectState[positions.get(i)] = true;
+//                        }
+//
+//                        SharedPreferencesUtil.saveOneWordTypes(context, selectState);
+//                        HitokotoApi.refreshCustomArray(selectState);
+//                    }
+//                })
+//                .setConfirmButtonText("确定")
+//                .show();
+//    }
 
     public static void showAboutAppDialog(Context context) {
 

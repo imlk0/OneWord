@@ -16,21 +16,17 @@ import java.util.TimerTask;
 
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
+import top.imlk.oneword.bean.WordBean;
 import top.imlk.oneword.net.Hitokoto.HitokotoApi;
-import top.imlk.oneword.net.Hitokoto.HitokotoBean;
-import top.imlk.oneword.StaticValue;
 import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
 import top.imlk.oneword.util.BroadcastSender;
 import top.imlk.oneword.util.SharedPreferencesUtil;
 
-import static top.imlk.oneword.dao.OneWordSQLiteOpenHelper.TABLE_HISTORY;
-import static top.imlk.oneword.dao.OneWordSQLiteOpenHelper.TABLE_LIKE;
-import static top.imlk.oneword.dao.OneWordSQLiteOpenHelper.TABLE_READY_TO_SHOW;
 
 /**
  * Created by imlk on 2018/5/26.
  */
-public class OneWordAutoRefreshService extends Service implements Observer<HitokotoBean> {
+public class OneWordAutoRefreshService extends Service implements Observer<WordBean> {
 
     private static final String LOG_TAG = "OneWordAutoRefreshServ";
 
@@ -77,12 +73,6 @@ public class OneWordAutoRefreshService extends Service implements Observer<Hitok
             this.stopSelf();
         }
 
-
-        //更新c_Array_custom数组
-        if (HitokotoApi.Parameter.c_Array_custom == null) {
-            HitokotoApi.refreshCustomArray(SharedPreferencesUtil.readOneWordTypes(this));
-        }
-
         super.onCreate();
     }
 
@@ -93,7 +83,7 @@ public class OneWordAutoRefreshService extends Service implements Observer<Hitok
         Log.e(LOG_TAG, intent == null ? "intent is null" : intent.getAction() + "");
 
 
-        if (intent == null || TextUtils.isEmpty(intent.getAction()) || StaticValue.CMD_SERVICES_START_AUTO_REFRESH_SERVICE.equals(intent.getAction())) {
+        if (intent == null || TextUtils.isEmpty(intent.getAction()) || BroadcastSender.CMD_SERVICES_START_AUTO_REFRESH_SERVICE.equals(intent.getAction())) {
 
             Log.e("isRefreshOpened()", SharedPreferencesUtil.isRefreshOpened(this) + "");
 
@@ -109,7 +99,7 @@ public class OneWordAutoRefreshService extends Service implements Observer<Hitok
                 Log.i(LOG_TAG, "Bye~");
                 this.stopSelf();
             }
-        } else if (StaticValue.CMD_SERVICES_STOP_SERVICE.equals(intent.getAction())) {
+        } else if (BroadcastSender.CMD_SERVICES_STOP_SERVICE.equals(intent.getAction())) {
 
 
             Log.i(LOG_TAG, "Bye~");
@@ -198,7 +188,7 @@ public class OneWordAutoRefreshService extends Service implements Observer<Hitok
                 @Override
                 public void run() {
 
-                    doClockEvent();
+                    doOnClockEvent();
 
                 }
             }, spaceTime, spaceTime);
@@ -214,7 +204,7 @@ public class OneWordAutoRefreshService extends Service implements Observer<Hitok
 
             if ((lockTimeCount %= lockTime) == 0) {
 
-                doClockEvent();
+                doOnClockEvent();
 
             }
 
@@ -222,7 +212,7 @@ public class OneWordAutoRefreshService extends Service implements Observer<Hitok
     }
 
     private void checkIfEnough() {
-        if (OneWordSQLiteOpenHelper.getInstance(this).count_a_table(TABLE_READY_TO_SHOW) < 10) {
+        if (OneWordSQLiteOpenHelper.getInstance(this).countToShow() < 10) {
             getSomeOneWord(20);
         }
     }
@@ -236,18 +226,18 @@ public class OneWordAutoRefreshService extends Service implements Observer<Hitok
 
     }
 
-    private void doClockEvent() {
-        Log.i(LOG_TAG, "锁屏一言自动更新服务");
-        HitokotoBean bean = OneWordSQLiteOpenHelper.getInstance(this).get_a_item_order_by(TABLE_READY_TO_SHOW, OneWordSQLiteOpenHelper.KEY_ADDED_AT + " ASC");
-        OneWordSQLiteOpenHelper.getInstance(this).remove_one_item(TABLE_READY_TO_SHOW, bean);
+    private void doOnClockEvent() {
+        Log.i(LOG_TAG, "锁屏一言自动更新服务 执行");
+        WordBean bean = OneWordSQLiteOpenHelper.getInstance(this).queryOneWordFromToShowByASC();
+        OneWordSQLiteOpenHelper.getInstance(this).removeFromToShow(bean.id);
 
 
         if (bean == null) {
-            bean = OneWordSQLiteOpenHelper.getInstance(this).get_a_item_order_by(TABLE_LIKE, "random()");
+            bean = OneWordSQLiteOpenHelper.getInstance(this).queryOneWordFromFavorByRandom();
         }
 
         if (bean == null) {
-            bean = OneWordSQLiteOpenHelper.getInstance(this).get_a_item_order_by(TABLE_HISTORY, "random()");
+            bean = OneWordSQLiteOpenHelper.getInstance(this).queryOneWordFromHistoryByRandom();
         }
 
         if (bean == null) {
@@ -257,15 +247,17 @@ public class OneWordAutoRefreshService extends Service implements Observer<Hitok
 
         checkIfEnough();
 
-        if (bean.like || OneWordSQLiteOpenHelper.getInstance(this).query_one_item_exist(TABLE_LIKE, bean)) {
-            bean.like = true;
-        }
+//        if (bean.like || OneWordSQLiteOpenHelper.getInstance(this).query_one_item_exist(TABLE_LIKE, bean)) {
+//            bean.like = true;
+//        }
 
-        OneWordSQLiteOpenHelper.getInstance(this).insert_one_item(TABLE_HISTORY, bean);
+        OneWordSQLiteOpenHelper.getInstance(this).insertToHistory(bean);
 
         SharedPreferencesUtil.saveCurOneWord(this, bean);
 
         BroadcastSender.sendSetNewLockScreenInfoBroadcast(this, bean);
+
+        Log.i(LOG_TAG, "锁屏一言自动更新服务 执行完毕");
     }
 
 
@@ -294,7 +286,7 @@ public class OneWordAutoRefreshService extends Service implements Observer<Hitok
     }
 
 
-    //implement from Observer
+    //implement reference Observer
 
     @Override
     public void onSubscribe(Disposable d) {
@@ -302,11 +294,11 @@ public class OneWordAutoRefreshService extends Service implements Observer<Hitok
     }
 
     @Override
-    public void onNext(HitokotoBean hitokotoBean) {
+    public void onNext(WordBean wordBean) {
 
         Log.i(LOG_TAG, "成功获取到一言");
 
-        OneWordSQLiteOpenHelper.getInstance(this).insert_one_item(TABLE_READY_TO_SHOW, hitokotoBean);
+        OneWordSQLiteOpenHelper.getInstance(this).insertToToShow(wordBean);
 
     }
 

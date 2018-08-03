@@ -80,7 +80,7 @@
                         android:layout_alignParentBottom="true">
 
                         <ImageView
-                            android:id="@+id/iv_msg_like"
+                            android:id="@+id/iv_msg_favor"
                             android:layout_width="@dimen/iv_msg_operator_size"
                             android:layout_height="@dimen/iv_msg_operator_size"
                             android:layout_alignParentLeft="true"

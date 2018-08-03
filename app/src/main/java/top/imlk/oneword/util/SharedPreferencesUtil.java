@@ -5,28 +5,11 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 
+import top.imlk.oneword.bean.WordBean;
+import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
 import top.imlk.oneword.net.Hitokoto.HitokotoBean;
 import top.imlk.oneword.application.client.service.OneWordAutoRefreshService;
-import top.imlk.oneword.StaticValue;
 
-import static top.imlk.oneword.StaticValue.SHARED_PER_KEY_APP_VERSION_CODE;
-import static top.imlk.oneword.StaticValue.SHARED_PER_KEY_CURRENT_ONEWORD_CREATOR;
-import static top.imlk.oneword.StaticValue.SHARED_PER_KEY_CURRENT_ONEWORD_CREAT_AT;
-import static top.imlk.oneword.StaticValue.SHARED_PER_KEY_CURRENT_ONEWORD_FROM;
-import static top.imlk.oneword.StaticValue.SHARED_PER_KEY_CURRENT_ONEWORD_ID;
-import static top.imlk.oneword.StaticValue.SHARED_PER_KEY_CURRENT_ONEWORD_LIKE;
-import static top.imlk.oneword.StaticValue.SHARED_PER_KEY_CURRENT_ONEWORD_MSG;
-import static top.imlk.oneword.StaticValue.SHARED_PER_KEY_CURRENT_ONEWORD_TYPE;
-import static top.imlk.oneword.StaticValue.SHARED_PER_KEY_FIRSTTIME_INSTALL;
-import static top.imlk.oneword.StaticValue.SHARED_PER_KEY_IS_REFRESH_OPENED;
-import static top.imlk.oneword.StaticValue.SHARED_PER_KEY_ONEWORD_TYPE_ANIME;
-import static top.imlk.oneword.StaticValue.SHARED_PER_KEY_ONEWORD_TYPE_COMIC;
-import static top.imlk.oneword.StaticValue.SHARED_PER_KEY_ONEWORD_TYPE_GAME;
-import static top.imlk.oneword.StaticValue.SHARED_PER_KEY_ONEWORD_TYPE_INTERNET;
-import static top.imlk.oneword.StaticValue.SHARED_PER_KEY_ONEWORD_TYPE_MYSELF;
-import static top.imlk.oneword.StaticValue.SHARED_PER_KEY_ONEWORD_TYPE_NOVEL;
-import static top.imlk.oneword.StaticValue.SHARED_PER_KEY_ONEWORD_TYPE_OTHER;
-import static top.imlk.oneword.StaticValue.SHARED_PER_KEY_REFRESH_MODE;
 
 /**
  * Created by imlk on 2018/5/26.
@@ -35,102 +18,106 @@ public class SharedPreferencesUtil {
     private static final String LOG_TAG = "SharedPreferencesUtil";
 
 
-    public static HitokotoBean readSavedOneWord(Context context) {
+    public static final String SHARED_PER_CURRENT_STATE = "SHARED_PER_CURRENT_STATE";
+    public static final String SHARED_PER_KEY_CURRENT_ONEWORD_ID = "current_id";
+//    public static final String SHARED_PER_KEY_CURRENT_ONEWORD_TYPE = "current_type";
+//    public static final String SHARED_PER_KEY_CURRENT_ONEWORD_MSG = "current_msg";
+//    public static final String SHARED_PER_KEY_CURRENT_ONEWORD_FROM = "current_from";
+//    public static final String SHARED_PER_KEY_CURRENT_ONEWORD_CREATOR = "current_creator";
+//    public static final String SHARED_PER_KEY_CURRENT_ONEWORD_CREAT_AT = "current_created_at";
+//    public static final String SHARED_PER_KEY_CURRENT_ONEWORD_LIKE = "current_like";
 
 
-//        try {
+    public static final String SHARED_PER_AUTO_REFRESH_STATE = "SHARED_PER_AUTO_REFRESH_STATE";
+    public static final String SHARED_PER_KEY_IS_REFRESH_OPENED = "is_refresh_opened";
+    public static final String SHARED_PER_KEY_REFRESH_MODE = "frequency_to_refresh";
 
-        SharedPreferences sharedPreferences = context.getSharedPreferences(StaticValue.SHARED_PER_CURRENT_STATE, Context.MODE_PRIVATE);
+
+    public static final String SHARED_PER_ONEWORD_TYPE_SELECT_STATE = "SHARED_PER_ONEWORD_TYPE_SELECT_STATE";
+
+
+    public static final String SHARED_PER_USER_INF = "SHARED_PER_USER_INF";
+    public static final String SHARED_PER_KEY_FIRSTTIME_INSTALL = "is_first_time_install";
+    public static final String SHARED_PER_KEY_APP_VERSION_CODE = "versionCode";
+
+
+//    public static final String SHARED_PER_KEY_ONEWORD_TYPE_ANIME = "Anime";
+//    public static final String SHARED_PER_KEY_ONEWORD_TYPE_COMIC = "Comic";
+//    public static final String SHARED_PER_KEY_ONEWORD_TYPE_GAME = "Game";
+//    public static final String SHARED_PER_KEY_ONEWORD_TYPE_NOVEL = "Novel";
+//    public static final String SHARED_PER_KEY_ONEWORD_TYPE_MYSELF = "Myself";
+//    public static final String SHARED_PER_KEY_ONEWORD_TYPE_INTERNET = "Internet";
+//    public static final String SHARED_PER_KEY_ONEWORD_TYPE_OTHER = "Other";
+
+
+    public static WordBean readSavedOneWord(Context context) {
+
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PER_CURRENT_STATE, Context.MODE_PRIVATE);
 
         int id = sharedPreferences.getInt(SHARED_PER_KEY_CURRENT_ONEWORD_ID, -1);
-        String type = sharedPreferences.getString(SHARED_PER_KEY_CURRENT_ONEWORD_TYPE, null);
-        String msg = sharedPreferences.getString(SHARED_PER_KEY_CURRENT_ONEWORD_MSG, null);
-        String from = sharedPreferences.getString(SHARED_PER_KEY_CURRENT_ONEWORD_FROM, null);
-        String creator = sharedPreferences.getString(SHARED_PER_KEY_CURRENT_ONEWORD_CREATOR, null);
-        String create_at = sharedPreferences.getString(SHARED_PER_KEY_CURRENT_ONEWORD_CREAT_AT, null);
-        boolean like = sharedPreferences.getBoolean(SHARED_PER_KEY_CURRENT_ONEWORD_LIKE, false);
 
-
-//            CurrentStatePreference currentStatePreference = new CurrentStatePreference(context);
-//
-//            int id = currentStatePreference.getInt(SHARED_PER_KEY_CURRENT_ONEWORD_ID, -1);
-//            String type = currentStatePreference.getString(SHARED_PER_KEY_CURRENT_ONEWORD_TYPE, null);
-//            String msg = currentStatePreference.getString(SHARED_PER_KEY_CURRENT_ONEWORD_MSG, null);
-//            String from = currentStatePreference.getString(SHARED_PER_KEY_CURRENT_ONEWORD_FROM, null);
-//            String creator = currentStatePreference.getString(SHARED_PER_KEY_CURRENT_ONEWORD_CREATOR, null);
-//            String create_at = currentStatePreference.getString(SHARED_PER_KEY_CURRENT_ONEWORD_CREAT_AT, null);
-//            boolean like = currentStatePreference.getBoolean(SHARED_PER_KEY_CURRENT_ONEWORD_LIKE, false);
-
-
-        if (id != -1 && (!TextUtils.isEmpty(type)) && (!TextUtils.isEmpty(msg)) && (!TextUtils.isEmpty(from))) {
-            return new HitokotoBean(id, msg, type, from, creator, create_at, like);
+        if (id > 0) {
+            return OneWordSQLiteOpenHelper.getInstance(context).queryOneWordInAllOneWordById(id);
         }
 
-//        } catch (PackageManager.NameNotFoundException e) {
-//            Log.e(LOG_TAG, "error when readSavedOneWord", e);
-//        }
         return null;
     }
 
 
-    public static void saveCurOneWord(Context context, HitokotoBean hitokotoBean) {
+    public static void saveCurOneWord(Context context, WordBean wordBean) {
 
-        SharedPreferences sharedPreferences = context.getSharedPreferences(StaticValue.SHARED_PER_CURRENT_STATE, Context.MODE_PRIVATE);
+        if (wordBean.id > 0) {
 
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+            SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PER_CURRENT_STATE, Context.MODE_PRIVATE);
 
-        editor.putInt(SHARED_PER_KEY_CURRENT_ONEWORD_ID, hitokotoBean.id);
-        editor.putString(SHARED_PER_KEY_CURRENT_ONEWORD_TYPE, hitokotoBean.type);
-        editor.putString(SHARED_PER_KEY_CURRENT_ONEWORD_MSG, hitokotoBean.hitokoto);
-        editor.putString(SHARED_PER_KEY_CURRENT_ONEWORD_FROM, hitokotoBean.from);
-        editor.putString(SHARED_PER_KEY_CURRENT_ONEWORD_CREATOR, hitokotoBean.creator);
-        editor.putString(SHARED_PER_KEY_CURRENT_ONEWORD_CREAT_AT, hitokotoBean.created_at);
-        editor.putBoolean(SHARED_PER_KEY_CURRENT_ONEWORD_LIKE, hitokotoBean.like);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        editor.commit();
+            editor.putInt(SHARED_PER_KEY_CURRENT_ONEWORD_ID, wordBean.id);
 
+            editor.commit();
+        }
     }
 
 
-    public static boolean[] readOneWordTypes(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(StaticValue.SHARED_PER_ONEWORD_TYPE_SELECT_STATE, Context.MODE_PRIVATE);
-        boolean a = sharedPreferences.getBoolean(SHARED_PER_KEY_ONEWORD_TYPE_ANIME, true);
-        boolean b = sharedPreferences.getBoolean(SHARED_PER_KEY_ONEWORD_TYPE_COMIC, true);
-        boolean c = sharedPreferences.getBoolean(SHARED_PER_KEY_ONEWORD_TYPE_GAME, true);
-        boolean d = sharedPreferences.getBoolean(SHARED_PER_KEY_ONEWORD_TYPE_NOVEL, true);
-        boolean e = sharedPreferences.getBoolean(SHARED_PER_KEY_ONEWORD_TYPE_MYSELF, true);
-        boolean f = sharedPreferences.getBoolean(SHARED_PER_KEY_ONEWORD_TYPE_INTERNET, true);
-        boolean g = sharedPreferences.getBoolean(SHARED_PER_KEY_ONEWORD_TYPE_OTHER, true);
+//    public static boolean[] readOneWordTypes(Context context) {
+//        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PER_ONEWORD_TYPE_SELECT_STATE, Context.MODE_PRIVATE);
+//        boolean a = sharedPreferences.getBoolean(SHARED_PER_KEY_ONEWORD_TYPE_ANIME, true);
+//        boolean b = sharedPreferences.getBoolean(SHARED_PER_KEY_ONEWORD_TYPE_COMIC, true);
+//        boolean c = sharedPreferences.getBoolean(SHARED_PER_KEY_ONEWORD_TYPE_GAME, true);
+//        boolean d = sharedPreferences.getBoolean(SHARED_PER_KEY_ONEWORD_TYPE_NOVEL, true);
+//        boolean e = sharedPreferences.getBoolean(SHARED_PER_KEY_ONEWORD_TYPE_MYSELF, true);
+//        boolean f = sharedPreferences.getBoolean(SHARED_PER_KEY_ONEWORD_TYPE_INTERNET, true);
+//        boolean g = sharedPreferences.getBoolean(SHARED_PER_KEY_ONEWORD_TYPE_OTHER, true);
+//
+//        return new boolean[]{a, b, c, d, e, f, g,};
+//
+//    }
 
-        return new boolean[]{a, b, c, d, e, f, g,};
-
-    }
-
-    public static void saveOneWordTypes(Context context, boolean selectState[]) {
-
-        SharedPreferences sharedPreferences = context.getSharedPreferences(StaticValue.SHARED_PER_ONEWORD_TYPE_SELECT_STATE, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        editor.putBoolean(SHARED_PER_KEY_ONEWORD_TYPE_ANIME, selectState[0]);
-        editor.putBoolean(SHARED_PER_KEY_ONEWORD_TYPE_COMIC, selectState[1]);
-        editor.putBoolean(SHARED_PER_KEY_ONEWORD_TYPE_GAME, selectState[2]);
-        editor.putBoolean(SHARED_PER_KEY_ONEWORD_TYPE_NOVEL, selectState[3]);
-        editor.putBoolean(SHARED_PER_KEY_ONEWORD_TYPE_MYSELF, selectState[4]);
-        editor.putBoolean(SHARED_PER_KEY_ONEWORD_TYPE_INTERNET, selectState[5]);
-        editor.putBoolean(SHARED_PER_KEY_ONEWORD_TYPE_OTHER, selectState[6]);
-
-        editor.commit();
-    }
+//    public static void saveOneWordTypes(Context context, boolean selectState[]) {
+//
+//        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PER_ONEWORD_TYPE_SELECT_STATE, Context.MODE_PRIVATE);
+//        SharedPreferences.Editor editor = sharedPreferences.edit();
+//
+//        editor.putBoolean(SHARED_PER_KEY_ONEWORD_TYPE_ANIME, selectState[0]);
+//        editor.putBoolean(SHARED_PER_KEY_ONEWORD_TYPE_COMIC, selectState[1]);
+//        editor.putBoolean(SHARED_PER_KEY_ONEWORD_TYPE_GAME, selectState[2]);
+//        editor.putBoolean(SHARED_PER_KEY_ONEWORD_TYPE_NOVEL, selectState[3]);
+//        editor.putBoolean(SHARED_PER_KEY_ONEWORD_TYPE_MYSELF, selectState[4]);
+//        editor.putBoolean(SHARED_PER_KEY_ONEWORD_TYPE_INTERNET, selectState[5]);
+//        editor.putBoolean(SHARED_PER_KEY_ONEWORD_TYPE_OTHER, selectState[6]);
+//
+//        editor.commit();
+//    }
 
     public static boolean isRefreshOpened(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(StaticValue.SHARED_PER_AUTO_REFRESH_STATE, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PER_AUTO_REFRESH_STATE, Context.MODE_PRIVATE);
 
         return sharedPreferences.getBoolean(SHARED_PER_KEY_IS_REFRESH_OPENED, false);
 
     }
 
     public static void setAutoRefreshOpened(Context context, boolean opened) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(StaticValue.SHARED_PER_AUTO_REFRESH_STATE, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PER_AUTO_REFRESH_STATE, Context.MODE_PRIVATE);
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
@@ -143,14 +130,14 @@ public class SharedPreferencesUtil {
 
     public static OneWordAutoRefreshService.Mode getRefreshMode(Context context) {
 
-        SharedPreferences sharedPreferences = context.getSharedPreferences(StaticValue.SHARED_PER_AUTO_REFRESH_STATE, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PER_AUTO_REFRESH_STATE, Context.MODE_PRIVATE);
         return OneWordAutoRefreshService.Mode.valueOf(sharedPreferences.getString(SHARED_PER_KEY_REFRESH_MODE, OneWordAutoRefreshService.Mode.TWICE_LOCK.toString()));
 
     }
 
     public static void setRefreshMode(Context context, OneWordAutoRefreshService.Mode mode) {
 
-        SharedPreferences sharedPreferences = context.getSharedPreferences(StaticValue.SHARED_PER_AUTO_REFRESH_STATE, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PER_AUTO_REFRESH_STATE, Context.MODE_PRIVATE);
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
@@ -160,25 +147,81 @@ public class SharedPreferencesUtil {
 
     }
 
-    public static boolean isFirstTimeUse(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(StaticValue.SHARED_PER_USER_INF, Context.MODE_PRIVATE);
+    public static void onMainActivityCreate(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PER_USER_INF, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        boolean firstTime = sharedPreferences.getBoolean(SHARED_PER_KEY_FIRSTTIME_INSTALL, true);
-        if (firstTime) {
+        boolean firstTimeInstall = sharedPreferences.getBoolean(SHARED_PER_KEY_FIRSTTIME_INSTALL, true);
+        if (firstTimeInstall) {
             editor.putBoolean(SHARED_PER_KEY_FIRSTTIME_INSTALL, false);
-        }
-
-
-        int versionCode = ApplicationInfoUtil.getAppVersionCode(context);
-        if (versionCode > sharedPreferences.getInt(SHARED_PER_KEY_APP_VERSION_CODE, 0)) {
-            editor.putInt(SHARED_PER_KEY_APP_VERSION_CODE, versionCode);
             editor.commit();
+
+            onAppFirstTimeInstall(context);
         }
 
 
-        return firstTime;
+        int curVerCode = ApplicationInfoUtil.getAppVersionCode(context);
+        if (curVerCode > sharedPreferences.getInt(SHARED_PER_KEY_APP_VERSION_CODE, 0)) {// 更新版本后
+            int oldVerCode = sharedPreferences.getInt(SHARED_PER_KEY_APP_VERSION_CODE, 0);
 
+            editor.putInt(SHARED_PER_KEY_APP_VERSION_CODE, curVerCode);
+            editor.commit();
+
+
+            if (oldVerCode > 0 && !firstTimeInstall) {
+                onAppUpgrade(context, oldVerCode, curVerCode);
+            }
+
+
+        }
+    }
+
+    public static void onAppFirstTimeInstall(Context context) {
+
+        ShowDialogUtil.showAboutAppDialog(context);
+
+    }
+
+    public static void onAppUpgrade(Context context, int oldVerCode, int curVerCode) {
+        switch (oldVerCode) {
+            case 1:
+
+                SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PER_CURRENT_STATE, Context.MODE_PRIVATE);
+
+                WordBean wordBean = new WordBean();
+                wordBean.content = sharedPreferences.getString("current_msg", null);
+                wordBean.reference = sharedPreferences.getString("current_from", null);
+
+                if (wordBean.content != null) {
+                    wordBean.id = OneWordSQLiteOpenHelper.getInstance(context).queryIdInAllOneWord(wordBean);
+                }
+
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                editor.remove("current_id");
+                editor.remove("current_type");
+                editor.remove("current_msg");
+                editor.remove("current_from");
+                editor.remove("current_creator");
+                editor.remove("current_created_at");
+                editor.remove("current_like");
+
+                editor.remove("Anime");
+                editor.remove("Comic");
+                editor.remove("Game");
+                editor.remove("Novel");
+                editor.remove("Myself");
+                editor.remove("Internet");
+                editor.remove("Other");
+
+                if (wordBean.id > 0) {
+                    editor.putInt(SHARED_PER_KEY_CURRENT_ONEWORD_ID, wordBean.id);
+                }
+
+                editor.commit();
+
+                break;
+        }
     }
 
 }

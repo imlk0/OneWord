@@ -20,10 +20,30 @@ public class PastedNestedScrollView extends NestedScrollView {
 //    private OverScroller mScroller;
 //    private static final int DEFAULT_DURATION = 1000;
 
+    private boolean canScroll = false;
 
-    public boolean canScroll = false;
-    public boolean isOnTop = true;
+    private boolean isOnTop = true;
     private Context context;
+    private OnPasteListener mOnPasteListener;
+
+
+    public interface OnPasteListener {
+
+        void onPastedToTop();
+
+        void onPastedToBottom();
+
+    }
+
+    public void setOnPasteListener(OnPasteListener listener) {
+        this.mOnPasteListener = listener;
+    }
+
+    public void removeOnPasteListener(OnPasteListener listener) {
+        if (this.mOnPasteListener == listener) {
+            this.mOnPasteListener = null;
+        }
+    }
 
     public PastedNestedScrollView(@NonNull Context context) {
         super(context);
@@ -80,9 +100,12 @@ public class PastedNestedScrollView extends NestedScrollView {
                 canScroll = false;
                 fling(0);
                 smoothScrollTo(0, 0);
+
+                if (mOnPasteListener != null) {
+                    mOnPasteListener.onPastedToTop();
+                }
             }
         });
-        ((MainActivity) context).mainOneWordView.bottomMagicIndicator.onPageSelected(-1);
         isOnTop = true;
     }
 
@@ -103,6 +126,10 @@ public class PastedNestedScrollView extends NestedScrollView {
                 canScroll = true;
                 fling(0);
                 smoothScrollTo(0, getHeight());
+
+                if (mOnPasteListener != null) {
+                    mOnPasteListener.onPastedToBottom();
+                }
             }
         });
 
@@ -123,5 +150,12 @@ public class PastedNestedScrollView extends NestedScrollView {
         }
     }
 
+    public boolean canScroll() {
+        return canScroll;
+    }
+
+    public boolean isOnTop() {
+        return isOnTop;
+    }
 
 }

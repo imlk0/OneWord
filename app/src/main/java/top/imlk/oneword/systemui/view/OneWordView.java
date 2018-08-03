@@ -17,7 +17,7 @@ public class OneWordView extends LinearLayout {
 
     TextView contentTextView;
 
-    TextView fromTextView;
+    TextView referenceTextView;
 
 
     //<TextView android:textSize="@r$dimen/widget_label_font_size" android:textColor="@color/clock_gray" android:ellipsize="marquee" android:layout_gravity="center_horizontal" android:id="@r$id/owner_info" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="16dp" android:layout_marginTop="@dimen/date_owner_info_margin" android:layout_marginRight="16dp" android:singleLine="true" android:letterSpacing="0.05"/>
@@ -62,32 +62,32 @@ public class OneWordView extends LinearLayout {
 
 
         // 设置来源TextView
-        fromTextView = new TextView(context);
-        fromTextView.setGravity(Gravity.RIGHT);
+        referenceTextView = new TextView(context);
+        referenceTextView.setGravity(Gravity.RIGHT);
 
-        LinearLayout.LayoutParams fromLP = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams referenceLP = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 
         // 来源TV外包裹一层LL
-        LinearLayout fromPa = new LinearLayout(context);
+        LinearLayout referencePa = new LinearLayout(context);
 
-        fromPa.addView(fromTextView, fromLP);
+        referencePa.addView(referenceTextView, referenceLP);
 
-        LinearLayout.LayoutParams fromPaLP = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams referencePaLP = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 
-        fromPaLP.leftMargin = 40;
-        fromPaLP.rightMargin = 40;
-        fromPaLP.topMargin = 10;
-        fromPaLP.bottomMargin = 10;
-        this.addView(fromPa, fromPaLP);
+        referencePaLP.leftMargin = 40;
+        referencePaLP.rightMargin = 40;
+        referencePaLP.topMargin = 10;
+        referencePaLP.bottomMargin = 10;
+        this.addView(referencePa, referencePaLP);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            fromTextView.setElegantTextHeight(true);
+            referenceTextView.setElegantTextHeight(true);
         }
-        fromTextView.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-        fromTextView.setSingleLine(true);
+        referenceTextView.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        referenceTextView.setSingleLine(true);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            fromTextView.setLetterSpacing(0.05f);
+            referenceTextView.setLetterSpacing(0.05f);
         }
 
     }
@@ -96,7 +96,7 @@ public class OneWordView extends LinearLayout {
     public void setOneWord(WordBean wordBean) {
         if (wordBean != null) {
             contentTextView.setText(wordBean.content);
-            fromTextView.setText("——" + wordBean.from);
+            referenceTextView.setText("——" + wordBean.reference);
         } else {
             defaultSetOneWord();
         }
@@ -104,18 +104,18 @@ public class OneWordView extends LinearLayout {
 
     public void defaultSetOneWord() {
         contentTextView.setText("句子正文，\n喵喵喵喵喵喵喵喵");
-        fromTextView.setText("——来源");
+        referenceTextView.setText("——来源");
     }
 
     public void setTextSize(int unit, float size) {
         contentTextView.setTextSize(unit, size);
-        fromTextView.setTextSize(unit, size);
+        referenceTextView.setTextSize(unit, size);
 
     }
 
     public void setTextColor(int color) {
         contentTextView.setTextColor(color);
-        fromTextView.setTextColor(color);
+        referenceTextView.setTextColor(color);
     }
 
 //    @Override

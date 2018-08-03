@@ -2,33 +2,48 @@ package top.imlk.oneword.util;
 
 import android.content.Context;
 import android.content.Intent;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
 import top.imlk.oneword.bean.WordBean;
-import top.imlk.oneword.net.Hitokoto.HitokotoBean;
 
-import static top.imlk.oneword.StaticValue.CMD_BROADCAST_SET_NEW_LOCK_SCREEN_INFO;
-import static top.imlk.oneword.StaticValue.THE_NEW_LOCK_SCREEN_INFO_JSON;
-import static top.imlk.oneword.StaticValue.CMD_BROADCAST_UPDATE_LOCK_SCREEN_INFO;
 
 /**
  * Created by imlk on 2018/5/26.
  */
 public class BroadcastSender {
 
+    public static final String CMD_BROADCAST_SET_NEW_LOCK_SCREEN_INFO = "top.imlk.oneword.set_new_lock_screen_info";
+//    public static final String THE_NEW_LOCK_SCREEN_INFO_MSG = "top.imlk.oneword.the_new_lock_screen_info_msg";
+//    public static final String THE_NEW_LOCK_SCREEN_INFO_FROM = "top.imlk.oneword.the_new_lock_screen_info_from";
+
+
+    public static final String THE_NEW_LOCK_SCREEN_INFO_JSON = "top.imlk.oneword.the_new_lock_screen_info_json";
+
+
+    public static final String CMD_SERVICES_START_AUTO_REFRESH_SERVICE = "top.imlk.oneword.start_auto_refresh_service";
+    public static final String CMD_SERVICES_STOP_SERVICE = "top.imlk.oneword.stop_service";
+
+
+    public static final String CMD_BROADCAST_UPDATE_LOCK_SCREEN_INFO = "top.imlk.oneword.update_lock_screen_info";
+
+
     private BroadcastSender() {
 
     }
 
-    public static void sendSetNewLockScreenInfoBroadcast(Context context, HitokotoBean hitokotoBean) {
-        Intent intent = new Intent();
-        intent.setAction(CMD_BROADCAST_SET_NEW_LOCK_SCREEN_INFO);
+    public static void sendSetNewLockScreenInfoBroadcast(Context context, WordBean wordBean) {
+        if (wordBean != null) {
 
-        WordBean wordBean = new WordBean(hitokotoBean.hitokoto, hitokotoBean.from);
-        intent.putExtra(THE_NEW_LOCK_SCREEN_INFO_JSON, new Gson().toJson(wordBean, WordBean.class));
+            Intent intent = new Intent();
+            intent.setAction(CMD_BROADCAST_SET_NEW_LOCK_SCREEN_INFO);
 
-        context.sendBroadcast(intent);
+            intent.putExtra(THE_NEW_LOCK_SCREEN_INFO_JSON, new Gson().toJson(wordBean, WordBean.class));
+
+            context.sendBroadcast(intent);
+            Toast.makeText(context, "设置锁屏一言中...", Toast.LENGTH_SHORT).show();
+        }
     }
 
 

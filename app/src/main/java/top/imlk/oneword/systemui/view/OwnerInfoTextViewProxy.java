@@ -8,6 +8,7 @@ import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
+import de.robv.android.xposed.XposedBridge;
 import top.imlk.oneword.systemui.uifixer.UIFixer;
 
 
@@ -52,6 +53,7 @@ public class OwnerInfoTextViewProxy extends TextView {
 
     @Override
     public void setText(CharSequence text, BufferType type) {
+        XposedBridge.log("OwnerInfoTextViewProxy.setText() -> " + text);
         if (uiFixer != null) {
             uiFixer.onSetText(text, type);
         }

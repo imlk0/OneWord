@@ -12,6 +12,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static android.os.Environment.DIRECTORY_DOWNLOADS;
+
 /**
  * Created by imlk on 2018/7/30.
  */
@@ -44,25 +46,25 @@ public class BugUtil {
             long timestamp = System.currentTimeMillis();
             String time = formatter.format(new Date());
             String logTime = time + "-" + timestamp;
-            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+//            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
 
-                String path = Environment.getExternalStorageDirectory() + "/Download/oneword_crash_log/";
+            String path = Environment.getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS) + "/oneword_crash_log/";
 
-                File dir = new File(path);
-                if (!dir.exists()) {
-                    dir.mkdirs();
-                }
-
-                path = path + logTime + ".log";
-                FileOutputStream fos = new FileOutputStream(path, true);
-                fos.write(logTime.getBytes());
-                fos.write("\n\n\n".getBytes());
-                fos.write(sb.toString().getBytes());
-                fos.write("\n\n\n".getBytes());
-                fos.close();
-
-                return path;
+            File dir = new File(path);
+            if (!dir.exists()) {
+                dir.mkdirs();
             }
+
+            path = path + logTime + ".log";
+            FileOutputStream fos = new FileOutputStream(path, true);
+            fos.write(logTime.getBytes());
+            fos.write("\n\n\n".getBytes());
+            fos.write(sb.toString().getBytes());
+            fos.write("\n\n\n".getBytes());
+            fos.close();
+
+            return path;
+//            }
         } catch (Exception e) {
             Log.e(BugUtil.class.getSimpleName(), "an error occured while writing file...", e);
         }

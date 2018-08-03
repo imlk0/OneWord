@@ -43,7 +43,9 @@ public class BaseUIFixer implements UIFixer {
         WordBean wordBean = null;
 
         try {
-            wordBean = new Gson().fromJson(text.toString(), WordBean.class);
+            if (text != null) {
+                wordBean = new Gson().fromJson(text.toString(), WordBean.class);
+            }
         } catch (JsonSyntaxException e) {
             // TODO 增加软件更新后重启提示
 

@@ -25,7 +25,7 @@
             android:src="@drawable/ic_done_white_48dp" />
 
         <ImageView
-            android:id="@+id/item_like_state"
+            android:id="@+id/item_favor_state"
             android:layout_width="@dimen/iv_msg_operator_size"
             android:layout_height="@dimen/iv_msg_operator_size"
             android:layout_centerVertical="true"
@@ -39,7 +39,7 @@
             android:layout_width="@dimen/iv_msg_operator_size"
             android:layout_height="@dimen/iv_msg_operator_size"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/item_like_state"
+            android:layout_toRightOf="@+id/item_favor_state"
             android:background="@drawable/bg_circle_botton"
             android:src="@drawable/ic_share_white_48dp" />
 

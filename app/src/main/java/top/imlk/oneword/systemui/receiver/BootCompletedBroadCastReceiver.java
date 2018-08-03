@@ -6,8 +6,8 @@ import android.content.Intent;
 import android.util.Log;
 
 import top.imlk.oneword.application.client.service.OneWordAutoRefreshService;
+import top.imlk.oneword.util.BroadcastSender;
 
-import static top.imlk.oneword.StaticValue.CMD_SERVICES_START_AUTO_REFRESH_SERVICE;
 
 /**
  * Created by imlk on 2018/6/3.
@@ -19,9 +19,9 @@ public class BootCompletedBroadCastReceiver extends BroadcastReceiver {
         switch (intent.getAction()) {
             case Intent.ACTION_BOOT_COMPLETED:
 
-                Log.e("BootCompletedBroadCast","imlk BootCompletedBroadCastReceiver onReceive");
+                Log.e("BootCompletedBroadCast", "imlk BootCompletedBroadCastReceiver onReceive");
                 Intent service = new Intent(context, OneWordAutoRefreshService.class);
-                intent.setAction(CMD_SERVICES_START_AUTO_REFRESH_SERVICE);
+                intent.setAction(BroadcastSender.CMD_SERVICES_START_AUTO_REFRESH_SERVICE);
                 context.startService(service);
                 break;
         }

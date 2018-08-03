@@ -13,7 +13,6 @@ import com.android.internal.widget.LockPatternUtils;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import de.robv.android.xposed.XC_MethodHook;
@@ -22,11 +21,9 @@ import de.robv.android.xposed.XposedHelpers;
 import top.imlk.oneword.systemui.uifixer.AOSPUIFixer;
 import top.imlk.oneword.systemui.uifixer.UIFixer;
 import top.imlk.oneword.systemui.view.OwnerInfoTextViewProxy;
+import top.imlk.oneword.util.BroadcastSender;
 import top.imlk.oneword.util.BugUtil;
 
-import static top.imlk.oneword.StaticValue.CMD_BROADCAST_SET_NEW_LOCK_SCREEN_INFO;
-import static top.imlk.oneword.StaticValue.THE_NEW_LOCK_SCREEN_INFO_JSON;
-import static top.imlk.oneword.StaticValue.CMD_BROADCAST_UPDATE_LOCK_SCREEN_INFO;
 
 /**
  * Created by imlk on 2018/5/24.
@@ -107,15 +104,14 @@ public class KeyguardStatusViewHooker {
 
                     ref_OwnerInfoTextViewProxy.get().setText(KeyguardStatusViewHelper.getOwnerInfo());
 
-                    registerBroadcastReceiver();
-
 
                 } catch (Throwable e) {
                     XposedBridge.log(e);
                     String logPath = BugUtil.saveCrashInfo2File(e);
                     Toast.makeText(((View) param.thisObject).getContext(), String.format("Hook后的操作发生异常，日志产生在:\n%s", logPath), Toast.LENGTH_LONG).show();
-
                 }
+
+                registerBroadcastReceiver();
 
             }
         });
@@ -124,8 +120,8 @@ public class KeyguardStatusViewHooker {
 
     public static void registerBroadcastReceiver() {
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(CMD_BROADCAST_SET_NEW_LOCK_SCREEN_INFO);
-        intentFilter.addAction(CMD_BROADCAST_UPDATE_LOCK_SCREEN_INFO);
+        intentFilter.addAction(BroadcastSender.CMD_BROADCAST_SET_NEW_LOCK_SCREEN_INFO);
+        intentFilter.addAction(BroadcastSender.CMD_BROADCAST_UPDATE_LOCK_SCREEN_INFO);
         ref_mOwnerInfo.get().getContext().registerReceiver(new SystemUICmdBroadcastReceiver(), intentFilter);
         XposedBridge.log("create SystemUICmdBroadcastReceiver");
 
@@ -142,19 +138,19 @@ public class KeyguardStatusViewHooker {
 
             try {
                 switch (intent.getAction()) {
-                    case CMD_BROADCAST_SET_NEW_LOCK_SCREEN_INFO:
+                    case BroadcastSender.CMD_BROADCAST_SET_NEW_LOCK_SCREEN_INFO:
 
                         XposedBridge.log("received");
-                        XposedBridge.log(intent.getStringExtra(THE_NEW_LOCK_SCREEN_INFO_JSON));
+                        XposedBridge.log(intent.getStringExtra(BroadcastSender.THE_NEW_LOCK_SCREEN_INFO_JSON));
 
-                        KeyguardStatusViewHelper.setOwnerInfo(intent.getStringExtra(THE_NEW_LOCK_SCREEN_INFO_JSON));
+                        KeyguardStatusViewHelper.setOwnerInfo(intent.getStringExtra(BroadcastSender.THE_NEW_LOCK_SCREEN_INFO_JSON));
 
                         XposedBridge.log("resolved");
 
                         Toast.makeText(context, "一言已经写好啦，可以展示了", Toast.LENGTH_SHORT).show();
 
 
-                    case CMD_BROADCAST_UPDATE_LOCK_SCREEN_INFO:
+                    case BroadcastSender.CMD_BROADCAST_UPDATE_LOCK_SCREEN_INFO:
 
                         // 更新OwnerInfo信息到界面
                         ref_OwnerInfoTextViewProxy.get().setText(KeyguardStatusViewHelper.getOwnerInfo());

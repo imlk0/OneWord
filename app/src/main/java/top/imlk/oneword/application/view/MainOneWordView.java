@@ -30,7 +30,7 @@ public class MainOneWordView extends LinearLayout {
     public LinearLayout llPageFirst;
     public LinearLayout llPageExtend;
 
-    private Context context;
+    private MainActivity mainActivity;
 
     public MagicIndicator bottomMagicIndicator;
 
@@ -42,28 +42,21 @@ public class MainOneWordView extends LinearLayout {
 
     public MainOneWordView(Context context) {
         super(context);
-        updateContext(context);
     }
 
     public MainOneWordView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        updateContext(context);
     }
 
     public MainOneWordView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        updateContext(context);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public MainOneWordView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        updateContext(context);
     }
 
-    public void updateContext(Context context) {
-        this.context = context;
-    }
 
     public void upDateLP(Rect rect) {
 
@@ -94,10 +87,8 @@ public class MainOneWordView extends LinearLayout {
         }
     }
 
-    protected void onFinishInflate() {
-        super.onFinishInflate();
-
-
+    public void init(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
         llMsgBottom = findViewById(R.id.ll_msg_bottom);
 //        if (llMsgBottom == null) {
 //            return;//第一次调用
@@ -105,14 +96,12 @@ public class MainOneWordView extends LinearLayout {
 
 
         llPageFirst = findViewById(R.id.ll_page_first);
-
         llPageExtend = findViewById(R.id.ll_page_extend);
-
         bottomMagicIndicator = findViewById(R.id.magi_bottom);
 
-        CommonNavigator commonNavigator = new CommonNavigator(this.context);
+        CommonNavigator commonNavigator = new CommonNavigator(mainActivity);
 
-        bottomNavigatorAdapter = new BottomNavigatorAdapter(this.context);
+        bottomNavigatorAdapter = new BottomNavigatorAdapter(mainActivity);
         commonNavigator.setAdapter(bottomNavigatorAdapter);
 
         bottomMagicIndicator.setNavigator(commonNavigator);
@@ -123,7 +112,7 @@ public class MainOneWordView extends LinearLayout {
             public boolean onPreDraw() {
                 if (llMsgBottom.getHeight() != 0) {
                     llMsgBottom.getViewTreeObserver().removeOnPreDrawListener(this);
-                    ((MainActivity) context).upDateLP();//更新ui
+                    MainOneWordView.this.mainActivity.upDateLP();//更新ui
                 }
                 return true;
             }
@@ -132,7 +121,7 @@ public class MainOneWordView extends LinearLayout {
 
         viewPager = findViewById(R.id.vp_page_extend);
 
-        extendViewPageAdaper = new ExtendViewPageAdaper(this.context);
+        extendViewPageAdaper = new ExtendViewPageAdaper(mainActivity);
         viewPager.setAdapter(extendViewPageAdaper);
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -158,12 +147,11 @@ public class MainOneWordView extends LinearLayout {
     }
 
 
-
     public void gotoPage(int index) {
         bottomMagicIndicator.onPageSelected(index == 2 ? 3 : index);
         viewPager.setCurrentItem(index);
         if (index == 0 || index == 1) {
-            ((ExtendViewPageAdaper) viewPager.getAdapter()).clearAndFillRecyclerView(index);
+            extendViewPageAdaper.clearAndFillRecyclerView(index);
         }
     }
 
@@ -175,7 +163,7 @@ public class MainOneWordView extends LinearLayout {
 //
 //    }
 
-    // implement from NestedScrollingParent
+    // implement reference NestedScrollingParent
 
 //    @Override
 //    public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
