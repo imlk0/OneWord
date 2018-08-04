@@ -2,10 +2,8 @@ package top.imlk.oneword.application.adapter;
 
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import top.imlk.oneword.R;
 import top.imlk.oneword.application.client.activity.MainActivity;
@@ -41,13 +39,13 @@ public class ExtendViewPageAdaper extends PagerAdapter {
         initFavorPage();
     }
 
-    public void clearAndFillRecyclerView(int index) {
+    public void clearAndReloadDataOfRecyclerView(int index) {
         switch (index) {
             case 0:
-                historyPage.oneWordRecyclerViewAdapter.clearAndFill();
+                historyPage.clearAndReloadData();
                 break;
             case 1:
-                favorPage.oneWordRecyclerViewAdapter.clearAndFill();
+                favorPage.clearAndReloadData();
                 break;
         }
     }
@@ -56,11 +54,15 @@ public class ExtendViewPageAdaper extends PagerAdapter {
     private void initHistoryPage() {
         historyPage.oneWordRecyclerViewAdapter = new OneWordRecyclerViewAdapter(mainActivity, OneWordRecyclerViewAdapter.PageType.HISTORY_PAGE);
         historyPage.recyclerView.setAdapter(historyPage.oneWordRecyclerViewAdapter);
+        historyPage.refreshLayout.setOnLoadMoreListener(historyPage.oneWordRecyclerViewAdapter);
+
     }
 
     private void initFavorPage() {
         favorPage.oneWordRecyclerViewAdapter = new OneWordRecyclerViewAdapter(mainActivity, OneWordRecyclerViewAdapter.PageType.FAVOR_PAGE);
         favorPage.recyclerView.setAdapter(favorPage.oneWordRecyclerViewAdapter);
+        favorPage.refreshLayout.setOnLoadMoreListener(favorPage.oneWordRecyclerViewAdapter);
+
     }
 
 

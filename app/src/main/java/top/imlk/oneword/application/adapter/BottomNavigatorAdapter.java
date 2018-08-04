@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 import top.imlk.oneword.R;
 import top.imlk.oneword.application.client.activity.MainActivity;
-import top.imlk.oneword.util.StyleHelper;
+import top.imlk.oneword.util.AppStyleHelper;
 import top.imlk.oneword.application.view.BottomNavigatorItem;
 
 /**
@@ -36,16 +36,16 @@ public class BottomNavigatorAdapter extends CommonNavigatorAdapter implements Vi
 
 
         commonPagerTitleView = new CommonPagerTitleView(mainActivity);
-        commonPagerTitleView.setContentView(((BottomNavigatorItem) LinearLayout.inflate(mainActivity, R.layout.item_bottom_selector, null)).setImage(R.drawable.ic_view_list_white_48dp).setBgByColor(StyleHelper.getColorByAttributeId(mainActivity, R.attr.colorPrimaryDark)).setText("历史").setIndex(0));
+        commonPagerTitleView.setContentView(((BottomNavigatorItem) LinearLayout.inflate(mainActivity, R.layout.item_bottom_selector, null)).setImage(R.drawable.ic_view_list_white_48dp).setBgByColor(AppStyleHelper.getColorByAttributeId(mainActivity, R.attr.colorPrimaryDark)).setText("历史").setIndex(0));
         data.add(commonPagerTitleView);
         commonPagerTitleView = new CommonPagerTitleView(mainActivity);
-        commonPagerTitleView.setContentView(((BottomNavigatorItem) LinearLayout.inflate(mainActivity, R.layout.item_bottom_selector, null)).setImage(R.drawable.ic_favorite_border_white_48dp).setBgByColor(StyleHelper.getColorByAttributeId(mainActivity, R.attr.colorPrimaryDark)).setText("喜欢的").setIndex(1));
+        commonPagerTitleView.setContentView(((BottomNavigatorItem) LinearLayout.inflate(mainActivity, R.layout.item_bottom_selector, null)).setImage(R.drawable.ic_favorite_border_white_48dp).setBgByColor(AppStyleHelper.getColorByAttributeId(mainActivity, R.attr.colorPrimaryDark)).setText("喜欢的").setIndex(1));
         data.add(commonPagerTitleView);
         commonPagerTitleView = new CommonPagerTitleView(mainActivity);
-        commonPagerTitleView.setContentView(((BottomNavigatorItem) LinearLayout.inflate(mainActivity, R.layout.item_bottom_selector, null)).setImage(R.drawable.ic_refresh_white_48dp).setBgByColor(StyleHelper.getColorByAttributeId(mainActivity, R.attr.colorPrimaryDark)).setText("再来一条").setIndex(2));
+        commonPagerTitleView.setContentView(((BottomNavigatorItem) LinearLayout.inflate(mainActivity, R.layout.item_bottom_selector, null)).setImage(R.drawable.ic_refresh_white_48dp).setBgByColor(AppStyleHelper.getColorByAttributeId(mainActivity, R.attr.colorPrimaryDark)).setText("再来一条").setIndex(2));
         data.add(commonPagerTitleView);
         commonPagerTitleView = new CommonPagerTitleView(mainActivity);
-        commonPagerTitleView.setContentView(((BottomNavigatorItem) LinearLayout.inflate(mainActivity, R.layout.item_bottom_selector, null)).setImage(R.drawable.ic_info_outline_white_48dp).setBgByColor(StyleHelper.getColorByAttributeId(mainActivity, R.attr.colorPrimaryDark)).setText("设置").setIndex(3));
+        commonPagerTitleView.setContentView(((BottomNavigatorItem) LinearLayout.inflate(mainActivity, R.layout.item_bottom_selector, null)).setImage(R.drawable.ic_info_outline_white_48dp).setBgByColor(AppStyleHelper.getColorByAttributeId(mainActivity, R.attr.colorPrimaryDark)).setText("设置").setIndex(3));
         data.add(commonPagerTitleView);
 
         for (int i = 0; i < data.size(); ++i) {
@@ -99,12 +99,12 @@ public class BottomNavigatorAdapter extends CommonNavigatorAdapter implements Vi
 
     @Override
     public void onSelected(int index, int totalCount) {
-        this.data.get(index).getChildAt(0).setBackgroundColor(StyleHelper.getColorByAttributeId(mainActivity, R.attr.colorPrimary));
+        this.data.get(index).getChildAt(0).setBackgroundColor(AppStyleHelper.getColorByAttributeId(mainActivity, R.attr.colorPrimary));
     }
 
     @Override
     public void onDeselected(int index, int totalCount) {
-        this.data.get(index).getChildAt(0).setBackgroundColor(StyleHelper.getColorByAttributeId(mainActivity, R.attr.colorPrimaryDark));
+        this.data.get(index).getChildAt(0).setBackgroundColor(AppStyleHelper.getColorByAttributeId(mainActivity, R.attr.colorPrimaryDark));
     }
 
     @Override

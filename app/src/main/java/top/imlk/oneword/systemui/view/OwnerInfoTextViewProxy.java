@@ -8,8 +8,8 @@ import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-import de.robv.android.xposed.XposedBridge;
-import top.imlk.oneword.systemui.uifixer.UIFixer;
+import top.imlk.oneword.bean.WordBean;
+import top.imlk.oneword.systemui.uifixer.BaseUIFixer;
 
 
 /**
@@ -23,7 +23,7 @@ import top.imlk.oneword.systemui.uifixer.UIFixer;
 @SuppressLint("AppCompatCustomView")
 public class OwnerInfoTextViewProxy extends TextView {
 
-    private UIFixer uiFixer;
+    private BaseUIFixer uiFixer;
 
 
     public OwnerInfoTextViewProxy(Context context) {
@@ -53,16 +53,19 @@ public class OwnerInfoTextViewProxy extends TextView {
 
     @Override
     public void setText(CharSequence text, BufferType type) {
-        XposedBridge.log("OwnerInfoTextViewProxy.setText() -> " + text);
-        if (uiFixer != null) {
-            uiFixer.onSetText(text, type);
-        }
+
     }
 
     @Override
     public void setTextColor(int color) {
         if (uiFixer != null) {
             uiFixer.onSetTextColor(color);
+        }
+    }
+
+    public void setOneWord(WordBean word) {
+        if (uiFixer != null) {
+            uiFixer.onSetOneWord(word);
         }
     }
 
@@ -88,7 +91,7 @@ public class OwnerInfoTextViewProxy extends TextView {
 //    }
 
 
-    public void setUiFixer(UIFixer uiFixer) {
+    public void setUiFixer(BaseUIFixer uiFixer) {
         this.uiFixer = uiFixer;
     }
 }

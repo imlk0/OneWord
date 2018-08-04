@@ -35,7 +35,7 @@ public class BroadcastSender {
 
     }
 
-    public static void sendSetNewLockScreenInfoBroadcast(Context context, WordBean wordBean) {
+    public static void sendUseNewOneWordInfoBroadcast(Context context, WordBean wordBean) {
         if (wordBean != null) {
 
             Intent intent = new Intent();
@@ -49,7 +49,7 @@ public class BroadcastSender {
     }
 
 
-    public static void sendReloadLockScreenInfoBySelfBroadcast(Context context) {
+    public static void sendReloadOneWordBySelfBroadcast(Context context) {
         Intent intent = new Intent();
         intent.setAction(CMD_BROADCAST_UPDATE_LOCK_SCREEN_INFO);
         context.sendBroadcast(intent);

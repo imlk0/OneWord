@@ -141,9 +141,15 @@ public class PastedNestedScrollView extends NestedScrollView {
     @Override
     public void onStopNestedScroll(View target) {
         super.onStopNestedScroll(target);
+
+        int maxY = getMaxScrollY();
+
         if (getScrollY() > 2 * getHeight() / 3) {
-            scrollToBottom();
-            canScroll = true;
+
+            if (maxY != getScrollY()) {
+                scrollToBottom();
+                canScroll = true;
+            }
         } else {
             scrollToTop();
             canScroll = false;
@@ -158,4 +164,11 @@ public class PastedNestedScrollView extends NestedScrollView {
         return isOnTop;
     }
 
+
+    public int getMaxScrollY() {
+        final int height = getHeight() - getPaddingBottom() - getPaddingTop();
+        final int bottom = getChildAt(0).getHeight();
+        final int maxY = Math.max(0, bottom - height);
+        return maxY;
+    }
 }

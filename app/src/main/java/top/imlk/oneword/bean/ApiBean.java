@@ -12,6 +12,11 @@ public class ApiBean {
     public String resp_form;
     public boolean enabled;
 
+    public ApiBean() {
+
+    }
+
+
     public ApiBean(int id, String name, String url, String req_method, String req_args_json, String resp_form, boolean enabled) {
         this.id = id;
         this.name = name;

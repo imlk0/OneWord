@@ -36,7 +36,7 @@ dependencies {
     //    implementation 'co.dift.ui.swipetoaction:library:1.1'
     implementation 'com.github.hackware1993:MagicIndicator:1.5.0'
     implementation 'com.yarolegovich:lovely-dialog:1.1.0'
-    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-6'
+    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-14'
     compileOnly files('lib/api-82.jar')
     implementation project(':SwipeToAction')
     implementation 'com.github.didikee:AndroidDonate:0.1.0'

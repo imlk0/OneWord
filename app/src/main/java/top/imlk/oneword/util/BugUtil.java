@@ -1,6 +1,5 @@
 package top.imlk.oneword.util;
 
-import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
@@ -14,7 +13,7 @@ import java.util.Date;
 
 import de.robv.android.xposed.XposedBridge;
 
-import static android.os.Environment.DIRECTORY_DOWNLOADS;
+import static top.imlk.oneword.util.OneWordFileStation.BASE_FILES_PATH;
 
 /**
  * Created by imlk on 2018/7/30.
@@ -25,6 +24,7 @@ public class BugUtil {
 //    private static String logFileName = "module_log.txt";
 
     private static final String TAG = BugUtil.class.getSimpleName();
+
 
     private static boolean hasXP = false;
 
@@ -44,6 +44,17 @@ public class BugUtil {
         } else {
             Log.e(TAG, "save Crashing", th);
         }
+
+        if (BASE_FILES_PATH == null) {
+            if (hasXP) {
+                XposedBridge.log("BASE_FILES_PATH = null, unable to save log to file !!!!!");
+            } else {
+                Log.e(TAG, "BASE_FILES_PATH = null, unable to save log to file !!!!!");
+            }
+
+            return null;
+        }
+
 
         StringBuffer sb = new StringBuffer();
 
@@ -66,7 +77,7 @@ public class BugUtil {
             String logTime = time + "-" + timestamp;
 //            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
 
-            String path = Environment.getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS) + "/oneword_crash_log/";
+            String path = BASE_FILES_PATH + "/crash_log/";
 
             File dir = new File(path);
             if (!dir.exists()) {

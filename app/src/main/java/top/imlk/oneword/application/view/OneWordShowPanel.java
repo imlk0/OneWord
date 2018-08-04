@@ -26,7 +26,7 @@ public class OneWordShowPanel extends RelativeLayout implements View.OnClickList
     public TextView tvMsgMain;
     public TextView tvMsgFrom;
 
-    public ImageView ivLike;
+    public ImageView ivFavor;
     public ImageView ivSetIt;
 
     public WordBean curWordBean;
@@ -58,8 +58,8 @@ public class OneWordShowPanel extends RelativeLayout implements View.OnClickList
         this.tvMsgMain = findViewById(R.id.tv_msg_main);
         this.tvMsgFrom = findViewById(R.id.tv_msg_from);
 
-        this.ivLike = findViewById(R.id.iv_msg_favor);
-        this.ivLike.setOnClickListener(this);
+        this.ivFavor = findViewById(R.id.iv_msg_favor);
+        this.ivFavor.setOnClickListener(this);
         this.ivSetIt = findViewById(R.id.iv_msg_set);
         this.ivSetIt.setOnClickListener(this);
 
@@ -88,9 +88,9 @@ public class OneWordShowPanel extends RelativeLayout implements View.OnClickList
 
     private void updateLike(boolean like) {
         if (like) {
-            this.ivLike.setImageResource(R.drawable.ic_favorite_white_48dp);
+            this.ivFavor.setImageResource(R.drawable.ic_favorite_white_48dp);
         } else {
-            this.ivLike.setImageResource(R.drawable.ic_favorite_border_white_48dp);
+            this.ivFavor.setImageResource(R.drawable.ic_favorite_border_white_48dp);
         }
     }
 
@@ -117,8 +117,7 @@ public class OneWordShowPanel extends RelativeLayout implements View.OnClickList
             case R.id.iv_msg_set:
                 if (this.curWordBean != null) {
 
-//                    SharedPreferencesUtil.saveCurOneWord(context, curWordBean);
-                    BroadcastSender.sendSetNewLockScreenInfoBroadcast(mainActivity, this.curWordBean);
+                    mainActivity.updateAndSetCurWordBean(this.curWordBean);
                 } else {
                     Toast.makeText(mainActivity, "还没有拉取任何一条一言哦", Toast.LENGTH_SHORT).show();
                 }

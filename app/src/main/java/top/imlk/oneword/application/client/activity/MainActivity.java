@@ -20,8 +20,9 @@ import top.imlk.oneword.R;
 import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
 import top.imlk.oneword.net.OneWordApi;
 import top.imlk.oneword.util.BroadcastSender;
+import top.imlk.oneword.util.OneWordFileStation;
 import top.imlk.oneword.util.SharedPreferencesUtil;
-import top.imlk.oneword.util.StyleHelper;
+import top.imlk.oneword.util.AppStyleHelper;
 import top.imlk.oneword.application.view.MainOneWordView;
 import top.imlk.oneword.application.view.OneWordShowPanel;
 import top.imlk.oneword.application.view.PastedNestedScrollView;
@@ -84,8 +85,8 @@ public class MainActivity extends AppCompatActivity implements Observer<WordBean
         this.refreshLayout.setEnableLoadMore(false);
 
         refreshLayout.setPrimaryColors(
-                StyleHelper.getColorByAttributeId(this, R.attr.primary_light),
-                StyleHelper.getColorByAttributeId(this, R.attr.colorPrimaryDark));
+                AppStyleHelper.getColorByAttributeId(this, R.attr.primary_light),
+                AppStyleHelper.getColorByAttributeId(this, R.attr.colorPrimaryDark));
 
 
         SharedPreferencesUtil.onMainActivityCreate(this);
@@ -105,11 +106,17 @@ public class MainActivity extends AppCompatActivity implements Observer<WordBean
     }
 
 
-    public void updateCurWordBeanWithoutSend(WordBean wordBean) {
-        oneWordShowPanel.updateCurWordBeanOnUI(wordBean);
-        SharedPreferencesUtil.saveCurOneWord(this, wordBean);
-        pastedNestedScrollView.scrollToTop();
-        OneWordSQLiteOpenHelper.getInstance().insertToHistory(wordBean);
+    public void updateAndSetCurWordBean(WordBean wordBean) {
+        if (wordBean != null) {
+
+            oneWordShowPanel.updateCurWordBeanOnUI(wordBean);
+            SharedPreferencesUtil.saveCurOneWordId(this, wordBean.id);
+            pastedNestedScrollView.scrollToTop();
+            OneWordSQLiteOpenHelper.getInstance().insertToHistory(wordBean);
+            OneWordFileStation.saveOneWordJSON(wordBean);
+            BroadcastSender.sendUseNewOneWordInfoBroadcast(this, wordBean);
+        }
+
     }
 
 
@@ -129,16 +136,17 @@ public class MainActivity extends AppCompatActivity implements Observer<WordBean
     @Override
     public void onNext(WordBean wordBean) {
 
-        updateCurWordBeanWithoutSend(wordBean);
+        updateAndSetCurWordBean(wordBean);
 
         refreshLayout.finishRefresh(300, true);
     }
 
     @Override
     public void onError(Throwable e) {
-        Toast.makeText(MainActivity.this, "网络异常，获取失败", Toast.LENGTH_LONG).show();
-        refreshLayout.finishRefresh(0, false);
+        Toast.makeText(MainActivity.this, "网络异常，获取失败", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
 
+        refreshLayout.finishRefresh(0, false);
     }
 
     @Override

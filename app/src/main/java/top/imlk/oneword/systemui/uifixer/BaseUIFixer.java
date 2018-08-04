@@ -1,6 +1,8 @@
 package top.imlk.oneword.systemui.uifixer;
 
 import android.util.TypedValue;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,7 +16,7 @@ import top.imlk.oneword.systemui.view.OneWordView;
 /**
  * Created by imlk on 2018/7/30.
  */
-public class BaseUIFixer implements UIFixer {
+public class BaseUIFixer {
 
     protected OneWordView oneWordView;
 
@@ -27,40 +29,50 @@ public class BaseUIFixer implements UIFixer {
 
     }
 
-    @Override
     public void fixUI(TextView onerInfoTextView) {
+
+        //添加到现有视图中
+
+        ViewGroup parent = ((ViewGroup) onerInfoTextView.getParent());
+
+        int index = parent.indexOfChild(onerInfoTextView);
+
+        ViewGroup.LayoutParams layoutParams = onerInfoTextView.getLayoutParams();
+
+        onerInfoTextView.setVisibility(View.GONE);
+
+//        parent.removeView(onerInfoTextView);
+
+//        XposedBridge.log("parent.addView(oneWordView, layoutParams);");
+
+        layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+
+        parent.addView(oneWordView, index + 1, layoutParams);
 
 
     }
 
-    @Override
-    public void onSetText(CharSequence text, TextView.BufferType type) {
+
+    public void onSetOneWord(WordBean wordBean) {
 
         if (oneWordView == null) {
             return;
         }
 
-        WordBean wordBean = null;
-
-        try {
-            if (text != null) {
-                wordBean = new Gson().fromJson(text.toString(), WordBean.class);
-            }
-        } catch (JsonSyntaxException e) {
-            // TODO 增加软件更新后重启提示
-
-            Toast.makeText(oneWordView.getContext(), "解析保存的一言失败，去设置一言？", Toast.LENGTH_SHORT).show();
+        if (wordBean == null) {
+            return;
         }
+
+        // TODO 增加软件更新后重启提示
+
 
         oneWordView.setOneWord(wordBean);
     }
 
-    @Override
     public void onSetTextSize(int unit, float size) {
         oneWordView.setTextSize(unit, size);
     }
 
-    @Override
     public void onSetTextColor(int color) {
         oneWordView.setTextColor(color);
     }

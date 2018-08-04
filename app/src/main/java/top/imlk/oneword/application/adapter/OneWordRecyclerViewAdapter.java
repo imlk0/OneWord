@@ -30,7 +30,9 @@ import top.imlk.oneword.util.BroadcastSender;
  */
 public class OneWordRecyclerViewAdapter extends RecyclerView.Adapter implements OnLoadMoreListener {
 
-//    private final RecyclerView recyclerView;
+    private RecyclerView recyclerView;
+
+    private static final int ITEM_NUM_INCREASE_STEP = 10;
 
     public enum PageType {
         HISTORY_PAGE,
@@ -49,15 +51,23 @@ public class OneWordRecyclerViewAdapter extends RecyclerView.Adapter implements 
 //        this.recyclerView = recyclerView;
     }
 
-    public void clearAndFill() {
+    @Override
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        this.recyclerView = recyclerView;
+    }
+
+    public void clearData() {
         switch (pageType) {
             case HISTORY_PAGE:
-                wordBeans = OneWordSQLiteOpenHelper.getInstance().querySomeOneWordFromHistory(0, 20);
+                wordBeans.clear();
                 notifyDataSetChanged();
+
                 break;
             case FAVOR_PAGE:
-                wordBeans = OneWordSQLiteOpenHelper.getInstance().querySomeOneWordFromFavor(0, 20);
+                wordBeans.clear();
                 notifyDataSetChanged();
+
                 break;
         }
 
@@ -82,6 +92,8 @@ public class OneWordRecyclerViewAdapter extends RecyclerView.Adapter implements 
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         OneWordItemHolder oneWordItemHolder = ((OneWordItemHolder) holder);
 
+        oneWordItemHolder.recoverToDefaultForm();
+
         oneWordItemHolder.data = wordBeans.get(position);
 
         ((TextView) oneWordItemHolder.itemView.findViewById(R.id.item_oneword_msg)).setText(wordBeans.get(position).content);
@@ -89,6 +101,7 @@ public class OneWordRecyclerViewAdapter extends RecyclerView.Adapter implements 
         oneWordItemHolder.itemView.findViewById(R.id.item_delete).setOnClickListener(oneWordItemHolder);
         oneWordItemHolder.itemView.findViewById(R.id.item_set).setOnClickListener(oneWordItemHolder);
         oneWordItemHolder.itemView.findViewById(R.id.item_share).setOnClickListener(oneWordItemHolder);
+
         if (pageType == PageType.HISTORY_PAGE) {
             oneWordItemHolder.itemView.findViewById(R.id.item_favor_state).setOnClickListener(oneWordItemHolder);
             oneWordItemHolder.updateFavorStateImage(OneWordSQLiteOpenHelper.getInstance().checkIfInFavor(oneWordItemHolder.data.id));
@@ -129,8 +142,7 @@ public class OneWordRecyclerViewAdapter extends RecyclerView.Adapter implements 
 
                 case R.id.item_set:
 
-                    mainActivity.updateCurWordBeanWithoutSend(this.data);
-                    BroadcastSender.sendSetNewLockScreenInfoBroadcast(mainActivity, this.data);
+                    mainActivity.updateAndSetCurWordBean(this.data);
 
                     break;
                 case R.id.item_favor_state:
@@ -168,14 +180,18 @@ public class OneWordRecyclerViewAdapter extends RecyclerView.Adapter implements 
 
                     int ind = wordBeans.indexOf(this.data);
                     wordBeans.remove(this.data);
-                    this.front.setX(0);
-                    this.revealRight.setVisibility(View.GONE);
-                    this.revealLeft.setVisibility(View.GONE);
                     OneWordRecyclerViewAdapter.this.notifyItemRemoved(ind);
 
 
                     break;
             }
+        }
+
+
+        public void recoverToDefaultForm() {
+            this.front.setX(0);
+            this.revealRight.setVisibility(View.GONE);
+            this.revealLeft.setVisibility(View.GONE);
         }
     }
 
@@ -185,14 +201,31 @@ public class OneWordRecyclerViewAdapter extends RecyclerView.Adapter implements 
         int oldLen = wordBeans.size();
 
         if (pageType == PageType.HISTORY_PAGE) {
-            wordBeans.addAll(OneWordSQLiteOpenHelper.getInstance().querySomeOneWordFromHistory(oldLen, 20));
+            wordBeans.addAll(OneWordSQLiteOpenHelper.getInstance().querySomeOneWordFromHistory(oldLen, ITEM_NUM_INCREASE_STEP));
         } else {
-            wordBeans.addAll(OneWordSQLiteOpenHelper.getInstance().querySomeOneWordFromFavor(oldLen, 20));
+            wordBeans.addAll(OneWordSQLiteOpenHelper.getInstance().querySomeOneWordFromFavor(oldLen, ITEM_NUM_INCREASE_STEP));
         }
+
 
         this.notifyItemRangeInserted(oldLen, wordBeans.size() - oldLen);
 
-        refreshLayout.finishLoadMore(1000);
+
+        if (wordBeans.size() == oldLen) {
+//            refreshLayout.setNoMoreData(true);
+            refreshLayout.finishLoadMoreWithNoMoreData();
+        } else {
+            refreshLayout.finishLoadMore(400);
+        }
+
+
+        if (oldLen == 0) {
+            recyclerView.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    recyclerView.smoothScrollToPosition(0);
+                }
+            }, 500);
+        }
     }
 
 

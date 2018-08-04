@@ -20,6 +20,7 @@ import top.imlk.oneword.bean.WordBean;
 import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
 import top.imlk.oneword.net.OneWordApi;
 import top.imlk.oneword.util.BroadcastSender;
+import top.imlk.oneword.util.OneWordFileStation;
 import top.imlk.oneword.util.SharedPreferencesUtil;
 
 
@@ -253,9 +254,10 @@ public class OneWordAutoRefreshService extends Service implements Observer<WordB
 
         OneWordSQLiteOpenHelper.getInstance().insertToHistory(bean);
 
-        SharedPreferencesUtil.saveCurOneWord(this, bean);
+        SharedPreferencesUtil.saveCurOneWordId(this, bean.id);
 
-        BroadcastSender.sendSetNewLockScreenInfoBroadcast(this, bean);
+        OneWordFileStation.saveOneWordJSON(bean);
+        BroadcastSender.sendUseNewOneWordInfoBroadcast(this, bean);
 
         Log.i(LOG_TAG, "锁屏一言自动更新服务 执行完毕");
     }

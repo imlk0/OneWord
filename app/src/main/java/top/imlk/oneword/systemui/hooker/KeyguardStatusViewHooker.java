@@ -18,11 +18,12 @@ import java.lang.reflect.Method;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
-import top.imlk.oneword.systemui.uifixer.AOSPUIFixer;
-import top.imlk.oneword.systemui.uifixer.UIFixer;
+import top.imlk.oneword.bean.WordBean;
+import top.imlk.oneword.systemui.uifixer.BaseUIFixer;
 import top.imlk.oneword.systemui.view.OwnerInfoTextViewProxy;
 import top.imlk.oneword.util.BroadcastSender;
 import top.imlk.oneword.util.BugUtil;
+import top.imlk.oneword.util.OneWordFileStation;
 
 
 /**
@@ -91,7 +92,7 @@ public class KeyguardStatusViewHooker {
 
                     OwnerInfoTextViewProxy proxyView = new OwnerInfoTextViewProxy(ref_mOwnerInfo.get().getContext());
 
-                    UIFixer uiFixer = new AOSPUIFixer(ref_mOwnerInfo.get());
+                    BaseUIFixer uiFixer = new BaseUIFixer(ref_mOwnerInfo.get());
                     uiFixer.fixUI(ref_mOwnerInfo.get());
 
                     proxyView.setUiFixer(uiFixer);
@@ -101,9 +102,7 @@ public class KeyguardStatusViewHooker {
 
                     field_com_android_keyguard_KeyguardStatusView_mOwnerInfo.set(param.thisObject, ref_OwnerInfoTextViewProxy.get());
 
-
-                    ref_OwnerInfoTextViewProxy.get().setText(KeyguardStatusViewHelper.getOwnerInfo());
-
+                    getAndSetOneWord();
 
                 } catch (Throwable e) {
 //                    XposedBridge.log(e);
@@ -115,6 +114,20 @@ public class KeyguardStatusViewHooker {
 
             }
         });
+    }
+
+    public static void getAndSetOneWord() {
+
+        WordBean wordBean = OneWordFileStation.readOneWordJSON();
+
+        if (wordBean == null) {
+
+            Toast.makeText(((View) ref_keyguardStatusView.get()).getContext(), "解析保存的一言失败，去设置一言？", Toast.LENGTH_SHORT).show();
+        } else {
+
+            ref_OwnerInfoTextViewProxy.get().setOneWord(wordBean);
+
+        }
     }
 
 
@@ -143,19 +156,21 @@ public class KeyguardStatusViewHooker {
                         XposedBridge.log("received");
                         XposedBridge.log(intent.getStringExtra(BroadcastSender.THE_NEW_LOCK_SCREEN_INFO_JSON));
 
-                        KeyguardStatusViewHelper.setOwnerInfo(intent.getStringExtra(BroadcastSender.THE_NEW_LOCK_SCREEN_INFO_JSON));
+//                        KeyguardStatusViewHelper.setOwnerInfo(intent.getStringExtra(BroadcastSender.THE_NEW_LOCK_SCREEN_INFO_JSON));
 
                         XposedBridge.log("resolved");
 
-                        Toast.makeText(context, "一言已经写好啦，可以展示了", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "一言已收到", Toast.LENGTH_SHORT).show();
 
+                        XposedBridge.log("updated");
+
+                        break;
 
                     case BroadcastSender.CMD_BROADCAST_UPDATE_LOCK_SCREEN_INFO:
 
-                        // 更新OwnerInfo信息到界面
-                        ref_OwnerInfoTextViewProxy.get().setText(KeyguardStatusViewHelper.getOwnerInfo());
+                        getAndSetOneWord();
 
-                        XposedBridge.log("updated");
+                        XposedBridge.log("updated byself");
 
                         break;
                 }

@@ -49,7 +49,7 @@ public class OneWordInJsonExtracter {
     }
 
     private static void resolveAim(String form, String real, WordBean wordBean) {
-        switch (form) {
+        switch (form.trim()) {
             case WordBean.FIELD_CONTENT:
                 wordBean.content = real;
                 break;

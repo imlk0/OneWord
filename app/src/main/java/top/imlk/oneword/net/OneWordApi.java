@@ -13,6 +13,9 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -46,7 +49,7 @@ public class OneWordApi {
 
     public static void requestOneWord(final Observer<WordBean> callback) {
 
-        requestOneWordInternal().subscribe(callback);
+        requestOneWordInternal().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(callback);
 
     }
 
@@ -128,9 +131,10 @@ public class OneWordApi {
                             } catch (Throwable throwable) {
 
                                 throwable.addSuppressed(new Throwable("responseBody=\n" + responseBody + "\napiBean=\n" + apiBean));
+
+                                BugUtil.printAndSaveCrashThrow2File(throwable);
                                 emitter.onError(throwable);
                             }
-
 
                         }
                     });

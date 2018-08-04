@@ -8,7 +8,7 @@ import android.util.TypedValue;
 /**
  * Created by imlk on 2018/6/2.
  */
-public class StyleHelper {
+public class AppStyleHelper {
     public static int getColorByAttributeId(Context context, @AttrRes int attrIdForColor) {
         TypedValue typedValue = new TypedValue();
         Resources.Theme theme = context.getTheme();

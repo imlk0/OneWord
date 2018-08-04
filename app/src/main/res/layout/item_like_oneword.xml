@@ -21,8 +21,9 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="12dp"
-            android:background="@drawable/bg_circle_botton"
             android:src="@drawable/ic_done_white_48dp" />
+
+        <!--android:background="@drawable/bg_circle_botton"-->
 
         <ImageView
             android:id="@+id/item_share"

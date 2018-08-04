@@ -3,8 +3,10 @@ package top.imlk.oneword.application.view;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.widget.LinearLayout;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -12,7 +14,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import co.dift.ui.SwipeToAction;
 import top.imlk.oneword.R;
 import top.imlk.oneword.application.adapter.OneWordRecyclerViewAdapter;
-import top.imlk.oneword.util.StyleHelper;
+import top.imlk.oneword.util.AppStyleHelper;
 
 /**
  * Created by imlk on 2018/8/3.
@@ -39,20 +41,43 @@ public class OneWordListShowPage extends LinearLayout {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
+
+    static class SmootherScrollLayoutManager extends LinearLayoutManager {
+
+        public SmootherScrollLayoutManager(Context context) {
+            super(context);
+        }
+
+        @Override
+        public void smoothScrollToPosition(RecyclerView recyclerView,
+                                           RecyclerView.State state, final int position) {
+            LinearSmoothScroller smoothScroller =
+                    new LinearSmoothScroller(recyclerView.getContext()) {
+                        @Override
+                        protected float calculateSpeedPerPixel(DisplayMetrics displayMetrics) {
+                            return 150f / displayMetrics.densityDpi;
+                        }
+                    };
+
+            smoothScroller.setTargetPosition(position);
+            startSmoothScroll(smoothScroller);
+        }
+    }
+
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
 
         recyclerView = findViewById(R.id.rv_on_history_page);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setLayoutManager(new SmootherScrollLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
 
-        RefreshLayout refreshLayout = findViewById(R.id.refreshLayout);
+
+        refreshLayout = findViewById(R.id.refreshLayout);
         refreshLayout.setEnableRefresh(false);
         refreshLayout.setPrimaryColors(
-                StyleHelper.getColorByAttributeId(getContext(), R.attr.primary_light),
-                StyleHelper.getColorByAttributeId(getContext(), R.attr.colorPrimaryDark));
-        refreshLayout.setOnLoadMoreListener(oneWordRecyclerViewAdapter);
+                AppStyleHelper.getColorByAttributeId(getContext(), R.attr.primary_light),
+                AppStyleHelper.getColorByAttributeId(getContext(), R.attr.colorPrimaryDark));
 
         final SwipeToAction swipeToAction = new SwipeToAction(recyclerView, new SwipeToAction.SwipeListener<OneWordRecyclerViewAdapter.OneWordItemHolder>() {
             @Override
@@ -76,6 +101,12 @@ public class OneWordListShowPage extends LinearLayout {
             }
 
         });
-
     }
+
+    public void clearAndReloadData() {
+        oneWordRecyclerViewAdapter.clearData();
+        refreshLayout.setNoMoreData(false);
+        refreshLayout.autoLoadMore();
+    }
+
 }

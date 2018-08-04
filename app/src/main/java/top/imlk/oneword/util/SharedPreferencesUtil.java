@@ -62,15 +62,15 @@ public class SharedPreferencesUtil {
     }
 
 
-    public static void saveCurOneWord(Context context, WordBean wordBean) {
+    public static void saveCurOneWordId(Context context, int id) {
 
-        if (wordBean.id > 0) {
+        if (id > 0) {
 
             SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PER_CURRENT_STATE, Context.MODE_PRIVATE);
 
             SharedPreferences.Editor editor = sharedPreferences.edit();
 
-            editor.putInt(SHARED_PER_KEY_CURRENT_ONEWORD_ID, wordBean.id);
+            editor.putInt(SHARED_PER_KEY_CURRENT_ONEWORD_ID, id);
 
             editor.commit();
         }

@@ -151,7 +151,7 @@ public class MainOneWordView extends LinearLayout {
         bottomMagicIndicator.onPageSelected(index == 2 ? 3 : index);
         viewPager.setCurrentItem(index);
         if (index == 0 || index == 1) {
-            extendViewPageAdaper.clearAndFillRecyclerView(index);
+            extendViewPageAdaper.clearAndReloadDataOfRecyclerView(index);
         }
     }
 
