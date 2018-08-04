@@ -18,9 +18,7 @@ import com.yarolegovich.lovelydialog.LovelyInfoDialog;
 import com.yarolegovich.lovelydialog.ViewConfigurator;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import top.imlk.oneword.net.Hitokoto.HitokotoApi;
 import top.imlk.oneword.R;
 import top.imlk.oneword.application.adapter.ItemArrayAdapter;
 import top.imlk.oneword.application.client.service.OneWordAutoRefreshService;

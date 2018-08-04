@@ -2,12 +2,10 @@ package top.imlk.oneword.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.text.TextUtils;
 
 
 import top.imlk.oneword.bean.WordBean;
 import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
-import top.imlk.oneword.net.Hitokoto.HitokotoBean;
 import top.imlk.oneword.application.client.service.OneWordAutoRefreshService;
 
 
@@ -57,7 +55,7 @@ public class SharedPreferencesUtil {
         int id = sharedPreferences.getInt(SHARED_PER_KEY_CURRENT_ONEWORD_ID, -1);
 
         if (id > 0) {
-            return OneWordSQLiteOpenHelper.getInstance(context).queryOneWordInAllOneWordById(id);
+            return OneWordSQLiteOpenHelper.getInstance().queryOneWordInAllOneWordById(id);
         }
 
         return null;
@@ -193,7 +191,7 @@ public class SharedPreferencesUtil {
                 wordBean.reference = sharedPreferences.getString("current_from", null);
 
                 if (wordBean.content != null) {
-                    wordBean.id = OneWordSQLiteOpenHelper.getInstance(context).queryIdInAllOneWord(wordBean);
+                    wordBean.id = OneWordSQLiteOpenHelper.getInstance().queryIdInAllOneWord(wordBean);
                 }
 
                 SharedPreferences.Editor editor = sharedPreferences.edit();

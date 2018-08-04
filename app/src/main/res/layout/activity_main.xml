@@ -19,7 +19,7 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/ll_page_first"
+                android:id="@+id/ll_page_main"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
@@ -129,7 +129,7 @@
                 <top.imlk.oneword.application.view.UnScrollableViewPaper
                     android:id="@+id/vp_page_extend"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="match_parent">
 
                 </top.imlk.oneword.application.view.UnScrollableViewPaper>
 

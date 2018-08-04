@@ -21,4 +21,17 @@ public class ApiBean {
         this.resp_form = resp_form;
         this.enabled = enabled;
     }
+
+    @Override
+    public String toString() {
+        return "ApiBean{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", url='" + url + '\'' +
+                ", req_method='" + req_method + '\'' +
+                ", req_args_json='" + req_args_json + '\'' +
+                ", resp_form='" + resp_form + '\'' +
+                ", enabled=" + enabled +
+                '}';
+    }
 }

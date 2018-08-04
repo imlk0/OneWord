@@ -17,8 +17,8 @@ import java.util.TimerTask;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import top.imlk.oneword.bean.WordBean;
-import top.imlk.oneword.net.Hitokoto.HitokotoApi;
 import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
+import top.imlk.oneword.net.OneWordApi;
 import top.imlk.oneword.util.BroadcastSender;
 import top.imlk.oneword.util.SharedPreferencesUtil;
 
@@ -212,7 +212,7 @@ public class OneWordAutoRefreshService extends Service implements Observer<WordB
     }
 
     private void checkIfEnough() {
-        if (OneWordSQLiteOpenHelper.getInstance(this).countToShow() < 10) {
+        if (OneWordSQLiteOpenHelper.getInstance().countToShow() < 10) {
             getSomeOneWord(20);
         }
     }
@@ -221,23 +221,23 @@ public class OneWordAutoRefreshService extends Service implements Observer<WordB
     private void getSomeOneWord(int count) {
 
         for (int i = 0; i < count; ++i) {
-            HitokotoApi.requestOneWord(this);
+            OneWordApi.requestOneWord(this);
         }
 
     }
 
     private void doOnClockEvent() {
         Log.i(LOG_TAG, "锁屏一言自动更新服务 执行");
-        WordBean bean = OneWordSQLiteOpenHelper.getInstance(this).queryOneWordFromToShowByASC();
-        OneWordSQLiteOpenHelper.getInstance(this).removeFromToShow(bean.id);
+        WordBean bean = OneWordSQLiteOpenHelper.getInstance().queryOneWordFromToShowByASC();
+        OneWordSQLiteOpenHelper.getInstance().removeFromToShow(bean.id);
 
 
         if (bean == null) {
-            bean = OneWordSQLiteOpenHelper.getInstance(this).queryOneWordFromFavorByRandom();
+            bean = OneWordSQLiteOpenHelper.getInstance().queryOneWordFromFavorByRandom();
         }
 
         if (bean == null) {
-            bean = OneWordSQLiteOpenHelper.getInstance(this).queryOneWordFromHistoryByRandom();
+            bean = OneWordSQLiteOpenHelper.getInstance().queryOneWordFromHistoryByRandom();
         }
 
         if (bean == null) {
@@ -247,11 +247,11 @@ public class OneWordAutoRefreshService extends Service implements Observer<WordB
 
         checkIfEnough();
 
-//        if (bean.like || OneWordSQLiteOpenHelper.getInstance(this).query_one_item_exist(TABLE_LIKE, bean)) {
+//        if (bean.like || OneWordSQLiteOpenHelper.getInstance().query_one_item_exist(TABLE_LIKE, bean)) {
 //            bean.like = true;
 //        }
 
-        OneWordSQLiteOpenHelper.getInstance(this).insertToHistory(bean);
+        OneWordSQLiteOpenHelper.getInstance().insertToHistory(bean);
 
         SharedPreferencesUtil.saveCurOneWord(this, bean);
 
@@ -275,10 +275,7 @@ public class OneWordAutoRefreshService extends Service implements Observer<WordB
             mUserPresentBroadCastReceiver = null;
         }
 
-        if (!OneWordSQLiteOpenHelper.isDataBaseClosed()) {
-            OneWordSQLiteOpenHelper.getInstance(this).close();
-        }
-
+        OneWordSQLiteOpenHelper.closeDataBase();
 
         super.onDestroy();
 
@@ -298,7 +295,7 @@ public class OneWordAutoRefreshService extends Service implements Observer<WordB
 
         Log.i(LOG_TAG, "成功获取到一言");
 
-        OneWordSQLiteOpenHelper.getInstance(this).insertToToShow(wordBean);
+        OneWordSQLiteOpenHelper.getInstance().insertToToShow(wordBean);
 
     }
 

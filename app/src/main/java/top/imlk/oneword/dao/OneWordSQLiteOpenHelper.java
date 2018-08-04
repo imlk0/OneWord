@@ -1,5 +1,6 @@
 package top.imlk.oneword.dao;
 
+import android.app.ActivityThread;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -69,10 +70,20 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
         return false;
     }
 
-    public static OneWordSQLiteOpenHelper getInstance(Context context) {
-        if (oneWordSQLiteOpenHelper == null) {
-            oneWordSQLiteOpenHelper = new OneWordSQLiteOpenHelper(context);
+    public synchronized static void closeDataBase() {
+        if (!OneWordSQLiteOpenHelper.isDataBaseClosed()) {
+            OneWordSQLiteOpenHelper.getInstance().close();
+        }
+    }
 
+    public static OneWordSQLiteOpenHelper getInstance() {
+
+        if (oneWordSQLiteOpenHelper == null) {
+            synchronized (OneWordSQLiteOpenHelper.class) {
+                if (oneWordSQLiteOpenHelper == null) {
+                    oneWordSQLiteOpenHelper = new OneWordSQLiteOpenHelper(ActivityThread.currentApplication());
+                }
+            }
         }
         return oneWordSQLiteOpenHelper;
     }
@@ -523,7 +534,7 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
                         if (cursor.getInt(7) == 1) {// 如果点过喜欢
 
                             Cursor cursor_1 = db.rawQuery("SELECT * FROM old_like WHERE id=? AND type=?", new String[]{
-                                    String.valueOf(cursor.getInt(0)), cursor.getString(3)
+                                    String.valueOf(cursor.getInt(0)), cursor.getString(2)
                             });
 
                             if (cursor_1.moveToNext()) {// 在旧的like表中存在

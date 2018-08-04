@@ -63,8 +63,8 @@ public class KeyguardStatusViewHooker {
 
 //            throw new Throwable();
         } catch (Throwable e) {
-            XposedBridge.log(e);
-            String logPath = BugUtil.saveCrashInfo2File(e);
+//            XposedBridge.log(e);
+            String logPath = BugUtil.printAndSaveCrashThrow2File(e);
 //            Toast.makeText(((View) param.thisObject).getContext(), String.format("Hook时发生异常，可能是系统兼容性问题，日志产生在:\n%s", logPath), Toast.LENGTH_LONG).show();
 
         }
@@ -106,8 +106,8 @@ public class KeyguardStatusViewHooker {
 
 
                 } catch (Throwable e) {
-                    XposedBridge.log(e);
-                    String logPath = BugUtil.saveCrashInfo2File(e);
+//                    XposedBridge.log(e);
+                    String logPath = BugUtil.printAndSaveCrashThrow2File(e);
                     Toast.makeText(((View) param.thisObject).getContext(), String.format("Hook后的操作发生异常，日志产生在:\n%s", logPath), Toast.LENGTH_LONG).show();
                 }
 
@@ -160,9 +160,9 @@ public class KeyguardStatusViewHooker {
                         break;
                 }
             } catch (Throwable e) {
-                XposedBridge.log(e);
+//                XposedBridge.log(e);
 
-                String logPath = BugUtil.saveCrashInfo2File(e);
+                String logPath = BugUtil.printAndSaveCrashThrow2File(e);
 
                 Toast.makeText(context, String.format("写入一言的时候不小心搞崩了,灰常抱歉，日志在\n%s", logPath), Toast.LENGTH_LONG).show();
 

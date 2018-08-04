@@ -70,7 +70,7 @@ public class PastedNestedScrollView extends NestedScrollView {
             return false;
         }
 
-        Log.d("getScrollY()", getScrollY() + "");
+//        Log.d("getScrollY()", getScrollY() + "");
 
         if (ev.getAction() == MotionEvent.ACTION_UP || ev.getAction() == MotionEvent.ACTION_CANCEL) {
 
@@ -88,7 +88,7 @@ public class PastedNestedScrollView extends NestedScrollView {
     }
 
     public void scrollToTop() {
-        Log.d("scrollToTop", "scrollToTop");
+        Log.d("PastedNestedScrollView", "scrollToTop");
         this.post(new Runnable() {
             @Override
             public void run() {
@@ -111,7 +111,7 @@ public class PastedNestedScrollView extends NestedScrollView {
 
 
     public void scrollToBottom() {
-        Log.d("scrollToBottom", "scrollToBottom");
+        Log.d("PastedNestedScrollView", "scrollToBottom");
 
         this.post(new Runnable() {
             @Override

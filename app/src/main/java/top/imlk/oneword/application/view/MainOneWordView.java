@@ -27,7 +27,7 @@ public class MainOneWordView extends LinearLayout {
 
 
     public LinearLayout llMsgBottom;
-    public LinearLayout llPageFirst;
+    public LinearLayout llPageMain;
     public LinearLayout llPageExtend;
 
     private MainActivity mainActivity;
@@ -61,11 +61,11 @@ public class MainOneWordView extends LinearLayout {
     public void upDateLP(Rect rect) {
 
 
-        if (llPageFirst != null) {
+        if (llPageMain != null) {
 
-            ViewGroup.LayoutParams layoutParams = llPageFirst.getLayoutParams();
+            ViewGroup.LayoutParams layoutParams = llPageMain.getLayoutParams();
             layoutParams.height = rect.height();
-            llPageFirst.setLayoutParams(layoutParams);
+            llPageMain.setLayoutParams(layoutParams);
 
         }
 
@@ -77,9 +77,9 @@ public class MainOneWordView extends LinearLayout {
             llPageExtend.setLayoutParams(layoutParams);
         }
 
-        if (extendViewPageAdaper != null) {
-            extendViewPageAdaper.upDateLP(rect.height() - (this.llMsgBottom == null ? 0 : this.llMsgBottom.getHeight()));
-        }
+//        if (extendViewPageAdaper != null) {
+//            extendViewPageAdaper.upDateLP(rect.height() - (this.llMsgBottom == null ? 0 : this.llMsgBottom.getHeight()));
+//        }
 
 
         if (bottomNavigatorAdapter != null) {
@@ -95,7 +95,7 @@ public class MainOneWordView extends LinearLayout {
 //        }
 
 
-        llPageFirst = findViewById(R.id.ll_page_first);
+        llPageMain = findViewById(R.id.ll_page_main);
         llPageExtend = findViewById(R.id.ll_page_extend);
         bottomMagicIndicator = findViewById(R.id.magi_bottom);
 

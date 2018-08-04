@@ -52,11 +52,11 @@ public class OneWordRecyclerViewAdapter extends RecyclerView.Adapter implements 
     public void clearAndFill() {
         switch (pageType) {
             case HISTORY_PAGE:
-                wordBeans = OneWordSQLiteOpenHelper.getInstance(mainActivity).querySomeOneWordFromHistory(20, 0);
+                wordBeans = OneWordSQLiteOpenHelper.getInstance().querySomeOneWordFromHistory(0, 20);
                 notifyDataSetChanged();
                 break;
             case FAVOR_PAGE:
-                wordBeans = OneWordSQLiteOpenHelper.getInstance(mainActivity).querySomeOneWordFromFavor(20, 0);
+                wordBeans = OneWordSQLiteOpenHelper.getInstance().querySomeOneWordFromFavor(0, 20);
                 notifyDataSetChanged();
                 break;
         }
@@ -91,7 +91,7 @@ public class OneWordRecyclerViewAdapter extends RecyclerView.Adapter implements 
         oneWordItemHolder.itemView.findViewById(R.id.item_share).setOnClickListener(oneWordItemHolder);
         if (pageType == PageType.HISTORY_PAGE) {
             oneWordItemHolder.itemView.findViewById(R.id.item_favor_state).setOnClickListener(oneWordItemHolder);
-            oneWordItemHolder.updateFavorStateImage(OneWordSQLiteOpenHelper.getInstance(mainActivity).checkIfInFavor(oneWordItemHolder.data.id));
+            oneWordItemHolder.updateFavorStateImage(OneWordSQLiteOpenHelper.getInstance().checkIfInFavor(oneWordItemHolder.data.id));
         }
 
 
@@ -139,12 +139,12 @@ public class OneWordRecyclerViewAdapter extends RecyclerView.Adapter implements 
                         break;
                     } else {
 
-                        boolean favor = OneWordSQLiteOpenHelper.getInstance(mainActivity).checkIfInFavor(this.data.id);
+                        boolean favor = OneWordSQLiteOpenHelper.getInstance().checkIfInFavor(this.data.id);
 
                         if (favor) {
-                            OneWordSQLiteOpenHelper.getInstance(mainActivity).removeFromFavor(this.data.id);
+                            OneWordSQLiteOpenHelper.getInstance().removeFromFavor(this.data.id);
                         } else {
-                            OneWordSQLiteOpenHelper.getInstance(mainActivity).insertToFavor(this.data);
+                            OneWordSQLiteOpenHelper.getInstance().insertToFavor(this.data);
                         }
 
                         mainActivity.checkIfCurBeanFavorStateChanged(this.data);
@@ -160,10 +160,10 @@ public class OneWordRecyclerViewAdapter extends RecyclerView.Adapter implements 
 
                     if (pageType == PageType.FAVOR_PAGE) {
 
-                        OneWordSQLiteOpenHelper.getInstance(mainActivity).removeFromFavor(this.data.id);
+                        OneWordSQLiteOpenHelper.getInstance().removeFromFavor(this.data.id);
                         mainActivity.checkIfCurBeanFavorStateChanged(this.data);
                     } else {
-                        OneWordSQLiteOpenHelper.getInstance(mainActivity).removeFromHistory(this.data.id);
+                        OneWordSQLiteOpenHelper.getInstance().removeFromHistory(this.data.id);
                     }
 
                     int ind = wordBeans.indexOf(this.data);
@@ -185,9 +185,9 @@ public class OneWordRecyclerViewAdapter extends RecyclerView.Adapter implements 
         int oldLen = wordBeans.size();
 
         if (pageType == PageType.HISTORY_PAGE) {
-            wordBeans.addAll(OneWordSQLiteOpenHelper.getInstance(mainActivity).querySomeOneWordFromHistory(oldLen, 20));
+            wordBeans.addAll(OneWordSQLiteOpenHelper.getInstance().querySomeOneWordFromHistory(oldLen, 20));
         } else {
-            wordBeans.addAll(OneWordSQLiteOpenHelper.getInstance(mainActivity).querySomeOneWordFromFavor(oldLen, 20));
+            wordBeans.addAll(OneWordSQLiteOpenHelper.getInstance().querySomeOneWordFromFavor(oldLen, 20));
         }
 
         this.notifyItemRangeInserted(oldLen, wordBeans.size() - oldLen);

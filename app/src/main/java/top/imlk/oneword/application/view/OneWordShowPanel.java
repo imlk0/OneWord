@@ -81,7 +81,7 @@ public class OneWordShowPanel extends RelativeLayout implements View.OnClickList
 
     public void updateCurWordBeanOnUI(WordBean wordBean) {
         this.curWordBean = wordBean;
-        this.updateLike(OneWordSQLiteOpenHelper.getInstance(mainActivity).checkIfInFavor(wordBean.id));
+        this.updateLike(OneWordSQLiteOpenHelper.getInstance().checkIfInFavor(wordBean.id));
         this.updateMsgMain(wordBean.content);
         this.updateMsgFrom(wordBean.reference);
     }
@@ -101,12 +101,12 @@ public class OneWordShowPanel extends RelativeLayout implements View.OnClickList
             case R.id.iv_msg_favor:
                 if (this.curWordBean != null) {
 
-                    boolean favor = OneWordSQLiteOpenHelper.getInstance(mainActivity).checkIfInFavor(this.curWordBean.id);
+                    boolean favor = OneWordSQLiteOpenHelper.getInstance().checkIfInFavor(this.curWordBean.id);
 
                     if (favor) {
-                        OneWordSQLiteOpenHelper.getInstance(mainActivity).removeFromFavor(this.curWordBean.id);
+                        OneWordSQLiteOpenHelper.getInstance().removeFromFavor(this.curWordBean.id);
                     } else {
-                        OneWordSQLiteOpenHelper.getInstance(mainActivity).insertToFavor(this.curWordBean);
+                        OneWordSQLiteOpenHelper.getInstance().insertToFavor(this.curWordBean);
                     }
 
                     this.updateLike(!favor);

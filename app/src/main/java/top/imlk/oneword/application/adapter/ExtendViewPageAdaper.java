@@ -22,7 +22,7 @@ public class ExtendViewPageAdaper extends PagerAdapter {
 
     public OneWordListShowPage historyPage;
     public OneWordListShowPage favorPage;
-    public LinearLayout settingPage;
+    public ViewGroup settingPage;
 
     public static int PAGE_COUNT = 3;
 
@@ -35,7 +35,7 @@ public class ExtendViewPageAdaper extends PagerAdapter {
 
         historyPage = (OneWordListShowPage) View.inflate(mainActivity, R.layout.page_oneword_show_list, null);
         favorPage = (OneWordListShowPage) View.inflate(mainActivity, R.layout.page_oneword_show_list, null);
-        settingPage = (LinearLayout) View.inflate(mainActivity, R.layout.page_setting, null);
+        settingPage = (ViewGroup) View.inflate(mainActivity, R.layout.page_setting, null);
 
         initHistoryPage();
         initFavorPage();
@@ -44,10 +44,10 @@ public class ExtendViewPageAdaper extends PagerAdapter {
     public void clearAndFillRecyclerView(int index) {
         switch (index) {
             case 0:
-                ((OneWordRecyclerViewAdapter) (historyPage.recyclerView).getAdapter()).clearAndFill();
+                historyPage.oneWordRecyclerViewAdapter.clearAndFill();
                 break;
             case 1:
-                ((OneWordRecyclerViewAdapter) (favorPage.recyclerView).getAdapter()).clearAndFill();
+                favorPage.oneWordRecyclerViewAdapter.clearAndFill();
                 break;
         }
     }
@@ -59,8 +59,8 @@ public class ExtendViewPageAdaper extends PagerAdapter {
     }
 
     private void initFavorPage() {
-        historyPage.oneWordRecyclerViewAdapter = new OneWordRecyclerViewAdapter(mainActivity, OneWordRecyclerViewAdapter.PageType.FAVOR_PAGE);
-        historyPage.recyclerView.setAdapter(historyPage.oneWordRecyclerViewAdapter);
+        favorPage.oneWordRecyclerViewAdapter = new OneWordRecyclerViewAdapter(mainActivity, OneWordRecyclerViewAdapter.PageType.FAVOR_PAGE);
+        favorPage.recyclerView.setAdapter(favorPage.oneWordRecyclerViewAdapter);
     }
 
 

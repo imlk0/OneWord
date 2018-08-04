@@ -12,6 +12,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import de.robv.android.xposed.XposedBridge;
+
 import static android.os.Environment.DIRECTORY_DOWNLOADS;
 
 /**
@@ -22,14 +24,33 @@ public class BugUtil {
     private static DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
 //    private static String logFileName = "module_log.txt";
 
-    public static String saveCrashInfo2File(Throwable ex) {
+    private static final String TAG = BugUtil.class.getSimpleName();
+
+    private static boolean hasXP = false;
+
+    static {
+        try {
+            XposedBridge.log(BugUtil.class.getSimpleName() + ":found XP");
+            hasXP = true;
+        } catch (Throwable e) {
+            Log.i(TAG, ":there is No XP");
+        }
+    }
+
+    public static String printAndSaveCrashThrow2File(Throwable th) {
+
+        if (hasXP) {
+            XposedBridge.log(th);
+        } else {
+            Log.e(TAG, "save Crashing", th);
+        }
 
         StringBuffer sb = new StringBuffer();
 
         Writer writer = new StringWriter();
         PrintWriter printWriter = new PrintWriter(writer);
-        ex.printStackTrace(printWriter);
-        Throwable cause = ex.getCause();
+        th.printStackTrace(printWriter);
+        Throwable cause = th.getCause();
         while (cause != null) {
             cause.printStackTrace(printWriter);
             cause = cause.getCause();
@@ -37,11 +58,8 @@ public class BugUtil {
         printWriter.close();
         String result = writer.toString();
         sb.append(result);
-/*        ErrorLogBean errorLogBean = new ErrorLogBean();
-        errorLogBean.saveInfo((String) SPUtils.get(AppContext.getInstance(), "POLICE_ID", "")
-                , (String) SPUtils.get(AppContext.getInstance(), "TOKEN", "")
-                , sb.toString()
-                , "崩溃记录");*/
+
+
         try {
             long timestamp = System.currentTimeMillis();
             String time = formatter.format(new Date());
@@ -60,7 +78,7 @@ public class BugUtil {
             fos.write(logTime.getBytes());
             fos.write("\n\n\n".getBytes());
             fos.write(sb.toString().getBytes());
-            fos.write("\n\n\n".getBytes());
+//            fos.write("\n\n\n".getBytes());
             fos.close();
 
             return path;
@@ -69,6 +87,15 @@ public class BugUtil {
             Log.e(BugUtil.class.getSimpleName(), "an error occured while writing file...", e);
         }
         return null;
+    }
+
+
+    public static String printAndSaveCrashThrowAndMsg2File(Throwable th, String msg) {
+
+        th.addSuppressed(new Throwable("other info: " + msg));
+
+        return printAndSaveCrashThrow2File(th);
+
     }
 
 }

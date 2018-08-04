@@ -16,9 +16,9 @@ import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import top.imlk.oneword.application.client.service.OneWordAutoRefreshService;
 import top.imlk.oneword.bean.WordBean;
-import top.imlk.oneword.net.Hitokoto.HitokotoApi;
 import top.imlk.oneword.R;
 import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
+import top.imlk.oneword.net.OneWordApi;
 import top.imlk.oneword.util.BroadcastSender;
 import top.imlk.oneword.util.SharedPreferencesUtil;
 import top.imlk.oneword.util.StyleHelper;
@@ -30,13 +30,13 @@ import top.imlk.oneword.application.view.PastedNestedScrollView;
 public class MainActivity extends AppCompatActivity implements Observer<WordBean>, OnRefreshListener, PastedNestedScrollView.OnPasteListener {
 
 
-    public PastedNestedScrollView pastedNestedScrollView;
+    private PastedNestedScrollView pastedNestedScrollView;
 
-    public MainOneWordView mainOneWordView;
+    private MainOneWordView mainOneWordView;
 
     private OneWordShowPanel oneWordShowPanel;
 
-    public RefreshLayout refreshLayout;
+    private RefreshLayout refreshLayout;
 
 
     @Override
@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements Observer<WordBean
         oneWordShowPanel.updateCurWordBeanOnUI(wordBean);
         SharedPreferencesUtil.saveCurOneWord(this, wordBean);
         pastedNestedScrollView.scrollToTop();
-        OneWordSQLiteOpenHelper.getInstance(this).insertToHistory(wordBean);
+        OneWordSQLiteOpenHelper.getInstance().insertToHistory(wordBean);
     }
 
 
@@ -148,9 +148,7 @@ public class MainActivity extends AppCompatActivity implements Observer<WordBean
 
     @Override
     protected void onDestroy() {
-        if (!OneWordSQLiteOpenHelper.isDataBaseClosed()) {
-            OneWordSQLiteOpenHelper.getInstance(this).close();
-        }
+        OneWordSQLiteOpenHelper.closeDataBase();
 
         if (SharedPreferencesUtil.isRefreshOpened(this)) {
             startAutoUpdateService();
@@ -197,6 +195,10 @@ public class MainActivity extends AppCompatActivity implements Observer<WordBean
     }
 
 
+    public void performRefresh() {
+        this.refreshLayout.autoRefresh(0, 200, 1);
+    }
+
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
 
@@ -206,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements Observer<WordBean
 
     public void startAnOneWordRequest() {
         try {
-            HitokotoApi.requestOneWord(this);
+            OneWordApi.requestOneWord(this);
             this.pastedNestedScrollView.scrollToTop();
         } catch (Exception e) {
             Toast.makeText(this, "发生错误:\n" + e.getMessage(), Toast.LENGTH_LONG).show();

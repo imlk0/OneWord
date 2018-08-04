@@ -23,29 +23,29 @@ import top.imlk.oneword.application.view.BottomNavigatorItem;
  */
 public class BottomNavigatorAdapter extends CommonNavigatorAdapter implements View.OnClickListener, CommonPagerTitleView.OnPagerTitleChangeListener {
 
-    private Context context;
+    private MainActivity mainActivity;
 
     private ArrayList<CommonPagerTitleView> data;
 
-    public BottomNavigatorAdapter(Context context) {
-        this.context = context;
+    public BottomNavigatorAdapter(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
 
         data = new ArrayList<>();
 
         CommonPagerTitleView commonPagerTitleView;
 
 
-        commonPagerTitleView = new CommonPagerTitleView(context);
-        commonPagerTitleView.setContentView(((BottomNavigatorItem) LinearLayout.inflate(context, R.layout.item_bottom_selector, null)).setImage(R.drawable.ic_view_list_white_48dp).setBgByColor(StyleHelper.getColorByAttributeId(context, R.attr.colorPrimaryDark)).setText("历史").setIndex(0));
+        commonPagerTitleView = new CommonPagerTitleView(mainActivity);
+        commonPagerTitleView.setContentView(((BottomNavigatorItem) LinearLayout.inflate(mainActivity, R.layout.item_bottom_selector, null)).setImage(R.drawable.ic_view_list_white_48dp).setBgByColor(StyleHelper.getColorByAttributeId(mainActivity, R.attr.colorPrimaryDark)).setText("历史").setIndex(0));
         data.add(commonPagerTitleView);
-        commonPagerTitleView = new CommonPagerTitleView(context);
-        commonPagerTitleView.setContentView(((BottomNavigatorItem) LinearLayout.inflate(context, R.layout.item_bottom_selector, null)).setImage(R.drawable.ic_favorite_border_white_48dp).setBgByColor(StyleHelper.getColorByAttributeId(context, R.attr.colorPrimaryDark)).setText("喜欢的").setIndex(1));
+        commonPagerTitleView = new CommonPagerTitleView(mainActivity);
+        commonPagerTitleView.setContentView(((BottomNavigatorItem) LinearLayout.inflate(mainActivity, R.layout.item_bottom_selector, null)).setImage(R.drawable.ic_favorite_border_white_48dp).setBgByColor(StyleHelper.getColorByAttributeId(mainActivity, R.attr.colorPrimaryDark)).setText("喜欢的").setIndex(1));
         data.add(commonPagerTitleView);
-        commonPagerTitleView = new CommonPagerTitleView(context);
-        commonPagerTitleView.setContentView(((BottomNavigatorItem) LinearLayout.inflate(context, R.layout.item_bottom_selector, null)).setImage(R.drawable.ic_refresh_white_48dp).setBgByColor(StyleHelper.getColorByAttributeId(context, R.attr.colorPrimaryDark)).setText("再来一条").setIndex(2));
+        commonPagerTitleView = new CommonPagerTitleView(mainActivity);
+        commonPagerTitleView.setContentView(((BottomNavigatorItem) LinearLayout.inflate(mainActivity, R.layout.item_bottom_selector, null)).setImage(R.drawable.ic_refresh_white_48dp).setBgByColor(StyleHelper.getColorByAttributeId(mainActivity, R.attr.colorPrimaryDark)).setText("再来一条").setIndex(2));
         data.add(commonPagerTitleView);
-        commonPagerTitleView = new CommonPagerTitleView(context);
-        commonPagerTitleView.setContentView(((BottomNavigatorItem) LinearLayout.inflate(context, R.layout.item_bottom_selector, null)).setImage(R.drawable.ic_info_outline_white_48dp).setBgByColor(StyleHelper.getColorByAttributeId(context, R.attr.colorPrimaryDark)).setText("设置").setIndex(3));
+        commonPagerTitleView = new CommonPagerTitleView(mainActivity);
+        commonPagerTitleView.setContentView(((BottomNavigatorItem) LinearLayout.inflate(mainActivity, R.layout.item_bottom_selector, null)).setImage(R.drawable.ic_info_outline_white_48dp).setBgByColor(StyleHelper.getColorByAttributeId(mainActivity, R.attr.colorPrimaryDark)).setText("设置").setIndex(3));
         data.add(commonPagerTitleView);
 
         for (int i = 0; i < data.size(); ++i) {
@@ -77,20 +77,20 @@ public class BottomNavigatorAdapter extends CommonNavigatorAdapter implements Vi
 //        ((CommonPagerTitleView) v).getChildAt(0).setBackgroundResource(R.color.btn_bg_color_selected);
 
         if (v == data.get(0)) {
-            ((MainActivity) context).gotoPage(0);
+            mainActivity.gotoPage(0);
 
 
         } else if (v == data.get(1)) {
-            ((MainActivity) context).gotoPage(1);
+            mainActivity.gotoPage(1);
 
         } else if (v == data.get(2)) {
 
-//            ((MainActivity) context).startAnOneWordRequest();
-            ((MainActivity) context).refreshLayout.autoRefresh(0, 200, 1);
+//            mainActivity.startAnOneWordRequest();
+            mainActivity.performRefresh();
 
         } else if (v == data.get(3)) {
 
-            ((MainActivity) context).gotoPage(2);
+            mainActivity.gotoPage(2);
 
         }
 
@@ -99,12 +99,12 @@ public class BottomNavigatorAdapter extends CommonNavigatorAdapter implements Vi
 
     @Override
     public void onSelected(int index, int totalCount) {
-        this.data.get(index).getChildAt(0).setBackgroundColor(StyleHelper.getColorByAttributeId(context, R.attr.colorPrimary));
+        this.data.get(index).getChildAt(0).setBackgroundColor(StyleHelper.getColorByAttributeId(mainActivity, R.attr.colorPrimary));
     }
 
     @Override
     public void onDeselected(int index, int totalCount) {
-        this.data.get(index).getChildAt(0).setBackgroundColor(StyleHelper.getColorByAttributeId(context, R.attr.colorPrimaryDark));
+        this.data.get(index).getChildAt(0).setBackgroundColor(StyleHelper.getColorByAttributeId(mainActivity, R.attr.colorPrimaryDark));
     }
 
     @Override
