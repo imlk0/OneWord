@@ -8,7 +8,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/primary_light"
+        android:background="?attr/color_primary_light"
         android:paddingLeft="16dp"
         android:tag="reveal-right"
         android:visibility="gone">
@@ -70,7 +70,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/colorPrimary"
+        android:background="?attr/color_primary_bg"
         android:paddingBottom="20dp"
         android:paddingLeft="8dp"
         android:paddingRight="20dp"
@@ -88,7 +88,7 @@
             android:minWidth="32sp"
             android:rotation="180"
             android:src="@drawable/ic_format_quote_white_48dp"
-            android:tint="?attr/primary_light" />
+            android:tint="?attr/color_primary_light" />
 
         <TextView
             android:id="@+id/item_oneword_msg"
@@ -119,6 +119,6 @@
     <View
         android:layout_width="fill_parent"
         android:layout_height="0.5dp"
-        android:background="?attr/colorPrimaryDark" />
+        android:background="?attr/color_primary_bg_dark" />
 
 </FrameLayout>

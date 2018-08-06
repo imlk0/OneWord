@@ -96,8 +96,9 @@ public class OneWordRecyclerViewAdapter extends RecyclerView.Adapter implements 
 
         oneWordItemHolder.data = wordBeans.get(position);
 
-        ((TextView) oneWordItemHolder.itemView.findViewById(R.id.item_oneword_msg)).setText(wordBeans.get(position).content);
-        ((TextView) oneWordItemHolder.itemView.findViewById(R.id.item_oneword_from)).setText("——" + wordBeans.get(position).reference);
+
+        ((TextView) oneWordItemHolder.itemView.findViewById(R.id.item_oneword_msg)).setText(oneWordItemHolder.data.content);
+        ((TextView) oneWordItemHolder.itemView.findViewById(R.id.item_oneword_from)).setText("——" + oneWordItemHolder.data.reference);
         oneWordItemHolder.itemView.findViewById(R.id.item_delete).setOnClickListener(oneWordItemHolder);
         oneWordItemHolder.itemView.findViewById(R.id.item_set).setOnClickListener(oneWordItemHolder);
         oneWordItemHolder.itemView.findViewById(R.id.item_share).setOnClickListener(oneWordItemHolder);
@@ -210,7 +211,7 @@ public class OneWordRecyclerViewAdapter extends RecyclerView.Adapter implements 
         this.notifyItemRangeInserted(oldLen, wordBeans.size() - oldLen);
 
 
-        if (wordBeans.size() == oldLen) {
+        if (wordBeans.size() - oldLen < ITEM_NUM_INCREASE_STEP) {
 //            refreshLayout.setNoMoreData(true);
             refreshLayout.finishLoadMoreWithNoMoreData();
         } else {

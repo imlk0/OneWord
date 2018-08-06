@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <attr name="primary_light" format="reference" />
-    <attr name="primary_text" format="reference" />
-    <attr name="secondary_text" format="reference" />
-    <attr name="icons" format="reference" />
-    <attr name="divider" format="reference" />
+    <attr name="color_primary_bg" format="reference" />
+    <attr name="color_primary_bg_dark" format="reference" />
+    <attr name="color_primary_light" format="reference" />
+    <attr name="color_primary_text" format="reference" />
+    <attr name="color_secondary_text" format="reference" />
+    <attr name="color_icons" format="reference" />
+    <attr name="color_divider" format="reference" />
 
 </resources>

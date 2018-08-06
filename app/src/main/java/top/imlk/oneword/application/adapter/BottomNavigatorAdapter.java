@@ -37,6 +37,7 @@ public class BottomNavigatorAdapter extends CommonNavigatorAdapter implements Vi
 
         commonPagerTitleView = new CommonPagerTitleView(mainActivity);
         commonPagerTitleView.setContentView(((BottomNavigatorItem) LinearLayout.inflate(mainActivity, R.layout.item_bottom_selector, null)).setImage(R.drawable.ic_view_list_white_48dp).setBgByColor(AppStyleHelper.getColorByAttributeId(mainActivity, R.attr.colorPrimaryDark)).setText("历史").setIndex(0));
+
         data.add(commonPagerTitleView);
         commonPagerTitleView = new CommonPagerTitleView(mainActivity);
         commonPagerTitleView.setContentView(((BottomNavigatorItem) LinearLayout.inflate(mainActivity, R.layout.item_bottom_selector, null)).setImage(R.drawable.ic_favorite_border_white_48dp).setBgByColor(AppStyleHelper.getColorByAttributeId(mainActivity, R.attr.colorPrimaryDark)).setText("喜欢的").setIndex(1));

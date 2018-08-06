@@ -47,6 +47,7 @@ public class ShowDialogUtil {
                 .show();
     }
 
+
 //    public static void showSelectOneWordTypeDialog(final Context context) {
 //
 //        String[] items = context.getResources().getStringArray(R.array.oneword_type);
@@ -167,7 +168,7 @@ public class ShowDialogUtil {
 
         titleAndSummaries.add(new TitleAndSummary("Xposed", "http://repo.xposed.info/"));
         titleAndSummaries.add(new TitleAndSummary("OkHttp", "https://github.com/square/okhttp"));
-        titleAndSummaries.add(new TitleAndSummary("Retrofit", "https://github.com/square/retrofit"));
+//        titleAndSummaries.add(new TitleAndSummary("Retrofit", "https://github.com/square/retrofit"));
         titleAndSummaries.add(new TitleAndSummary("RxAndroid", "https://github.com/ReactiveX/RxAndroid"));
         titleAndSummaries.add(new TitleAndSummary("RxJava", "https://github.com/ReactiveX/RxJava"));
         titleAndSummaries.add(new TitleAndSummary("Gson", "https://github.com/google/gson"));

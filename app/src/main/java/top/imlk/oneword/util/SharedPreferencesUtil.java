@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 
+import top.imlk.oneword.BuildConfig;
 import top.imlk.oneword.bean.WordBean;
 import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
 import top.imlk.oneword.application.client.service.OneWordAutoRefreshService;
@@ -31,12 +32,16 @@ public class SharedPreferencesUtil {
     public static final String SHARED_PER_KEY_REFRESH_MODE = "frequency_to_refresh";
 
 
-    public static final String SHARED_PER_ONEWORD_TYPE_SELECT_STATE = "SHARED_PER_ONEWORD_TYPE_SELECT_STATE";
+//    public static final String SHARED_PER_ONEWORD_TYPE_SELECT_STATE = "SHARED_PER_ONEWORD_TYPE_SELECT_STATE";
 
 
     public static final String SHARED_PER_USER_INF = "SHARED_PER_USER_INF";
     public static final String SHARED_PER_KEY_FIRSTTIME_INSTALL = "is_first_time_install";
     public static final String SHARED_PER_KEY_APP_VERSION_CODE = "versionCode";
+
+
+    public static final String SHARED_PER_USER_CONFIG = "SHARED_PER_USER_CONFIG";
+    public static final String SHARED_PER_KEY_SELECTED_THEME_NAME = "selected_theme_name";
 
 
 //    public static final String SHARED_PER_KEY_ONEWORD_TYPE_ANIME = "Anime";
@@ -145,6 +150,21 @@ public class SharedPreferencesUtil {
 
     }
 
+//    public static void setSelectedThemeName(Context context, String name) {
+//        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PER_KEY_SELECTED_THEME_NAME, Context.MODE_PRIVATE);
+//
+//        SharedPreferences.Editor editor = sharedPreferences.edit();
+//
+//        editor.putString(SHARED_PER_KEY_SELECTED_THEME_NAME, name);
+//        editor.commit();
+//    }
+
+//    public static String getSelectedThemeName(Context context) {
+//        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PER_KEY_SELECTED_THEME_NAME, Context.MODE_PRIVATE);
+//        return sharedPreferences.getString(SHARED_PER_KEY_SELECTED_THEME_NAME, AppStyleHelper.DEFAULT_THEME_NAME);
+//    }
+
+
     public static void onMainActivityCreate(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PER_USER_INF, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -158,7 +178,7 @@ public class SharedPreferencesUtil {
         }
 
 
-        int curVerCode = ApplicationInfoUtil.getAppVersionCode(context);
+        int curVerCode = BuildConfig.VERSION_CODE;
         if (curVerCode > sharedPreferences.getInt(SHARED_PER_KEY_APP_VERSION_CODE, 0)) {// 更新版本后
             int oldVerCode = sharedPreferences.getInt(SHARED_PER_KEY_APP_VERSION_CODE, 0);
 
@@ -191,7 +211,7 @@ public class SharedPreferencesUtil {
                 wordBean.reference = sharedPreferences.getString("current_from", null);
 
                 if (wordBean.content != null) {
-                    wordBean.id = OneWordSQLiteOpenHelper.getInstance().queryIdInAllOneWord(wordBean);
+                    wordBean.id = OneWordSQLiteOpenHelper.getInstance().queryIdOfOneWordInAllOneWord(wordBean);
                 }
 
                 SharedPreferences.Editor editor = sharedPreferences.edit();

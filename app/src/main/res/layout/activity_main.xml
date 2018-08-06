@@ -14,7 +14,7 @@
             android:id="@+id/ll_main_oneword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
+            android:background="?attr/color_primary_bg"
             android:descendantFocusability="blocksDescendants"
             android:orientation="vertical">
 
@@ -42,7 +42,7 @@
                         android:minWidth="40sp"
                         android:rotation="180"
                         android:src="@drawable/ic_format_quote_white_48dp"
-                        android:tint="?attr/primary_light" />
+                        android:tint="?attr/color_primary_light" />
 
                     <TextView
                         android:id="@+id/tv_msg_main"
@@ -114,7 +114,7 @@
                         android:id="@+id/magi_bottom"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="?attr/colorPrimaryDark" />
+                        android:background="?attr/color_primary_bg_dark" />
 
                 </LinearLayout>
 

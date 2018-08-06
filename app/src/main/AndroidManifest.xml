@@ -11,10 +11,9 @@
         android:label="@string/app_name"
         android:persistent="true"
         android:supportsRtl="true"
-        android:theme="@style/BaseTheme">
-        <activity
-            android:name=".application.client.activity.MainActivity"
-            android:screenOrientation="portrait">
+        android:theme="@style/GreenTheme">
+        <activity android:name=".application.client.activity.MainActivity">
+            <!--android:screenOrientation="portrait"-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,11 +33,21 @@
 
         </service>
 
-        <receiver android:name=".systemui.receiver.BootCompletedBroadCastReceiver">
+        <receiver
+            android:name=".systemui.receiver.BootCompletedReceiver"
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
+
         </receiver>
+
+        <provider
+            android:name="top.imlk.oneword.application.client.provider.OneWordDBProvider"
+            android:authorities="top.imlk.oneword.application.client.provider.OneWordDBProvider">
+
+        </provider>
 
 
         <meta-data

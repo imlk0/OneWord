@@ -18,4 +18,6 @@
     <dimen name="item_selector_icon_mg_bottom">4dp</dimen>
     <dimen name="item_selector_icon_mg_top">12dp</dimen>
     <dimen name="item_selector_text_mg_bottom">5dp</dimen>
+    <dimen name="item_setting_title_ts">16sp</dimen>
+    <dimen name="item_setting_summary_ts">14sp</dimen>
 </resources>

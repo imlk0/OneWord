@@ -46,28 +46,7 @@ public class MainActivity extends AppCompatActivity implements Observer<WordBean
 
         killRunningServices();
 
-        int themes[] = {
-                R.style.RedTheme,
-                R.style.BlueTheme,
-                R.style.BlueGreyTheme,
-                R.style.BrownTheme,
-                R.style.CyanTheme,
-                R.style.DeepOrangeTheme,
-                R.style.DeepPurpleTheme,
-                R.style.GreenTheme,
-                R.style.GreyTheme,
-                R.style.IndigoTheme,
-                R.style.LightBlueTheme,
-                R.style.LimeTheme,
-                R.style.OrangeTheme,
-                R.style.PinkTheme,
-                R.style.PurpleTheme,
-                R.style.TealTheme,
-                R.style.YellowTheme,
-        };
-
-        setTheme(themes[((int) (Math.random() * themes.length))]);
-
+//        setTheme(R.style.GreenTheme);
 
         setContentView(R.layout.activity_main);
 
@@ -85,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements Observer<WordBean
         this.refreshLayout.setEnableLoadMore(false);
 
         refreshLayout.setPrimaryColors(
-                AppStyleHelper.getColorByAttributeId(this, R.attr.primary_light),
+                AppStyleHelper.getColorByAttributeId(this, R.attr.color_primary_light),
                 AppStyleHelper.getColorByAttributeId(this, R.attr.colorPrimaryDark));
 
 
@@ -115,6 +94,8 @@ public class MainActivity extends AppCompatActivity implements Observer<WordBean
             OneWordSQLiteOpenHelper.getInstance().insertToHistory(wordBean);
             OneWordFileStation.saveOneWordJSON(wordBean);
             BroadcastSender.sendUseNewOneWordInfoBroadcast(this, wordBean);
+            Toast.makeText(this, "设置锁屏一言中...", Toast.LENGTH_SHORT).show();
+
         }
 
     }
@@ -136,9 +117,18 @@ public class MainActivity extends AppCompatActivity implements Observer<WordBean
     @Override
     public void onNext(WordBean wordBean) {
 
+        int id = OneWordSQLiteOpenHelper.getInstance().queryIdOfOneWordInAllOneWord(wordBean);
+        if (id <= 0) {
+            id = OneWordSQLiteOpenHelper.getInstance().insertOneWordWithoutCheck(wordBean);
+        }
+
+        wordBean.id = id;
+
         updateAndSetCurWordBean(wordBean);
 
         refreshLayout.finishRefresh(300, true);
+
+
     }
 
     @Override
@@ -162,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements Observer<WordBean
             startAutoUpdateService();
         }
         super.onDestroy();
-        System.exit(0);
+//        System.exit(0);
     }
 
     @Override

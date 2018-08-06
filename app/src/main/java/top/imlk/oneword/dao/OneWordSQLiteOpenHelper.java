@@ -10,9 +10,9 @@ import android.text.TextUtils;
 
 import java.util.ArrayList;
 
+import top.imlk.oneword.BuildConfig;
 import top.imlk.oneword.bean.ApiBean;
 import top.imlk.oneword.bean.WordBean;
-import top.imlk.oneword.util.ApplicationInfoUtil;
 
 import static android.database.sqlite.SQLiteDatabase.CONFLICT_IGNORE;
 import static android.database.sqlite.SQLiteDatabase.CONFLICT_REPLACE;
@@ -90,7 +90,7 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 
     private OneWordSQLiteOpenHelper(Context context) {//使用versionCode作为数据库版本
-        super(context, DB_NAME, null, ApplicationInfoUtil.getAppVersionCode(context));
+        super(context, DB_NAME, null, BuildConfig.VERSION_CODE);
     }
 
     /**
@@ -124,7 +124,7 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
      * @param wordBean
      * @return 一言的总表ID，不存在则返回 -1
      */
-    public int queryIdInAllOneWord(WordBean wordBean) {
+    public int queryIdOfOneWordInAllOneWord(WordBean wordBean) {
         synchronized (this) {
             SQLiteDatabase sqLiteDatabase = getReadableDatabase();
             Cursor cursor = sqLiteDatabase.rawQuery("SELECT " + KEY_ID + " FROM " + TABLE_ALL_ONEWORD + " WHERE " + KEY_CONTENT + "=? AND " + KEY_REFERENCE + "=?", new String[]{
@@ -174,7 +174,7 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
         synchronized (this) {
             SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
-            int id = queryIdInAllOneWord(wordBean);
+            int id = queryIdOfOneWordInAllOneWord(wordBean);
 
 
             if (id <= 0) {
@@ -215,7 +215,7 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
             int id = wordBean.id;
 
             if (id <= 0) {
-                id = queryIdInAllOneWord(wordBean);
+                id = queryIdOfOneWordInAllOneWord(wordBean);
                 if (id <= 0) {
                     // 未收录
                     id = insertOneWordWithoutCheck(wordBean);
@@ -285,7 +285,7 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
             if (id <= 0) {
                 return;
             }
-            sqLiteDatabase.execSQL("DELETE FROM " + TABLE_ALL_ONEWORD + " WHERE " + KEY_ID + "=?", new Object[]{id});
+            sqLiteDatabase.execSQL("DELETE FROM " + tableName + " WHERE " + KEY_ONEWORD_ID + "=?", new Object[]{id});
 
         }
     }
@@ -453,12 +453,18 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
         }
     }
 
+    @Override
+    public void onConfigure(SQLiteDatabase db) {
+        // 开启外键支持
+        db.execSQL("PRAGMA foreign_keys = on");
+
+    }
 
     //第一次创建数据库时被调用
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        db.execSQL("PRAGMA foreign_keys = off");
+
         db.execSQL("BEGIN TRANSACTION");
 
         db.execSQL("CREATE TABLE all_oneword (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE CHECK (id > 0), content TEXT, reference TEXT, target_url TEXT)");
@@ -475,7 +481,6 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE INDEX index_toshow_onewordid ON toshow (oneword_id)");
 
         db.execSQL("COMMIT TRANSACTION");
-        db.execSQL("PRAGMA foreign_keys = on");
 
         db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('Hitokoto-动漫', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"a\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
         db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('Hitokoto-漫画', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"b\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");

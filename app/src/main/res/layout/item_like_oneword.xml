@@ -8,9 +8,9 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/primary_light"
-        android:tag="reveal-right"
+        android:background="?attr/color_primary_light"
         android:paddingLeft="16dp"
+        android:tag="reveal-right"
         android:visibility="gone">
 
 
@@ -21,9 +21,9 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="12dp"
+            android:background="@drawable/bg_circle_botton"
             android:src="@drawable/ic_done_white_48dp" />
 
-        <!--android:background="@drawable/bg_circle_botton"-->
 
         <ImageView
             android:id="@+id/item_share"
@@ -62,7 +62,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/colorPrimary"
+        android:background="?attr/color_primary_bg"
         android:paddingBottom="20dp"
         android:paddingLeft="8dp"
         android:paddingRight="20dp"
@@ -80,14 +80,14 @@
             android:minWidth="32sp"
             android:rotation="180"
             android:src="@drawable/ic_format_quote_white_48dp"
-            android:tint="?attr/primary_light" />
+            android:tint="?attr/color_primary_light" />
 
         <TextView
             android:id="@+id/item_oneword_msg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:layout_marginRight="10dp"
+            android:layout_marginTop="20dp"
             android:layout_toRightOf="@id/iv_quote"
             android:singleLine="false"
             android:textColor="@android:color/white"
@@ -111,6 +111,6 @@
     <View
         android:layout_width="fill_parent"
         android:layout_height="0.5dp"
-        android:background="?attr/colorPrimaryDark" />
+        android:background="?attr/color_primary_bg_dark" />
 
 </FrameLayout>

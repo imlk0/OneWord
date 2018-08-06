@@ -76,7 +76,7 @@ public class OneWordListShowPage extends LinearLayout {
         refreshLayout = findViewById(R.id.refreshLayout);
         refreshLayout.setEnableRefresh(false);
         refreshLayout.setPrimaryColors(
-                AppStyleHelper.getColorByAttributeId(getContext(), R.attr.primary_light),
+                AppStyleHelper.getColorByAttributeId(getContext(), R.attr.color_primary_light),
                 AppStyleHelper.getColorByAttributeId(getContext(), R.attr.colorPrimaryDark));
 
         final SwipeToAction swipeToAction = new SwipeToAction(recyclerView, new SwipeToAction.SwipeListener<OneWordRecyclerViewAdapter.OneWordItemHolder>() {

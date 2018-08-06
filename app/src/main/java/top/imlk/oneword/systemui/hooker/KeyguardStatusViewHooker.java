@@ -8,12 +8,11 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.internal.widget.LockPatternUtils;
 
+import com.google.gson.Gson;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
@@ -32,18 +31,18 @@ import top.imlk.oneword.util.OneWordFileStation;
 public class KeyguardStatusViewHooker {
 
     public static Class class_com_android_keyguard_KeyguardStatusView;
-    public static Class class_com_android_keyguard_KeyguardUpdateMonitor;
+//    public static Class class_com_android_keyguard_KeyguardUpdateMonitor;
 
     public static Field field_com_android_keyguard_KeyguardStatusView_mOwnerInfo;
-    public static Field field_com_android_keyguard_KeyguardStatusView_mLockPatternUtils;
+//    public static Field field_com_android_keyguard_KeyguardStatusView_mLockPatternUtils;
 
     //    public static Method method_com_android_keyguard_KeyguardStatusView_updateOwnerInfo;
-    public static Method method_com_android_keyguard_KeyguardStatusView_getOwnerInfo;
+//    public static Method method_com_android_keyguard_KeyguardStatusView_getOwnerInfo;
 //    public static Method method_com_android_keyguard_KeyguardUpdateMonitor_getCurrentUser;
 
     public static WeakReference<TextView> ref_mOwnerInfo;
     public static WeakReference<Object> ref_keyguardStatusView;
-    public static WeakReference<LockPatternUtils> ref_mLockPatternUtils;
+    //    public static WeakReference<LockPatternUtils> ref_mLockPatternUtils;
     public static WeakReference<OwnerInfoTextViewProxy> ref_OwnerInfoTextViewProxy;
 
 
@@ -53,13 +52,13 @@ public class KeyguardStatusViewHooker {
 
 
             class_com_android_keyguard_KeyguardStatusView = XposedHelpers.findClass("com.android.keyguard.KeyguardStatusView", classLoader);
-            class_com_android_keyguard_KeyguardUpdateMonitor = XposedHelpers.findClass("com.android.keyguard.KeyguardUpdateMonitor", classLoader);
+//            class_com_android_keyguard_KeyguardUpdateMonitor = XposedHelpers.findClass("com.android.keyguard.KeyguardUpdateMonitor", classLoader);
 
             field_com_android_keyguard_KeyguardStatusView_mOwnerInfo = XposedHelpers.findField(class_com_android_keyguard_KeyguardStatusView, "mOwnerInfo");
-            field_com_android_keyguard_KeyguardStatusView_mLockPatternUtils = XposedHelpers.findField(class_com_android_keyguard_KeyguardStatusView, "mLockPatternUtils");
+//            field_com_android_keyguard_KeyguardStatusView_mLockPatternUtils = XposedHelpers.findField(class_com_android_keyguard_KeyguardStatusView, "mLockPatternUtils");
 
 //            method_com_android_keyguard_KeyguardStatusView_updateOwnerInfo = XposedHelpers.findMethodExact(class_com_android_keyguard_KeyguardStatusView, "updateOwnerInfo");
-            method_com_android_keyguard_KeyguardStatusView_getOwnerInfo = XposedHelpers.findMethodExact(class_com_android_keyguard_KeyguardStatusView, "getOwnerInfo");
+//            method_com_android_keyguard_KeyguardStatusView_getOwnerInfo = XposedHelpers.findMethodExact(class_com_android_keyguard_KeyguardStatusView, "getOwnerInfo");
 //        method_com_android_keyguard_KeyguardUpdateMonitor_getCurrentUser = XposedHelpers.findMethodExact(class_com_android_keyguard_KeyguardUpdateMonitor, "getCurrentUser");
 
 //            throw new Throwable();
@@ -76,18 +75,19 @@ public class KeyguardStatusViewHooker {
         XposedHelpers.findAndHookMethod(class_com_android_keyguard_KeyguardStatusView, "onFinishInflate", new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                super.afterHookedMethod(param);
 
 //                CrashReport.initCrashReport(((View) param.thisObject).getContext().getApplicationContext(), "03e888691d", false);
 //
 //                CrashReport.testJavaCrash();
+
+                Context context = ((View) param.thisObject).getContext();
 
                 try {
 
                     XposedBridge.log("doHook_onFinishInflate()");
 
                     ref_mOwnerInfo = new WeakReference(field_com_android_keyguard_KeyguardStatusView_mOwnerInfo.get(param.thisObject));
-                    ref_mLockPatternUtils = new WeakReference(field_com_android_keyguard_KeyguardStatusView_mLockPatternUtils.get(param.thisObject));
+//                    ref_mLockPatternUtils = new WeakReference(field_com_android_keyguard_KeyguardStatusView_mLockPatternUtils.get(param.thisObject));
                     ref_keyguardStatusView = new WeakReference(param.thisObject);
 
                     OwnerInfoTextViewProxy proxyView = new OwnerInfoTextViewProxy(ref_mOwnerInfo.get().getContext());
@@ -99,7 +99,6 @@ public class KeyguardStatusViewHooker {
 
                     ref_OwnerInfoTextViewProxy = new WeakReference<>(proxyView);
 
-
                     field_com_android_keyguard_KeyguardStatusView_mOwnerInfo.set(param.thisObject, ref_OwnerInfoTextViewProxy.get());
 
                     getAndSetOneWord();
@@ -107,7 +106,7 @@ public class KeyguardStatusViewHooker {
                 } catch (Throwable e) {
 //                    XposedBridge.log(e);
                     String logPath = BugUtil.printAndSaveCrashThrow2File(e);
-                    Toast.makeText(((View) param.thisObject).getContext(), String.format("Hook后的操作发生异常，日志产生在:\n%s", logPath), Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, String.format("Hook后的操作发生异常，日志产生在:\n%s", logPath), Toast.LENGTH_LONG).show();
                 }
 
                 registerBroadcastReceiver();
@@ -158,9 +157,15 @@ public class KeyguardStatusViewHooker {
 
 //                        KeyguardStatusViewHelper.setOwnerInfo(intent.getStringExtra(BroadcastSender.THE_NEW_LOCK_SCREEN_INFO_JSON));
 
+
+                        WordBean wordBean = new Gson().fromJson(intent.getStringExtra(BroadcastSender.THE_NEW_LOCK_SCREEN_INFO_JSON), WordBean.class);
+
+
                         XposedBridge.log("resolved");
 
-                        Toast.makeText(context, "一言已收到", Toast.LENGTH_SHORT).show();
+                        ref_OwnerInfoTextViewProxy.get().setOneWord(wordBean);
+
+//                        Toast.makeText(context, "一言已收到", Toast.LENGTH_SHORT).show();
 
                         XposedBridge.log("updated");
 

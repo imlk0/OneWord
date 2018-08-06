@@ -13,8 +13,8 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import top.imlk.oneword.BuildConfig;
 import top.imlk.oneword.R;
-import top.imlk.oneword.util.ApplicationInfoUtil;
 import top.imlk.oneword.util.SharedPreferencesUtil;
 import top.imlk.oneword.util.ShowDialogUtil;
 
@@ -97,7 +97,7 @@ public class SettingPage extends LinearLayout implements View.OnClickListener, C
         llVersion = findViewById(R.id.ll_version);
 //        llVersion.setOnClickListener(this);
 
-        ((TextView) llVersion.findViewById(R.id.tv_version_code)).setText(ApplicationInfoUtil.getAppVersionName(context) + "[" + ApplicationInfoUtil.getAppVersionCode(context) + "]");
+        ((TextView) llVersion.findViewById(R.id.tv_version_code)).setText("VersionName:" + BuildConfig.VERSION_NAME + "\nVersionCode:" + BuildConfig.VERSION_CODE);
 
     }
 

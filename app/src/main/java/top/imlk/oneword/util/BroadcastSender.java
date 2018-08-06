@@ -44,7 +44,6 @@ public class BroadcastSender {
             intent.putExtra(THE_NEW_LOCK_SCREEN_INFO_JSON, new Gson().toJson(wordBean, WordBean.class));
 
             context.sendBroadcast(intent);
-            Toast.makeText(context, "设置锁屏一言中...", Toast.LENGTH_SHORT).show();
         }
     }
 

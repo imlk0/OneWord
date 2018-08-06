@@ -1,5 +1,6 @@
 package top.imlk.oneword.application.client.service;
 
+import android.app.Notification;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -16,10 +17,13 @@ import java.util.TimerTask;
 
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
+import top.imlk.oneword.R;
 import top.imlk.oneword.bean.WordBean;
 import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
 import top.imlk.oneword.net.OneWordApi;
+import top.imlk.oneword.systemui.uifixer.BaseUIFixer;
 import top.imlk.oneword.util.BroadcastSender;
+import top.imlk.oneword.util.BugUtil;
 import top.imlk.oneword.util.OneWordFileStation;
 import top.imlk.oneword.util.SharedPreferencesUtil;
 
@@ -84,6 +88,8 @@ public class OneWordAutoRefreshService extends Service implements Observer<WordB
         Log.e(LOG_TAG, intent == null ? "intent is null" : intent.getAction() + "");
 
 
+        toForeground();
+
         if (intent == null || TextUtils.isEmpty(intent.getAction()) || BroadcastSender.CMD_SERVICES_START_AUTO_REFRESH_SERVICE.equals(intent.getAction())) {
 
             Log.e("isRefreshOpened()", SharedPreferencesUtil.isRefreshOpened(this) + "");
@@ -114,6 +120,7 @@ public class OneWordAutoRefreshService extends Service implements Observer<WordB
         return START_REDELIVER_INTENT;
 
     }
+
 
     private void parseMode() {
         if (currentMode == null) {
@@ -229,17 +236,24 @@ public class OneWordAutoRefreshService extends Service implements Observer<WordB
 
     private void doOnClockEvent() {
         Log.i(LOG_TAG, "锁屏一言自动更新服务 执行");
+
+        checkIfEnough();
+
+
         WordBean bean = OneWordSQLiteOpenHelper.getInstance().queryOneWordFromToShowByASC();
-        OneWordSQLiteOpenHelper.getInstance().removeFromToShow(bean.id);
 
-
-        if (bean == null) {
-            bean = OneWordSQLiteOpenHelper.getInstance().queryOneWordFromFavorByRandom();
+        if (bean != null) {
+            OneWordSQLiteOpenHelper.getInstance().removeFromToShow(bean.id);
         }
+
 
         if (bean == null) {
             bean = OneWordSQLiteOpenHelper.getInstance().queryOneWordFromHistoryByRandom();
         }
+        if (bean == null) {
+            bean = OneWordSQLiteOpenHelper.getInstance().queryOneWordFromFavorByRandom();
+        }
+
 
         if (bean == null) {
             Toast.makeText(this, "网络不行呀，\n没有新的一言可以更新", Toast.LENGTH_LONG).show();
@@ -252,12 +266,15 @@ public class OneWordAutoRefreshService extends Service implements Observer<WordB
 //            bean.like = true;
 //        }
 
-        OneWordSQLiteOpenHelper.getInstance().insertToHistory(bean);
+        if (bean != null) {
 
-        SharedPreferencesUtil.saveCurOneWordId(this, bean.id);
+            OneWordSQLiteOpenHelper.getInstance().insertToHistory(bean);
 
-        OneWordFileStation.saveOneWordJSON(bean);
-        BroadcastSender.sendUseNewOneWordInfoBroadcast(this, bean);
+            SharedPreferencesUtil.saveCurOneWordId(this, bean.id);
+
+            OneWordFileStation.saveOneWordJSON(bean);
+            BroadcastSender.sendUseNewOneWordInfoBroadcast(this, bean);
+        }
 
         Log.i(LOG_TAG, "锁屏一言自动更新服务 执行完毕");
     }
@@ -267,6 +284,8 @@ public class OneWordAutoRefreshService extends Service implements Observer<WordB
     public void onDestroy() {
 
         Log.e(LOG_TAG, "onDestroy");
+
+
         if (mTimer != null) {
             mTimer.cancel();
             mTimer = null;
@@ -281,7 +300,6 @@ public class OneWordAutoRefreshService extends Service implements Observer<WordB
 
         super.onDestroy();
 
-        System.exit(0);
     }
 
 
@@ -304,12 +322,24 @@ public class OneWordAutoRefreshService extends Service implements Observer<WordB
 
     @Override
     public void onError(Throwable e) {
-        Log.e(LOG_TAG, "error when get new oneword", e);
+        Log.e(LOG_TAG, "error when get new oneword");
+//        BugUtil.printAndSaveCrashThrow2File(e);
     }
 
     @Override
     public void onComplete() {
 
+    }
+
+
+    public void toForeground() {
+        Notification notification = new Notification.Builder(this)
+                .setContentText("锁屏一言自动刷新服务")
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setWhen(System.currentTimeMillis())
+                .build();
+
+        startForeground(1, notification);
     }
 
 }
