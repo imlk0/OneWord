@@ -47,7 +47,7 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
     public static final String KEY_URL = "url";
     public static final String KEY_REQ_METHOD = "req_method";
     public static final String KEY_REQ_ARGS_JSON = "req_args_json";
-    public static final String KEY_RESP_FORM = "resp_form";
+    public static final String KEY_RESP_FORM_JSON = "resp_form_json";
     public static final String KEY_ENABLED = "enabled";
 
 
@@ -170,7 +170,7 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
      *
      * @param wordBean
      */
-    public void deleteOneWordInAllOneWord(WordBean wordBean) {
+    public void removeOneWordInAllOneWord(WordBean wordBean) {
         synchronized (this) {
             SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
@@ -329,9 +329,16 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
         return queryOneWordFromSubTableByRandom(TABLE_HISTORY, "random()");
     }
 
+
     public WordBean queryOneWordFromFavorByRandom() {
         return queryOneWordFromSubTableByRandom(TABLE_FAVOR, "random()");
     }
+
+
+    public WordBean queryOneWordFromHistoryByDESC() {
+        return queryOneWordFromSubTableByRandom(TABLE_HISTORY, KEY_ADDED_AT + " DESC");
+    }
+
 
     public WordBean queryOneWordFromToShowByASC() {
         return queryOneWordFromSubTableByRandom(TABLE_TOSHOW, KEY_ADDED_AT + " ASC");
@@ -402,7 +409,28 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
         }
     }
 
-    public ApiBean queryAEnabledApi() {
+
+    public ApiBean queryApiById(int id) {
+        if (id <= 0) {
+            return null;
+        }
+        synchronized (this) {
+            SQLiteDatabase sqLiteDatabase = getReadableDatabase();
+
+            Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + TABLE_API + " WHERE " + KEY_ID + " =?", new String[]{String.valueOf(id)});
+
+            ApiBean apiBean = null;
+
+            if (cursor.moveToNext()) {
+                apiBean = new ApiBean(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getInt(6) == 1);
+            }
+            cursor.close();
+
+            return apiBean;
+        }
+    }
+
+    public ApiBean queryAEnabledApiRandom() {
         synchronized (this) {
             SQLiteDatabase sqLiteDatabase = getReadableDatabase();
 
@@ -442,16 +470,30 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
             contentValues.put(KEY_NAME, apiBean.name);
             contentValues.put(KEY_URL, apiBean.url);
             if (!TextUtils.isEmpty(apiBean.name)) {
-                contentValues.put(KEY_REQ_METHOD, apiBean.name);
+                contentValues.put(KEY_REQ_METHOD, apiBean.req_method);
             }
-            contentValues.put(KEY_REQ_ARGS_JSON, apiBean.name);
-            contentValues.put(KEY_RESP_FORM, apiBean.resp_form);
+            contentValues.put(KEY_REQ_ARGS_JSON, apiBean.req_args_json);
+            contentValues.put(KEY_RESP_FORM_JSON, apiBean.resp_form_json);
             contentValues.put(KEY_ENABLED, apiBean.enabled);
 
             sqLiteDatabase.insertWithOnConflict(TABLE_API, null, contentValues, CONFLICT_REPLACE);
 
         }
     }
+
+
+    public void removeApiById(int id) {
+        if (id <= 0) {
+            return;
+        }
+        synchronized (this) {
+            SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+
+            sqLiteDatabase.execSQL("DELETE FROM " + TABLE_API + " WHERE " + KEY_ID + " =?", new Object[]{id});
+
+        }
+    }
+
 
     @Override
     public void onConfigure(SQLiteDatabase db) {
@@ -468,7 +510,7 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
         db.execSQL("BEGIN TRANSACTION");
 
         db.execSQL("CREATE TABLE all_oneword (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE CHECK (id > 0), content TEXT, reference TEXT, target_url TEXT)");
-        db.execSQL("CREATE TABLE api (id INTEGER PRIMARY KEY UNIQUE NOT NULL CHECK (id > 0), name TEXT NOT NULL, url TEXT NOT NULL, req_method TEXT NOT NULL DEFAULT 'GET', req_args_json TEXT, resp_form TEXT NOT NULL, enabled BOOLEAN NOT NULL DEFAULT 1)");
+        db.execSQL("CREATE TABLE api (id INTEGER PRIMARY KEY UNIQUE NOT NULL CHECK (id > 0), name TEXT NOT NULL, url TEXT NOT NULL, req_method TEXT NOT NULL DEFAULT 'GET', req_args_json TEXT, resp_form_json TEXT NOT NULL, enabled BOOLEAN NOT NULL DEFAULT 1)");
         db.execSQL("CREATE TABLE favor (oneword_id INTEGER REFERENCES all_oneword (id) ON DELETE CASCADE UNIQUE NOT NULL, added_at INTEGER NOT NULL COLLATE BINARY)");
         db.execSQL("CREATE TABLE history (oneword_id INTEGER REFERENCES all_oneword (id) ON DELETE CASCADE NOT NULL UNIQUE, added_at INTEGER COLLATE BINARY NOT NULL)");
         db.execSQL("CREATE TABLE toshow (oneword_id INTEGER REFERENCES all_oneword (id) ON DELETE CASCADE UNIQUE NOT NULL, added_at INTEGER NOT NULL COLLATE BINARY)");
@@ -482,13 +524,13 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
 
         db.execSQL("COMMIT TRANSACTION");
 
-        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('Hitokoto-动漫', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"a\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
-        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('Hitokoto-漫画', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"b\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
-        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('Hitokoto-游戏', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"c\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
-        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('Hitokoto-小说', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"d\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
-        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('Hitokoto-原创', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"e\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
-        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('Hitokoto-来自网络', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"f\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
-        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('Hitokoto-其他', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"g\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
+        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form_json,enabled) VALUES('Hitokoto-动漫', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"a\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
+        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form_json,enabled) VALUES('Hitokoto-漫画', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"b\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
+        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form_json,enabled) VALUES('Hitokoto-游戏', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"c\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
+        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form_json,enabled) VALUES('Hitokoto-小说', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"d\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
+        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form_json,enabled) VALUES('Hitokoto-原创', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"e\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
+        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form_json,enabled) VALUES('Hitokoto-来自网络', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"f\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
+        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form_json,enabled) VALUES('Hitokoto-其他', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"g\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
 
     }
 

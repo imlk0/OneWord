@@ -270,7 +270,7 @@ public class OneWordAutoRefreshService extends Service implements Observer<WordB
 
             OneWordSQLiteOpenHelper.getInstance().insertToHistory(bean);
 
-            SharedPreferencesUtil.saveCurOneWordId(this, bean.id);
+//            SharedPreferencesUtil.saveCurOneWordId(this, bean.id);
 
             OneWordFileStation.saveOneWordJSON(bean);
             BroadcastSender.sendUseNewOneWordInfoBroadcast(this, bean);

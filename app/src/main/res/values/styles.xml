@@ -1,7 +1,7 @@
 <resources>
 
 
-    <style name="SwitchStyle" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme.SwitchStyle" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Active thumb color & Active track color(30% transparency)
             switch 打开时的拇指按钮的颜色 轨迹颜色默认为30%这个颜色 -->
         <item name="colorControlActivated">@android:color/white</item>
@@ -15,12 +15,12 @@
 
 
     <!-- Base application theme. -->
-    <style name="BaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@android:color/white</item>
         <item name="colorPrimaryDark">@android:color/white</item>
-        <item name="color_primary_bg">@android:color/white</item>
-        <item name="color_primary_bg_dark">@android:color/white</item>
+        <item name="color_primary">@android:color/white</item>
+        <item name="color_primary_dark">@android:color/white</item>
         <item name="colorAccent">@android:color/white</item>
         <item name="color_primary_light">@color/green_primary_light</item>
         <item name="color_primary_text">@color/green_primary_text</item>
@@ -136,11 +136,11 @@
     <!--<item name="color_divider">@color/deep_purple_divider</item>-->
     <!--</style>-->
 
-    <style name="GreenTheme" parent="BaseTheme">
+    <style name="GreenTheme" parent="AppTheme">
         <item name="colorPrimary">@color/green_colorPrimary</item>
         <item name="colorPrimaryDark">@color/green_colorPrimaryDark</item>
-        <item name="color_primary_bg">@color/green_colorPrimary</item>
-        <item name="color_primary_bg_dark">@color/green_colorPrimaryDark</item>
+        <item name="color_primary">@color/green_colorPrimary</item>
+        <item name="color_primary_dark">@color/green_colorPrimaryDark</item>
         <item name="colorAccent">@color/green_colorAccent</item>
         <item name="color_primary_light">@color/green_primary_light</item>
         <item name="color_primary_text">@color/green_primary_text</item>

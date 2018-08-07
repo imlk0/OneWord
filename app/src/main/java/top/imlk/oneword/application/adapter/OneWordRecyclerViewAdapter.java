@@ -23,6 +23,7 @@ import top.imlk.oneword.R;
 import top.imlk.oneword.application.client.activity.MainActivity;
 import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
 import top.imlk.oneword.util.BroadcastSender;
+import top.imlk.oneword.util.ShareUtil;
 
 
 /**
@@ -136,9 +137,8 @@ public class OneWordRecyclerViewAdapter extends RecyclerView.Adapter implements 
 
             switch (v.getId()) {
                 case R.id.item_share:
-                    ClipboardManager cm = (ClipboardManager) mainActivity.getSystemService(Context.CLIPBOARD_SERVICE);
-                    cm.setPrimaryClip(ClipData.newPlainText("一言", this.data.content + "\n——" + this.data.reference));
-                    Toast.makeText(mainActivity, "成功复制到剪切板", Toast.LENGTH_SHORT).show();
+
+                    ShareUtil.shareOneWord(mainActivity, this.data);
                     break;
 
                 case R.id.item_set:
@@ -177,6 +177,7 @@ public class OneWordRecyclerViewAdapter extends RecyclerView.Adapter implements 
                         mainActivity.checkIfCurBeanFavorStateChanged(this.data);
                     } else {
                         OneWordSQLiteOpenHelper.getInstance().removeFromHistory(this.data.id);
+                        mainActivity.checkIfCurBeanRemoved(this.data);
                     }
 
                     int ind = wordBeans.indexOf(this.data);

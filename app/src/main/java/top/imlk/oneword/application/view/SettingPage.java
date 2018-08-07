@@ -15,69 +15,65 @@ import android.widget.TextView;
 
 import top.imlk.oneword.BuildConfig;
 import top.imlk.oneword.R;
+import top.imlk.oneword.application.client.activity.AdjustStyleActivity;
+import top.imlk.oneword.application.client.activity.AllApiActivity;
+import top.imlk.oneword.application.client.activity.MainActivity;
 import top.imlk.oneword.util.SharedPreferencesUtil;
 import top.imlk.oneword.util.ShowDialogUtil;
 
 /**
  * Created by imlk on 2018/5/30.
  */
-public class SettingPage extends LinearLayout implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class SettingPage extends android.support.v4.widget.NestedScrollView implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
-    private Context context;
+    private MainActivity mainActivity;
 
     public SwitchCompat swOpenAutoRefresh;
     public LinearLayout llOpenAutoRefresh;
     public LinearLayout llSetRefreshMode;
-    public LinearLayout llSetOneWordType;
-    public LinearLayout llShowAboutApp;
+    public LinearLayout llSetOneWordShowForm;
+    public LinearLayout llEditOneWordApi;
+
+
     public LinearLayout llShowDonate;
+    public LinearLayout llShowAboutApp;
     public LinearLayout llCoolapkMarket;
-    public LinearLayout llShowThxHitokoto;
     public LinearLayout llShowThxOpenSource;
     public LinearLayout llVersion;
 
 
     public SettingPage(Context context) {
         super(context);
-        updateContext(context);
     }
 
     public SettingPage(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        updateContext(context);
     }
 
     public SettingPage(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        updateContext(context);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public SettingPage(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        updateContext(context);
     }
 
 
-    public void updateContext(Context context) {
-        this.context = context;
-    }
-
-    @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
+    public void init(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
 
         swOpenAutoRefresh = findViewById(R.id.sw_open_auto_refresh);
         swOpenAutoRefresh.setOnCheckedChangeListener(this);
-        swOpenAutoRefresh.setChecked(SharedPreferencesUtil.isRefreshOpened(context));
+        swOpenAutoRefresh.setChecked(SharedPreferencesUtil.isRefreshOpened(mainActivity));
         llOpenAutoRefresh = findViewById(R.id.ll_open_auto_refresh);
         llOpenAutoRefresh.setOnClickListener(this);
 
         llSetRefreshMode = findViewById(R.id.ll_set_refresh_mode);
         llSetRefreshMode.setOnClickListener(this);
 
-        llSetOneWordType = findViewById(R.id.ll_set_oneword_type);
-        llSetOneWordType.setOnClickListener(this);
+        llSetOneWordShowForm = findViewById(R.id.ll_set_oneword_show_form);
+        llSetOneWordShowForm.setOnClickListener(this);
+
+
+        llEditOneWordApi = findViewById(R.id.ll_edit_apis);
+        llEditOneWordApi.setOnClickListener(this);
+
 
         llShowAboutApp = findViewById(R.id.ll_show_about_app);
         llShowAboutApp.setOnClickListener(this);
@@ -88,8 +84,6 @@ public class SettingPage extends LinearLayout implements View.OnClickListener, C
         llCoolapkMarket = findViewById(R.id.ll_coolapk_market);
         llCoolapkMarket.setOnClickListener(this);
 
-        llShowThxHitokoto = findViewById(R.id.ll_show_thx_hitokoto);
-        llShowThxHitokoto.setOnClickListener(this);
 
         llShowThxOpenSource = findViewById(R.id.ll_show_thx_open_source);
         llShowThxOpenSource.setOnClickListener(this);
@@ -101,8 +95,11 @@ public class SettingPage extends LinearLayout implements View.OnClickListener, C
 
     }
 
+
     @Override
     public void onClick(View v) {
+        Intent intent;
+
         switch (v.getId()) {
             case R.id.ll_open_auto_refresh:
                 swOpenAutoRefresh.setChecked(!swOpenAutoRefresh.isChecked());
@@ -110,31 +107,36 @@ public class SettingPage extends LinearLayout implements View.OnClickListener, C
 
             case R.id.ll_set_refresh_mode:
 
-                ShowDialogUtil.showSelectRefreshModeDialog(context);
+                ShowDialogUtil.showSelectRefreshModeDialog(mainActivity);
                 break;
 
 
-            case R.id.ll_set_oneword_type:
+            case R.id.ll_set_oneword_show_form:
 
+                intent = new Intent(mainActivity, AdjustStyleActivity.class);
+                intent.putExtra(AdjustStyleActivity.ADJUST_SAMPLE_ONEWORD, mainActivity.getCurWordBeanCopy());
+                mainActivity.startActivity(intent);
+
+                break;
+
+            case R.id.ll_edit_apis:
                 //TODO API编辑
-//                ShowDialogUtil.showSelectOneWordTypeDialog(context);
+                mainActivity.startActivity(new Intent(mainActivity, AllApiActivity.class));
                 break;
+            //TODO 手动编写句子
 
             case R.id.ll_show_about_app:
-                ShowDialogUtil.showAboutAppDialog(context);
+                ShowDialogUtil.showAboutAppDialog(mainActivity);
                 break;
 
             case R.id.ll_show_donate:
-                ShowDialogUtil.showDonateDialog(context);
+                ShowDialogUtil.showDonateDialog(mainActivity);
                 break;
             case R.id.ll_coolapk_market:
-                context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.coolapk.com/apk/top.imlk.oneword")));
-                break;
-            case R.id.ll_show_thx_hitokoto:
-                context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://hitokoto.cn/about")));
+                mainActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.coolapk.com/apk/top.imlk.oneword")));
                 break;
             case R.id.ll_show_thx_open_source:
-                ShowDialogUtil.showOpenSourceProjectDialog(context);
+                ShowDialogUtil.showOpenSourceProjectDialog(mainActivity);
                 break;
 
 
@@ -147,7 +149,7 @@ public class SettingPage extends LinearLayout implements View.OnClickListener, C
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         switch (buttonView.getId()) {
             case R.id.sw_open_auto_refresh:
-                SharedPreferencesUtil.setAutoRefreshOpened(context, isChecked);
+                SharedPreferencesUtil.setAutoRefreshOpened(mainActivity, isChecked);
                 break;
         }
     }

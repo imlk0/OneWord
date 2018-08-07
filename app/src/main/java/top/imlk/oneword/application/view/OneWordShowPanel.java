@@ -3,7 +3,6 @@ package top.imlk.oneword.application.view;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
@@ -15,8 +14,6 @@ import top.imlk.oneword.application.client.activity.MainActivity;
 import top.imlk.oneword.bean.WordBean;
 import top.imlk.oneword.R;
 import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
-import top.imlk.oneword.util.BroadcastSender;
-import top.imlk.oneword.util.SharedPreferencesUtil;
 
 /**
  * Created by imlk on 2018/5/26.
@@ -63,20 +60,32 @@ public class OneWordShowPanel extends RelativeLayout implements View.OnClickList
         this.ivSetIt = findViewById(R.id.iv_msg_set);
         this.ivSetIt.setOnClickListener(this);
 
-        WordBean wordBean = SharedPreferencesUtil.readSavedOneWord(mainActivity);
+        loadAndShowCurneWord();
+    }
+
+    public void loadAndShowCurneWord() {
+
+        WordBean wordBean = OneWordSQLiteOpenHelper.getInstance().queryOneWordFromHistoryByDESC();
 
         if (wordBean != null) {
             updateCurWordBeanOnUI(wordBean);
+        } else {
+            showDefaultWord();
         }
+
     }
 
 
+    public void showDefaultWord() {
+        updateCurWordBeanOnUI(new WordBean("当前一言", "出处"));
+    }
+
     public void updateMsgMain(String str) {
-        this.tvMsgMain.setText(TextUtils.isEmpty(str) ? "  当前一言" : "  " + str);
+        this.tvMsgMain.setText("  " + str);
     }
 
     public void updateMsgFrom(String str) {
-        this.tvMsgFrom.setText("——" + (TextUtils.isEmpty(str) ? "出处 " : str + " "));
+        this.tvMsgFrom.setText("——" + str);
     }
 
     public void updateCurWordBeanOnUI(WordBean wordBean) {
@@ -99,7 +108,7 @@ public class OneWordShowPanel extends RelativeLayout implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_msg_favor:
-                if (this.curWordBean != null) {
+                if (this.curWordBean != null && this.curWordBean.id > 0) {
 
                     boolean favor = OneWordSQLiteOpenHelper.getInstance().checkIfInFavor(this.curWordBean.id);
 
@@ -115,7 +124,7 @@ public class OneWordShowPanel extends RelativeLayout implements View.OnClickList
                 }
                 break;
             case R.id.iv_msg_set:
-                if (this.curWordBean != null) {
+                if (this.curWordBean != null && this.curWordBean.id > 0) {
 
                     mainActivity.updateAndSetCurWordBean(this.curWordBean);
                 } else {
@@ -125,4 +134,11 @@ public class OneWordShowPanel extends RelativeLayout implements View.OnClickList
         }
     }
 
+    public WordBean getCurBeanCopy() {
+        if (curWordBean == null) {
+            return null;
+        }
+
+        return new WordBean(curWordBean);
+    }
 }

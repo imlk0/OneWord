@@ -20,4 +20,7 @@
     <dimen name="item_selector_text_mg_bottom">5dp</dimen>
     <dimen name="item_setting_title_ts">16sp</dimen>
     <dimen name="item_setting_summary_ts">14sp</dimen>
+    <dimen name="popup_context_item_padding_l">12dp</dimen>
+    <dimen name="popup_context_item_padding_b">8dp</dimen>
+    <dimen name="popup_context_item_padding_t">8dp</dimen>
 </resources>

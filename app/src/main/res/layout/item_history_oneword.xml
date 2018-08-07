@@ -70,7 +70,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/color_primary_bg"
+        android:background="?attr/color_primary"
         android:paddingBottom="20dp"
         android:paddingLeft="8dp"
         android:paddingRight="20dp"
@@ -119,6 +119,6 @@
     <View
         android:layout_width="fill_parent"
         android:layout_height="0.5dp"
-        android:background="?attr/color_primary_bg_dark" />
+        android:background="?attr/color_primary_dark" />
 
 </FrameLayout>

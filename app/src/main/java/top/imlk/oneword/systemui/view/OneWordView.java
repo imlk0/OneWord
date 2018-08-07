@@ -3,6 +3,7 @@ package top.imlk.oneword.systemui.view;
 import android.content.Context;
 import android.os.Build;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -15,9 +16,14 @@ import top.imlk.oneword.bean.WordBean;
  */
 public class OneWordView extends LinearLayout {
 
-    TextView contentTextView;
+    private LinearLayout contentPa;
 
-    TextView referenceTextView;
+    private TextView contentTextView;
+
+
+    private LinearLayout referencePa;
+
+    private TextView referenceTextView;
 
 
     //<TextView android:textSize="@r$dimen/widget_label_font_size" android:textColor="@color/clock_gray" android:ellipsize="marquee" android:layout_gravity="center_horizontal" android:id="@r$id/owner_info" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="16dp" android:layout_marginTop="@dimen/date_owner_info_margin" android:layout_marginRight="16dp" android:singleLine="true" android:letterSpacing="0.05"/>
@@ -36,7 +42,7 @@ public class OneWordView extends LinearLayout {
 
 
         // 正文外包裹一层LinearLayout
-        LinearLayout contentPa = new LinearLayout(context);
+        contentPa = new LinearLayout(context);
         contentPa.setGravity(Gravity.CENTER);
         contentPa.addView(contentTextView, contentLP);
 
@@ -68,7 +74,8 @@ public class OneWordView extends LinearLayout {
         LinearLayout.LayoutParams referenceLP = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 
         // 来源TV外包裹一层LL
-        LinearLayout referencePa = new LinearLayout(context);
+
+        referencePa = new LinearLayout(context);
 
         referencePa.addView(referenceTextView, referenceLP);
 
@@ -95,16 +102,20 @@ public class OneWordView extends LinearLayout {
 
     public void setOneWord(WordBean wordBean) {
         if (wordBean != null) {
-            contentTextView.setText(wordBean.content);
-            referenceTextView.setText("——" + wordBean.reference);
+            contentTextView.setText("\u3000\u3000" + wordBean.content);
+            if (TextUtils.isEmpty(wordBean.reference)) {
+                referencePa.setVisibility(GONE);
+            } else {
+                referencePa.setVisibility(VISIBLE);
+                referenceTextView.setText("——" + wordBean.reference);
+            }
         } else {
             defaultSetOneWord();
         }
     }
 
     public void defaultSetOneWord() {
-        contentTextView.setText("句子正文，\n喵喵喵喵喵喵喵喵");
-        referenceTextView.setText("——来源");
+        setOneWord(new WordBean("句子正文，\n喵喵喵喵喵喵喵喵", "来源"));
     }
 
     public void setTextSize(int unit, float size) {

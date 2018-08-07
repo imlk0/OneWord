@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <attr name="color_primary_bg" format="reference" />
-    <attr name="color_primary_bg_dark" format="reference" />
+    <attr name="color_primary" format="reference" />
+    <attr name="color_primary_dark" format="reference" />
     <attr name="color_primary_light" format="reference" />
     <attr name="color_primary_text" format="reference" />
     <attr name="color_secondary_text" format="reference" />

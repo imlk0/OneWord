@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements Observer<WordBean
 
         refreshLayout.setPrimaryColors(
                 AppStyleHelper.getColorByAttributeId(this, R.attr.color_primary_light),
-                AppStyleHelper.getColorByAttributeId(this, R.attr.colorPrimaryDark));
+                AppStyleHelper.getColorByAttributeId(this, R.attr.color_primary_dark));
 
 
         SharedPreferencesUtil.onMainActivityCreate(this);
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements Observer<WordBean
         if (wordBean != null) {
 
             oneWordShowPanel.updateCurWordBeanOnUI(wordBean);
-            SharedPreferencesUtil.saveCurOneWordId(this, wordBean.id);
+//            SharedPreferencesUtil.saveCurOneWordId(this, wordBean.id);
             pastedNestedScrollView.scrollToTop();
             OneWordSQLiteOpenHelper.getInstance().insertToHistory(wordBean);
             OneWordFileStation.saveOneWordJSON(wordBean);
@@ -104,6 +104,12 @@ public class MainActivity extends AppCompatActivity implements Observer<WordBean
     public void checkIfCurBeanFavorStateChanged(WordBean wordBean) {
         if (oneWordShowPanel.curWordBean != null && wordBean.id == oneWordShowPanel.curWordBean.id) {
             oneWordShowPanel.updateCurWordBeanOnUI(wordBean);
+        }
+    }
+
+    public void checkIfCurBeanRemoved(WordBean wordBean) {
+        if (oneWordShowPanel.curWordBean != null && wordBean.id == oneWordShowPanel.curWordBean.id) {
+            oneWordShowPanel.loadAndShowCurneWord();
         }
     }
 
@@ -133,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements Observer<WordBean
 
     @Override
     public void onError(Throwable e) {
-        Toast.makeText(MainActivity.this, "网络异常，获取失败", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, "发生异常，获取失败", Toast.LENGTH_SHORT).show();
         Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
 
         refreshLayout.finishRefresh(0, false);
@@ -242,6 +248,9 @@ public class MainActivity extends AppCompatActivity implements Observer<WordBean
         super.onWindowFocusChanged(hasFocus);
 
         upDateLP();
+    }
 
+    public WordBean getCurWordBeanCopy() {
+        return this.oneWordShowPanel.getCurBeanCopy();
     }
 }

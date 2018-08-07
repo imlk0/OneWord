@@ -19,6 +19,12 @@ import top.imlk.oneword.bean.WordBean;
 /**
  * Created by imlk on 2018/8/4.
  */
+
+/**
+ * 一言文件存储站
+ */
+
+
 public class OneWordFileStation {
 
     private static final String ONEWORD_FILE_NAME = "oneword.json";

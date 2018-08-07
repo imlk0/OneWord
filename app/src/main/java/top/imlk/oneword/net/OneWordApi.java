@@ -1,7 +1,5 @@
 package top.imlk.oneword.net;
 
-import android.content.Context;
-
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
@@ -13,7 +11,6 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Call;
@@ -49,11 +46,18 @@ public class OneWordApi {
 
     public static void requestOneWord(final Observer<WordBean> callback) {
 
-        requestOneWordInternal().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(callback);
+        ApiBean apiBean = OneWordSQLiteOpenHelper.getInstance().queryAEnabledApiRandom();
+
+        requestOneWordByAPI(callback, apiBean);
 
     }
 
-    private static Observable<WordBean> requestOneWordInternal() {
+    public static void requestOneWordByAPI(final Observer<WordBean> callback, ApiBean apiBean) {
+
+        requestOneWordInternal(apiBean).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(callback);
+    }
+
+    private static Observable<WordBean> requestOneWordInternal(final ApiBean apiBean) {
 
         return Observable.create(new ObservableOnSubscribe<WordBean>() {
             @Override
@@ -61,7 +65,10 @@ public class OneWordApi {
 
 
                 try {
-                    final ApiBean apiBean = OneWordSQLiteOpenHelper.getInstance().queryAEnabledApi();
+
+                    if (apiBean == null) {
+                        throw new RuntimeException("没有有效的api配置或未启用任何api");
+                    }
 
                     Request req;
 
@@ -95,7 +102,7 @@ public class OneWordApi {
                         req = new Request.Builder().url(apiBean.url).post(formBodyBuilder.build()).build();
 
                     } else {
-                        throw new UnsupportedOperationException(String.format("request method %s was not supported", apiBean.req_method));
+                        throw new UnsupportedOperationException(String.format("不支持的请求方式：%s", apiBean.req_method));
 
                     }
 
@@ -119,7 +126,7 @@ public class OneWordApi {
 
                                 WordBean wordBean = new WordBean();
 
-                                JSONTokener jsonForm = new JSONTokener(apiBean.resp_form);
+                                JSONTokener jsonForm = new JSONTokener(apiBean.resp_form_json);
 
                                 JSONTokener jsonReal = new JSONTokener(responseBody);
 

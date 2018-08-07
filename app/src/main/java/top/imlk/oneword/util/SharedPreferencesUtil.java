@@ -67,19 +67,19 @@ public class SharedPreferencesUtil {
     }
 
 
-    public static void saveCurOneWordId(Context context, int id) {
-
-        if (id > 0) {
-
-            SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PER_CURRENT_STATE, Context.MODE_PRIVATE);
-
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-
-            editor.putInt(SHARED_PER_KEY_CURRENT_ONEWORD_ID, id);
-
-            editor.commit();
-        }
-    }
+//    public static void saveCurOneWordId(Context context, int id) {
+//
+//        if (id > 0) {
+//
+//            SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PER_CURRENT_STATE, Context.MODE_PRIVATE);
+//
+//            SharedPreferences.Editor editor = sharedPreferences.edit();
+//
+//            editor.putInt(SHARED_PER_KEY_CURRENT_ONEWORD_ID, id);
+//
+//            editor.commit();
+//        }
+//    }
 
 
 //    public static boolean[] readOneWordTypes(Context context) {
@@ -166,6 +166,7 @@ public class SharedPreferencesUtil {
 
 
     public static void onMainActivityCreate(Context context) {
+
         SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PER_USER_INF, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import top.imlk.oneword.R;
 import top.imlk.oneword.application.client.activity.MainActivity;
 import top.imlk.oneword.application.view.OneWordListShowPage;
+import top.imlk.oneword.application.view.SettingPage;
 
 /**
  * Created by imlk on 2018/5/20.
@@ -20,7 +21,7 @@ public class ExtendViewPageAdaper extends PagerAdapter {
 
     public OneWordListShowPage historyPage;
     public OneWordListShowPage favorPage;
-    public ViewGroup settingPage;
+    public SettingPage settingPage;
 
     public static int PAGE_COUNT = 3;
 
@@ -33,8 +34,9 @@ public class ExtendViewPageAdaper extends PagerAdapter {
 
         historyPage = (OneWordListShowPage) View.inflate(mainActivity, R.layout.page_oneword_show_list, null);
         favorPage = (OneWordListShowPage) View.inflate(mainActivity, R.layout.page_oneword_show_list, null);
-        settingPage = (ViewGroup) View.inflate(mainActivity, R.layout.page_setting, null);
+        settingPage = (SettingPage) View.inflate(mainActivity, R.layout.page_setting, null);
 
+        settingPage.init(mainActivity);
         initHistoryPage();
         initFavorPage();
     }

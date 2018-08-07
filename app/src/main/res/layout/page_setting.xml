@@ -1,21 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<top.imlk.oneword.application.view.SettingPage xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <top.imlk.oneword.application.view.SettingPage
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/color_primary_bg"
+        android:background="?attr/color_primary"
         android:orientation="vertical">
-
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/color_primary_bg"
+            android:background="?attr/color_primary"
             android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/color_primary"
+                android:paddingBottom="8dp"
+                android:paddingLeft="16dp"
+                android:paddingTop="8dp"
+                android:text="一言相关"
+                android:textColor="@android:color/white"
+                android:textSize="14sp" />
 
 
             <LinearLayout
@@ -46,7 +56,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="开启后将在后台启动一个服务以定期刷新锁屏一言（退出应用后生效）"
+                        android:text="开启后将在后台启动一个服务以定期刷新锁屏一言（退出应用后有效）"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/item_setting_summary_ts" />
                 </LinearLayout>
@@ -64,16 +74,10 @@
                         android:layout_gravity="center"
                         android:layout_weight="1"
                         android:gravity="center"
-                        app:theme="@style/SwitchStyle" />
+                        app:theme="@style/AppTheme.SwitchStyle" />
                 </LinearLayout>
 
             </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="?attr/color_primary_bg_dark" />
-
 
             <LinearLayout
                 android:id="@+id/ll_set_refresh_mode"
@@ -112,14 +116,9 @@
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="?attr/color_primary_bg_dark" />
-
 
             <LinearLayout
-                android:id="@+id/ll_set_oneword_type"
+                android:id="@+id/ll_set_oneword_show_form"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?android:attr/selectableItemBackground"
@@ -139,7 +138,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="您要哪种类型的一言？"
+                        android:text="一言·样式"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/item_setting_title_ts"
                         android:textStyle="bold" />
@@ -147,16 +146,47 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="点按选择选择一言分类"
+                        android:text="调整一言字体、布局、边界大小等"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/item_setting_summary_ts" />
                 </LinearLayout>
             </LinearLayout>
 
-            <View
+
+            <LinearLayout
+                android:id="@+id/ll_edit_apis"
                 android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="?attr/color_primary_bg_dark" />
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:orientation="horizontal"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingBottom="16dp"
+                    android:paddingTop="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="一言·源"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/item_setting_title_ts"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="编辑一言的所有源API"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/item_setting_summary_ts" />
+                </LinearLayout>
+            </LinearLayout>
 
 
             <LinearLayout
@@ -180,7 +210,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="食用须知"
+                        android:text="一言·食用须知"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/item_setting_title_ts"
                         android:textStyle="bold" />
@@ -194,10 +224,23 @@
                 </LinearLayout>
             </LinearLayout>
 
+
             <View
                 android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="?attr/color_primary_bg_dark" />
+                android:layout_height="1dp"
+                android:background="?attr/color_primary_dark" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/color_primary"
+                android:paddingBottom="8dp"
+                android:paddingLeft="16dp"
+                android:paddingTop="8dp"
+                android:text="应用相关"
+                android:textColor="@android:color/white"
+                android:textSize="14sp" />
 
 
             <LinearLayout
@@ -221,7 +264,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="喜欢吗？  （看这里看这里看这里）"
+                        android:text="支持开发者"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/item_setting_title_ts"
                         android:textStyle="bold" />
@@ -229,17 +272,11 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="无耻地要捐赠（本性暴露）"
+                        android:text="人是铁，饭是钢，没有捐赠饿得慌。"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/item_setting_summary_ts" />
                 </LinearLayout>
             </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="?attr/color_primary_bg_dark" />
-
 
             <LinearLayout
                 android:id="@+id/ll_coolapk_market"
@@ -262,7 +299,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="点按进入酷安"
+                        android:text="酷安"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/item_setting_title_ts"
                         android:textStyle="bold" />
@@ -275,53 +312,6 @@
                         android:textSize="@dimen/item_setting_summary_ts" />
                 </LinearLayout>
             </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="?attr/color_primary_bg_dark" />
-
-
-            <LinearLayout
-                android:id="@+id/ll_show_thx_hitokoto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackground"
-                android:orientation="horizontal"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp">
-
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:paddingBottom="16dp"
-                    android:paddingTop="16dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="灰常感谢的 Hitokoto"
-                        android:textColor="@android:color/white"
-                        android:textSize="@dimen/item_setting_title_ts"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="hitokoto.cn"
-                        android:textColor="@android:color/white"
-                        android:textSize="@dimen/item_setting_summary_ts" />
-                </LinearLayout>
-            </LinearLayout>
-
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="?attr/color_primary_bg_dark" />
 
 
             <LinearLayout
@@ -359,10 +349,6 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="?attr/color_primary_bg_dark" />
 
             <LinearLayout
                 android:id="@+id/ll_version"
@@ -404,5 +390,5 @@
         </LinearLayout>
 
 
-    </top.imlk.oneword.application.view.SettingPage>
-</android.support.v4.widget.NestedScrollView>
+    </LinearLayout>
+</top.imlk.oneword.application.view.SettingPage>

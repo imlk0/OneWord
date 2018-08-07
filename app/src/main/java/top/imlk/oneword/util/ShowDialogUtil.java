@@ -31,7 +31,7 @@ public class ShowDialogUtil {
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter(context, R.layout.item_dialog_choose_refresh_mode, R.id.tv_item_name, context.getResources().getStringArray(R.array.auto_update_time_item));
         new LovelyChoiceDialog(context)
-                .setTopColor(AppStyleHelper.getColorByAttributeId(context, R.attr.colorPrimary))
+                .setTopColor(AppStyleHelper.getColorByAttributeId(context, R.attr.color_primary))
                 .setTitle("选择刷新频率 当前：" + context.getResources().getStringArray(R.array.auto_update_time_item)[SharedPreferencesUtil.getRefreshMode(context).ordinal()])
                 .setIcon(R.drawable.ic_av_timer_white_48dp)
                 .setMessage("从下面的选项中选一个刷新频率，若您启用了自动刷新选项，那么在应用退出后，锁屏一言将会在的时间里自动刷新")
@@ -53,7 +53,7 @@ public class ShowDialogUtil {
 //        String[] items = context.getResources().getStringArray(R.array.oneword_type);
 //
 //        new LovelyChoiceDialog(context)
-//                .setTopColor(AppStyleHelper.getColorByAttributeId(context, R.attr.colorPrimary))
+//                .setTopColor(AppStyleHelper.getColorByAttributeId(context, R.attr.color_primary_bg))
 //                .setTitle("选择你想要的类型的一言（多选）")
 //                .setMessage("您可以选择你想要看到的一言类型，若什么都不选则默认全选")
 //                .setIcon(R.drawable.ic_clear_all_white_48dp)
@@ -79,7 +79,7 @@ public class ShowDialogUtil {
     public static void showAboutAppDialog(Context context) {
 
         new LovelyInfoDialog(context)
-                .setTopColor(AppStyleHelper.getColorByAttributeId(context, R.attr.colorPrimary))
+                .setTopColor(AppStyleHelper.getColorByAttributeId(context, R.attr.color_primary))
                 .setIcon(R.drawable.ic_info_outline_white_48dp)
                 .setTitle("食用说明")
                 .setMessage("- 这个应用是基于Xposed的，所以Xposed框架是必须的\n" +
@@ -101,7 +101,7 @@ public class ShowDialogUtil {
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter(context, R.layout.item_dialog_choose_donate_by, R.id.tv_item_name, new String[]{"支付宝(推荐，点击拉起支付宝)", "微信", "QQ"});
         new LovelyChoiceDialog(context)
-                .setTopColor(AppStyleHelper.getColorByAttributeId(context, R.attr.colorPrimary))
+                .setTopColor(AppStyleHelper.getColorByAttributeId(context, R.attr.color_primary))
                 .setTitle("赏点小费吧")
                 .setIcon(R.drawable.ic_local_atm_white_48dp)
                 .setMessage("个人开发者，迷上了Xposed，在学习之余开发了这个软件，如果这个软件让您喜欢的话，就请不要吝惜吧！\n每元捐赠都是给我的最大鼓励\n（话说，捐一分钱这种骚操作还是别玩吧\n/_ \\，惊喜夹杂着失望的感觉真**）\n谢谢了")
@@ -121,8 +121,8 @@ public class ShowDialogUtil {
                             case 1:
 
                                 new LovelyCustomDialog(context)
-                                        .setView(R.layout.donate)
-                                        .setTopColor(AppStyleHelper.getColorByAttributeId(context, R.attr.colorPrimary))
+                                        .setView(R.layout.item_donate)
+                                        .setTopColor(AppStyleHelper.getColorByAttributeId(context, R.attr.color_primary))
                                         .setTitle("感谢您使用微信来捐赠")
                                         .setMessage("这是我的支付二维码，截图捐赠，谢谢\n建议一元起捐，不设上限(￣y▽,￣)╭")
                                         .setIcon(R.drawable.ic_local_atm_white_48dp)
@@ -138,8 +138,8 @@ public class ShowDialogUtil {
                                 break;
                             case 2:
                                 new LovelyCustomDialog(context)
-                                        .setView(R.layout.donate)
-                                        .setTopColor(AppStyleHelper.getColorByAttributeId(context, R.attr.colorPrimary))
+                                        .setView(R.layout.item_donate)
+                                        .setTopColor(AppStyleHelper.getColorByAttributeId(context, R.attr.color_primary))
                                         .setTitle("感谢您使用QQ来捐赠")
                                         .setMessage("这是我的支付二维码，截图捐赠，谢谢\n建议一元起捐，不设上限(￣y▽,￣)╭")
                                         .setIcon(R.drawable.ic_local_atm_white_48dp)
@@ -190,7 +190,7 @@ public class ShowDialogUtil {
 
         new LovelyCustomDialog(context)
                 .setView(listView)
-                .setTopColor(AppStyleHelper.getColorByAttributeId(context, R.attr.colorPrimary))
+                .setTopColor(AppStyleHelper.getColorByAttributeId(context, R.attr.color_primary))
                 .setIcon(R.drawable.ic_polymer_white_48dp)
                 .setTitle("向以下开源项目致敬")
                 .setMessage("在开发过程中，这些开源项目使我学到了很多")

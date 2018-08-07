@@ -14,7 +14,7 @@
             android:id="@+id/ll_main_oneword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/color_primary_bg"
+            android:background="?attr/color_primary"
             android:descendantFocusability="blocksDescendants"
             android:orientation="vertical">
 
@@ -114,7 +114,7 @@
                         android:id="@+id/magi_bottom"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="?attr/color_primary_bg_dark" />
+                        android:background="?attr/color_primary_dark" />
 
                 </LinearLayout>
 
