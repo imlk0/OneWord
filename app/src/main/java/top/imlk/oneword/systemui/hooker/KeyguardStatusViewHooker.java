@@ -85,17 +85,6 @@ public class KeyguardStatusViewHooker {
 
                 try {
 
-                    try {
-
-                        ViewGroup.LayoutParams layoutParams = ((View) param.thisObject).getLayoutParams();
-
-                        XposedBridge.log("View.getLP：" + layoutParams);
-
-                    } catch (Throwable e) {
-                        XposedBridge.log(e);
-                    }
-
-
                     ref_mOwnerInfo = new WeakReference(field_com_android_keyguard_KeyguardStatusView_mOwnerInfo.get(param.thisObject));
 //                    ref_mLockPatternUtils = new WeakReference(field_com_android_keyguard_KeyguardStatusView_mLockPatternUtils.get(param.thisObject));
                     ref_keyguardStatusView = new WeakReference(param.thisObject);
@@ -234,11 +223,11 @@ public class KeyguardStatusViewHooker {
         }
 
 
-        public static void reportException(Context context, Exception e) {
-            e.printStackTrace();
-            // TODO 错误上报
-
-        }
+//        public static void reportException(Context context, Exception e) {
+//            e.printStackTrace();
+//            //  错误上报
+//
+//        }
     }
 
 

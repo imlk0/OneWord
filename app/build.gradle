@@ -6,7 +6,7 @@ android {
         applicationId "top.imlk.oneword"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 3
+        versionCode 2
         versionName "1.0.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
