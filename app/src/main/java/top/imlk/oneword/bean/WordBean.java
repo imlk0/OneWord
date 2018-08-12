@@ -18,7 +18,6 @@ public class WordBean implements Parcelable {
     public String target_url;// TODO 相关链接
 
     public WordBean() {
-
     }
 
     public WordBean(String content, String reference) {
@@ -82,5 +81,10 @@ public class WordBean implements Parcelable {
         dest.writeString(content);
         dest.writeString(reference);
         dest.writeString(target_url);
+    }
+
+
+    public static WordBean generateDefaultBean() {
+        return new WordBean("这是一个默认句子，\n喵喵喵喵喵喵喵喵", "来源");
     }
 }

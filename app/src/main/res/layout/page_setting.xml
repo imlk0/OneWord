@@ -56,7 +56,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="开启后将在后台启动一个服务以定期刷新锁屏一言（退出应用后有效）"
+                        android:text="开启后将 在退出应用时 启动一个服务以定期刷新锁屏一言"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/item_setting_summary_ts" />
                 </LinearLayout>
@@ -69,6 +69,58 @@
 
                     <android.support.v7.widget.SwitchCompat
                         android:id="@+id/sw_open_auto_refresh"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        app:theme="@style/AppTheme.SwitchStyle" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/ll_open_show_notification_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:orientation="horizontal"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingBottom="16dp"
+                    android:paddingTop="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="通知上显示“锁屏一言”字样标题"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/item_setting_title_ts"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="由于通知在锁屏界面时有显示高度限制，关闭此选项可在通知上留出空间显示更多行的一言内容，但没有标题会显得突兀"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/item_setting_summary_ts" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:paddingLeft="16dp">
+
+                    <android.support.v7.widget.SwitchCompat
+                        android:id="@+id/sw_open_show_notification_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -116,6 +168,41 @@
 
             </LinearLayout>
 
+
+            <LinearLayout
+                android:id="@+id/ll_set_custom_oneword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:orientation="horizontal"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingBottom="16dp"
+                    android:paddingTop="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="一言·自定义"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/item_setting_title_ts"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="编写自己的个性化语句"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/item_setting_summary_ts" />
+                </LinearLayout>
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/ll_set_oneword_show_form"

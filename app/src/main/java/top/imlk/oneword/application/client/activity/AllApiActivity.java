@@ -15,7 +15,7 @@ import android.widget.Toolbar;
 import top.imlk.oneword.R;
 import top.imlk.oneword.application.adapter.AllApisRVAdapter;
 
-public class AllApiActivity extends AppCompatActivity {
+public class AllApiActivity extends BaseActivity {
 
     Toolbar toolbar;
     RecyclerView recyclerView;

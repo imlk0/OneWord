@@ -1,6 +1,7 @@
 package top.imlk.oneword.application.client.activity;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -11,15 +12,17 @@ import android.widget.Toast;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.tencent.bugly.crashreport.CrashReport;
 
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
 import top.imlk.oneword.application.client.service.OneWordAutoRefreshService;
+import top.imlk.oneword.bean.ApiBean;
 import top.imlk.oneword.bean.WordBean;
 import top.imlk.oneword.R;
+import top.imlk.oneword.net.WordRequestObserver;
 import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
 import top.imlk.oneword.net.OneWordApi;
 import top.imlk.oneword.util.BroadcastSender;
+import top.imlk.oneword.util.BugUtil;
 import top.imlk.oneword.util.OneWordFileStation;
 import top.imlk.oneword.util.SharedPreferencesUtil;
 import top.imlk.oneword.util.AppStyleHelper;
@@ -28,7 +31,7 @@ import top.imlk.oneword.application.view.OneWordShowPanel;
 import top.imlk.oneword.application.view.PastedNestedScrollView;
 
 
-public class MainActivity extends AppCompatActivity implements Observer<WordBean>, OnRefreshListener, PastedNestedScrollView.OnPasteListener {
+public class MainActivity extends AppCompatActivity implements WordRequestObserver, OnRefreshListener, PastedNestedScrollView.OnPasteListener {
 
 
     private PastedNestedScrollView pastedNestedScrollView;
@@ -45,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements Observer<WordBean
         super.onCreate(savedInstanceState);
 
         killRunningServices();
+
+//        CrashReport.testJavaCrash();
 
 //        setTheme(R.style.GreenTheme);
 
@@ -69,7 +74,10 @@ public class MainActivity extends AppCompatActivity implements Observer<WordBean
 
 
         SharedPreferencesUtil.onMainActivityCreate(this);
-//        startAutoUpdateService();
+
+
+        lpResolved = false;
+        isOnConfigurationChanged = false;
     }
 
 
@@ -93,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements Observer<WordBean
             pastedNestedScrollView.scrollToTop();
             OneWordSQLiteOpenHelper.getInstance().insertToHistory(wordBean);
             OneWordFileStation.saveOneWordJSON(wordBean);
-            BroadcastSender.sendUseNewOneWordInfoBroadcast(this, wordBean);
+            BroadcastSender.sendUseNewOneWordBroadcast(this, wordBean);
             Toast.makeText(this, "设置锁屏一言中...", Toast.LENGTH_SHORT).show();
 
         }
@@ -113,15 +121,15 @@ public class MainActivity extends AppCompatActivity implements Observer<WordBean
         }
     }
 
-    //implement reference Observer
+    //implement reference WordRequestObserver
 
     @Override
-    public void onSubscribe(Disposable d) {
-
+    public void onStart(ApiBean apiBean) {
+        Toast.makeText(this, String.format("正在从\n%s\n%s\n拉取一言数据", apiBean.name, apiBean.url), Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onNext(WordBean wordBean) {
+    public void onAcquire(ApiBean apiBean, WordBean wordBean) {
 
         int id = OneWordSQLiteOpenHelper.getInstance().queryIdOfOneWordInAllOneWord(wordBean);
         if (id <= 0) {
@@ -138,23 +146,20 @@ public class MainActivity extends AppCompatActivity implements Observer<WordBean
     }
 
     @Override
-    public void onError(Throwable e) {
-        Toast.makeText(MainActivity.this, "发生异常，获取失败", Toast.LENGTH_SHORT).show();
-        Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+    public void onError(ApiBean apiBean, Throwable e) {
+        BugUtil.printAndSaveCrashThrow2File(e);
+//        Toast.makeText(MainActivity.this, "发生异常，获取失败", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, e.getMessage() + "\ncause:\n" + e.getCause(), Toast.LENGTH_LONG).show();
 
         refreshLayout.finishRefresh(0, false);
     }
 
-    @Override
-    public void onComplete() {
-
-    }
 
     @Override
     protected void onDestroy() {
         OneWordSQLiteOpenHelper.closeDataBase();
 
-        if (SharedPreferencesUtil.isRefreshOpened(this)) {
+        if ((!isOnConfigurationChanged) && SharedPreferencesUtil.isAutoRefreshOpened(this)) {
             startAutoUpdateService();
         }
         super.onDestroy();
@@ -177,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements Observer<WordBean
 
 
     public void killRunningServices() {
-//        if(SharedPreferencesUtil.isRefreshOpened(this)){
+//        if(SharedPreferencesUtil.isAutoRefreshOpened(this)){
 //
 //            Intent intent = new Intent(this, OneWordAutoRefreshService.class);
 //
@@ -243,14 +248,31 @@ public class MainActivity extends AppCompatActivity implements Observer<WordBean
         return outRect;
     }
 
+
+    boolean lpResolved = false;
+
     @Override
+
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
 
-        upDateLP();
+        if (hasFocus && !lpResolved) {
+            lpResolved = true;
+            upDateLP();
+        }
+
     }
 
     public WordBean getCurWordBeanCopy() {
         return this.oneWordShowPanel.getCurBeanCopy();
+    }
+
+
+    private boolean isOnConfigurationChanged = false;
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        isOnConfigurationChanged = true;
     }
 }

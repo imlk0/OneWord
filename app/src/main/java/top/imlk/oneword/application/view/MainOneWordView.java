@@ -2,6 +2,7 @@ package top.imlk.oneword.application.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.os.Build;
 import android.support.annotation.Nullable;
@@ -58,35 +59,6 @@ public class MainOneWordView extends LinearLayout {
     }
 
 
-    public void upDateLP(Rect rect) {
-
-
-        if (llPageMain != null) {
-
-            ViewGroup.LayoutParams layoutParams = llPageMain.getLayoutParams();
-            layoutParams.height = rect.height();
-            llPageMain.setLayoutParams(layoutParams);
-
-        }
-
-
-        if (llPageExtend != null) {
-
-            ViewGroup.LayoutParams layoutParams = llPageExtend.getLayoutParams();
-            layoutParams.height = rect.height() - (this.llMsgBottom == null ? 0 : this.llMsgBottom.getHeight());
-            llPageExtend.setLayoutParams(layoutParams);
-        }
-
-//        if (extendViewPageAdaper != null) {
-//            extendViewPageAdaper.upDateLP(rect.height() - (this.llMsgBottom == null ? 0 : this.llMsgBottom.getHeight()));
-//        }
-
-
-        if (bottomNavigatorAdapter != null) {
-            bottomNavigatorAdapter.upDateLP(rect);
-        }
-    }
-
     public void init(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
         llMsgBottom = findViewById(R.id.ll_msg_bottom);
@@ -123,26 +95,23 @@ public class MainOneWordView extends LinearLayout {
 
         extendViewPageAdaper = new ExtendViewPageAdaper(mainActivity);
         viewPager.setAdapter(extendViewPageAdaper);
-
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                bottomMagicIndicator.onPageScrolled(position, positionOffset, positionOffsetPixels);
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                bottomMagicIndicator.onPageSelected(position == 2 ? 3 : position);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                bottomMagicIndicator.onPageScrollStateChanged(state);
-            }
-        });
-
-        viewPager.setCurrentItem(0);
-
+        viewPager.setCurrentItem(-1);
+//        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//            @Override
+//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//                bottomMagicIndicator.onPageScrolled(position, positionOffset, positionOffsetPixels);
+//            }
+//
+//            @Override
+//            public void onPageSelected(int position) {
+//                bottomMagicIndicator.onPageSelected(position == 2 ? 3 : position);
+//            }
+//
+//            @Override
+//            public void onPageScrollStateChanged(int state) {
+//                bottomMagicIndicator.onPageScrollStateChanged(state);
+//            }
+//        });
 
     }
 
@@ -155,56 +124,35 @@ public class MainOneWordView extends LinearLayout {
         }
     }
 
-//    @Override
-//    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-//
-//        ((MainActivity) this.context).upDateLP();
-//
-//    }
 
-    // implement reference NestedScrollingParent
+    public void upDateLP(Rect rect) {
 
-//    @Override
-//    public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
-//        return true;
-//    }
-//
-//    @Override
-//    public void onNestedScrollAccepted(View child, View target, int axes) {
-//        nestedScrollingParentHelper.onNestedScrollAccepted(child, target, axes);
-//    }
-//
-//    @Override
-//    public void onStopNestedScroll(View child) {
-//
-//    }
-//
-//    @Override
-//    public void onNestedScroll(View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
-//
-//    }
-//
-//    @Override
-//    public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
-//
-//    }
-//
-//    @Override
-//    public boolean onNestedFling(View target, float velocityX, float velocityY, boolean consumed) {
-//        return false;
-//}
-//
-//    @Override
-//    public boolean onNestedPreFling(View target, float velocityX, float velocityY) {
-//        return false;
-//    }
-//
-//    @Override
-//    public int getNestedScrollAxes() {
-//        return nestedScrollingParentHelper.getNestedScrollAxes();
-//    }
-//
+
+        if (llPageMain != null) {
+
+            ViewGroup.LayoutParams layoutParams = llPageMain.getLayoutParams();
+            layoutParams.height = rect.height();
+            llPageMain.setLayoutParams(layoutParams);
+
+        }
+
+
+        if (llPageExtend != null) {
+
+            ViewGroup.LayoutParams layoutParams = llPageExtend.getLayoutParams();
+            layoutParams.height = rect.height() - (this.llMsgBottom == null ? 0 : this.llMsgBottom.getHeight());
+            llPageExtend.setLayoutParams(layoutParams);
+        }
+
+//        if (extendViewPageAdaper != null) {
+//            extendViewPageAdaper.upDateLP(rect.height() - (this.llMsgBottom == null ? 0 : this.llMsgBottom.getHeight()));
+//        }
+
+
+        if (bottomNavigatorAdapter != null) {
+            bottomNavigatorAdapter.upDateLP(rect);
+        }
+    }
 
 
 }

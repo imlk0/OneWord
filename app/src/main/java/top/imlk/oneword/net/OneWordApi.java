@@ -1,5 +1,9 @@
 package top.imlk.oneword.net;
 
+import android.text.TextUtils;
+
+import com.tencent.bugly.crashreport.CrashReport;
+
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
@@ -12,6 +16,7 @@ import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -44,7 +49,7 @@ public class OneWordApi {
         return client;
     }
 
-    public static void requestOneWord(final Observer<WordBean> callback) {
+    public static void requestOneWord(final WordRequestObserver callback) {
 
         ApiBean apiBean = OneWordSQLiteOpenHelper.getInstance().queryAEnabledApiRandom();
 
@@ -52,9 +57,29 @@ public class OneWordApi {
 
     }
 
-    public static void requestOneWordByAPI(final Observer<WordBean> callback, ApiBean apiBean) {
+    public static void requestOneWordByAPI(final WordRequestObserver callback, final ApiBean apiBean) {
 
-        requestOneWordInternal(apiBean).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(callback);
+        requestOneWordInternal(apiBean).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<WordBean>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                callback.onStart(apiBean);
+            }
+
+            @Override
+            public void onNext(WordBean wordBean) {
+                callback.onAcquire(apiBean, wordBean);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                callback.onError(apiBean, e);
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
     }
 
     private static Observable<WordBean> requestOneWordInternal(final ApiBean apiBean) {
@@ -75,12 +100,21 @@ public class OneWordApi {
                     if ("GET".equalsIgnoreCase(apiBean.req_method)) {
                         HttpUrl.Builder httpUrlBuilder = HttpUrl.parse(apiBean.url).newBuilder();
 
-                        JSONObject jsonObject = new JSONObject(apiBean.req_args_json);
+                        if (!TextUtils.isEmpty(apiBean.req_args_json)) {
+                            try {
 
-                        for (Iterator<String> it = jsonObject.keys(); it.hasNext(); ) {
-                            String key = it.next();
+                                JSONObject jsonObject = new JSONObject(apiBean.req_args_json);
 
-                            httpUrlBuilder.addQueryParameter(key, String.valueOf(jsonObject.get(key)));
+                                for (Iterator<String> it = jsonObject.keys(); it.hasNext(); ) {
+                                    String key = it.next();
+
+                                    httpUrlBuilder.addQueryParameter(key, String.valueOf(jsonObject.get(key)));
+
+                                }
+
+                            } catch (Throwable e) {
+                                throw new RuntimeException("参数解析出错", e);
+                            }
 
                         }
 
@@ -91,14 +125,21 @@ public class OneWordApi {
 
                         FormBody.Builder formBodyBuilder = new FormBody.Builder();
 
-                        JSONObject jsonObject = new JSONObject(apiBean.req_args_json);
+                        if (!TextUtils.isEmpty(apiBean.req_args_json)) {
 
-                        for (Iterator<String> it = jsonObject.keys(); it.hasNext(); ) {
-                            String key = it.next();
+                            try {
+                                JSONObject jsonObject = new JSONObject(apiBean.req_args_json);
 
-                            formBodyBuilder.add(key, String.valueOf(jsonObject.get(key)));
+                                for (Iterator<String> it = jsonObject.keys(); it.hasNext(); ) {
+                                    String key = it.next();
+
+                                    formBodyBuilder.add(key, String.valueOf(jsonObject.get(key)));
+                                }
+
+                            } catch (Throwable e) {
+                                throw new RuntimeException("参数解析出错", e);
+                            }
                         }
-
                         req = new Request.Builder().url(apiBean.url).post(formBodyBuilder.build()).build();
 
                     } else {
@@ -110,7 +151,7 @@ public class OneWordApi {
                         @Override
                         public void onFailure(Call call, IOException e) {
 
-                            emitter.onError(e);
+                            emitter.onError(new RuntimeException("网络连接失败", e));
 
                         }
 
@@ -123,31 +164,56 @@ public class OneWordApi {
 
                                 responseBody = response.body().string();
 
-
                                 WordBean wordBean = new WordBean();
 
-                                JSONTokener jsonForm = new JSONTokener(apiBean.resp_form_json);
+                                if (!TextUtils.isEmpty(apiBean.resp_form)) {// 结果格式不为空
 
-                                JSONTokener jsonReal = new JSONTokener(responseBody);
+                                    try {// 尝试用json格式解析
+                                        JSONTokener jsonForm = new JSONTokener(apiBean.resp_form);
 
-                                OneWordInJsonExtracter.direction(jsonForm.nextValue(), jsonReal.nextValue(), wordBean);
+                                        JSONTokener jsonReal = new JSONTokener(responseBody);
+
+                                        OneWordInJsonExtracter.direction(jsonForm.nextValue(), jsonReal.nextValue(), wordBean);
+                                    } catch (Throwable e0) {// 解析出错，改用分隔符解析
+
+                                    }
+                                }
+
+
+                                if (TextUtils.isEmpty(wordBean.content) && !TextUtils.isEmpty(apiBean.resp_form)) {
+                                    String[] substr = responseBody.split(apiBean.resp_form);
+
+                                    StringBuilder builder = new StringBuilder();
+                                    for (int i = 0; i < substr.length - 1; i++) {
+                                        builder.append(substr[i]);
+                                    }
+                                    wordBean.content = builder.toString();
+                                    wordBean.reference = substr[substr.length - 1];
+                                }
+
+                                if (TextUtils.isEmpty(wordBean.content)) {
+                                    wordBean = new WordBean(responseBody, null);
+                                }
 
                                 emitter.onNext(wordBean);
 
                                 emitter.onComplete();
+
+
                             } catch (Throwable throwable) {
 
-                                throwable.addSuppressed(new Throwable("responseBody=\n" + responseBody + "\napiBean=\n" + apiBean));
+                                RuntimeException re = new RuntimeException("responseBody=\n" + responseBody + "\napiBean=\n" + apiBean, throwable);
 
-                                BugUtil.printAndSaveCrashThrow2File(throwable);
-                                emitter.onError(throwable);
+                                BugUtil.printAndSaveCrashThrow2File(re);
+                                emitter.onError(re);
                             }
 
                         }
                     });
 
                 } catch (Throwable throwable) {
-                    emitter.onError(throwable);
+                    emitter.onError(new RuntimeException("未知异常", throwable));
+                    CrashReport.postCatchedException(throwable);
                 }
 
 

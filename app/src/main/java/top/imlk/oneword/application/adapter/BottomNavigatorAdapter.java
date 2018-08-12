@@ -80,7 +80,6 @@ public class BottomNavigatorAdapter extends CommonNavigatorAdapter implements Vi
         if (v == data.get(0)) {
             mainActivity.gotoPage(0);
 
-
         } else if (v == data.get(1)) {
             mainActivity.gotoPage(1);
 

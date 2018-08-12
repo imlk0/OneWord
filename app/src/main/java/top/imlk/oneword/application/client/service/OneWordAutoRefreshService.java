@@ -1,29 +1,36 @@
 package top.imlk.oneword.application.client.service;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
 import top.imlk.oneword.R;
+import top.imlk.oneword.application.client.activity.MainActivity;
+import top.imlk.oneword.bean.ApiBean;
 import top.imlk.oneword.bean.WordBean;
+import top.imlk.oneword.net.WordRequestObserver;
 import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
 import top.imlk.oneword.net.OneWordApi;
-import top.imlk.oneword.systemui.uifixer.BaseUIFixer;
 import top.imlk.oneword.util.BroadcastSender;
-import top.imlk.oneword.util.BugUtil;
 import top.imlk.oneword.util.OneWordFileStation;
 import top.imlk.oneword.util.SharedPreferencesUtil;
 
@@ -31,9 +38,9 @@ import top.imlk.oneword.util.SharedPreferencesUtil;
 /**
  * Created by imlk on 2018/5/26.
  */
-public class OneWordAutoRefreshService extends Service implements Observer<WordBean> {
+public class OneWordAutoRefreshService extends Service implements WordRequestObserver {
 
-    private static final String LOG_TAG = "OneWordAutoRefreshServ";
+    private static final String TAG = "OneWordAutoRefreshServ";
 
 
     public enum Mode {
@@ -55,11 +62,19 @@ public class OneWordAutoRefreshService extends Service implements Observer<WordB
     private Mode currentMode;
 
     private long spaceTime = 0;
-    private int lockTime = 0;
-    private int lockTimeCount = 0;
+
+    private int lockTimes = 0;
+    private int lockTimesCount = 0;
+
+    private boolean updateByLockTimes;
+
+    private boolean canUpdate = true;
 
     private UserPresentBroadCastReceiver mUserPresentBroadCastReceiver;
     private Timer mTimer;
+
+
+    private WordBean currentWord;
 
     @Nullable
     @Override
@@ -69,32 +84,36 @@ public class OneWordAutoRefreshService extends Service implements Observer<WordB
 
     @Override
     public void onCreate() {
-        Log.i(LOG_TAG, "onCreate");
+        Log.i(TAG, "onCreate");
 
 
-        if (!SharedPreferencesUtil.isRefreshOpened(this)) {
-            Log.e(LOG_TAG, "自动更新开关未启动，搞毛线啊");
-            Log.i(LOG_TAG, "Bye~");
+        if (!SharedPreferencesUtil.isAutoRefreshOpened(this)) {
+            Log.i(TAG, "自动更新开关未启动，搞毛线啊");
+            Log.i(TAG, "Bye~");
             this.stopSelf();
         }
+
+        currentWord = OneWordFileStation.readOneWordJSON();
+        if (currentWord == null) {
+            currentWord = WordBean.generateDefaultBean();
+        }
+        toForeground();
 
         super.onCreate();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.i(LOG_TAG, "Hello~");
+        Log.i(TAG, "Hello~");
 
-        Log.e(LOG_TAG, intent == null ? "intent is null" : intent.getAction() + "");
+        Log.i(TAG, intent == null ? "intent is null" : intent.getAction() + "");
 
-
-        toForeground();
 
         if (intent == null || TextUtils.isEmpty(intent.getAction()) || BroadcastSender.CMD_SERVICES_START_AUTO_REFRESH_SERVICE.equals(intent.getAction())) {
 
-            Log.e("isRefreshOpened()", SharedPreferencesUtil.isRefreshOpened(this) + "");
+            Log.i("isAutoRefreshOpened()", SharedPreferencesUtil.isAutoRefreshOpened(this) + "");
 
-            if (SharedPreferencesUtil.isRefreshOpened(this)) {
+            if (SharedPreferencesUtil.isAutoRefreshOpened(this)) {
 
                 currentMode = SharedPreferencesUtil.getRefreshMode(this);
 
@@ -102,17 +121,17 @@ public class OneWordAutoRefreshService extends Service implements Observer<WordB
 
 
             } else {
-                Log.e(LOG_TAG, "自动更新开关未启动，搞毛线啊");
-                Log.i(LOG_TAG, "Bye~");
+                Log.i(TAG, "自动更新开关未启动，搞毛线啊");
+                Log.i(TAG, "Bye~");
                 this.stopSelf();
             }
         } else if (BroadcastSender.CMD_SERVICES_STOP_SERVICE.equals(intent.getAction())) {
 
 
-            Log.i(LOG_TAG, "Bye~");
+            Log.i(TAG, "Bye~");
             this.stopSelf();
         } else {
-            Log.i(LOG_TAG, "NO match command!!!");
+            Log.i(TAG, "NO match command!!!");
 
         }
 
@@ -124,23 +143,24 @@ public class OneWordAutoRefreshService extends Service implements Observer<WordB
 
     private void parseMode() {
         if (currentMode == null) {
-            Log.e(LOG_TAG, "wtf! currentMode is null, error when parse");
+            Log.i(TAG, "wtf! currentMode is null, error when parse");
         } else {
-            Log.e(LOG_TAG, "currentMode -> " + Mode.values()[currentMode.ordinal()]);
+            Log.i(TAG, "currentMode -> " + Mode.values()[currentMode.ordinal()]);
 
-            boolean updateByLockTimes = true;
+            updateByLockTimes = true;
+
             switch (currentMode) {
                 case EVERY_LOCK:
-                    lockTime = 1;
+                    lockTimes = 1;
                     break;
                 case TWICE_LOCK:
-                    lockTime = 2;
+                    lockTimes = 2;
                     break;
                 case FIFTH_LOCK:
-                    lockTime = 5;
+                    lockTimes = 5;
                     break;
                 case TEN_TIMES_LOCK:
-                    lockTime = 10;
+                    lockTimes = 10;
                     break;
 
 
@@ -169,27 +189,30 @@ public class OneWordAutoRefreshService extends Service implements Observer<WordB
                     updateByLockTimes = false;
                     break;
                 default:
-                    lockTime = 1;
+                    lockTimes = 1;
                     break;
             }
 
 
-            scheduleUpdateMode(updateByLockTimes);
+            scheduleUpdateMode();
 
         }
     }
 
 
-    private void scheduleUpdateMode(boolean updateByLockTimes) {
+    private void scheduleUpdateMode() {
 
         checkIfEnough();
 
+        clearSchedule();
+
+        IntentFilter intentFilter = new IntentFilter();
+        mUserPresentBroadCastReceiver = new UserPresentBroadCastReceiver();
+
+        intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
         if (updateByLockTimes) {
-            IntentFilter intentFilter = new IntentFilter();
-            intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
-            mUserPresentBroadCastReceiver = new UserPresentBroadCastReceiver();
-            lockTimeCount = 0;
-            this.registerReceiver(mUserPresentBroadCastReceiver, intentFilter);
+            lockTimesCount = 0;
+
         } else {
             mTimer = new Timer();
             mTimer.schedule(new TimerTask() {
@@ -200,7 +223,11 @@ public class OneWordAutoRefreshService extends Service implements Observer<WordB
 
                 }
             }, spaceTime, spaceTime);
+            intentFilter.addAction(Intent.ACTION_SCREEN_ON);
         }
+
+        this.registerReceiver(mUserPresentBroadCastReceiver, intentFilter);
+
     }
 
     class UserPresentBroadCastReceiver extends BroadcastReceiver {
@@ -208,19 +235,35 @@ public class OneWordAutoRefreshService extends Service implements Observer<WordB
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            lockTimeCount++;
+            switch (intent.getAction()) {
+                case Intent.ACTION_SCREEN_OFF:
 
-            if ((lockTimeCount %= lockTime) == 0) {
 
-                doOnClockEvent();
+                    if (updateByLockTimes) {
 
+                        lockTimesCount++;
+
+                        if ((lockTimesCount %= lockTimes) == 0) {
+
+                            canUpdate = true;
+                            doOnClockEvent();
+                        }
+                    }
+
+                    toForeground();
+                    break;
+                case Intent.ACTION_SCREEN_ON:
+                    if (!updateByLockTimes) {
+                        canUpdate = true;
+                    }
+                    break;
             }
 
         }
     }
 
     private void checkIfEnough() {
-        if (OneWordSQLiteOpenHelper.getInstance().countToShow() < 10) {
+        if (OneWordSQLiteOpenHelper.getInstance().countToShow() < 5) {
             getSomeOneWord(20);
         }
     }
@@ -235,56 +278,74 @@ public class OneWordAutoRefreshService extends Service implements Observer<WordB
     }
 
     private void doOnClockEvent() {
-        Log.i(LOG_TAG, "锁屏一言自动更新服务 执行");
+        Log.i(TAG, "锁屏一言自动更新服务 执行");
 
-        checkIfEnough();
+        Log.i(TAG, "can update:" + canUpdate);
 
+        if (canUpdate) {
 
-        WordBean bean = OneWordSQLiteOpenHelper.getInstance().queryOneWordFromToShowByASC();
-
-        if (bean != null) {
-            OneWordSQLiteOpenHelper.getInstance().removeFromToShow(bean.id);
-        }
+            checkIfEnough();
 
 
-        if (bean == null) {
-            bean = OneWordSQLiteOpenHelper.getInstance().queryOneWordFromHistoryByRandom();
-        }
-        if (bean == null) {
-            bean = OneWordSQLiteOpenHelper.getInstance().queryOneWordFromFavorByRandom();
-        }
+            WordBean bean = OneWordSQLiteOpenHelper.getInstance().queryOneWordFromToShowByASC();
+
+            if (bean != null) {
+                OneWordSQLiteOpenHelper.getInstance().removeFromToShow(bean.id);
+            }
 
 
-        if (bean == null) {
-            Toast.makeText(this, "网络不行呀，\n没有新的一言可以更新", Toast.LENGTH_LONG).show();
-            return;
-        }
+            if (bean == null) {
+                bean = OneWordSQLiteOpenHelper.getInstance().queryOneWordFromHistoryByRandom();
+            }
+            if (bean == null) {
+                bean = OneWordSQLiteOpenHelper.getInstance().queryOneWordFromFavorByRandom();
+            }
 
-        checkIfEnough();
+
+            if (bean == null) {
+                Toast.makeText(this, "网络不行呀，\n没有新的一言可以更新", Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            checkIfEnough();
 
 //        if (bean.like || OneWordSQLiteOpenHelper.getInstance().query_one_item_exist(TABLE_LIKE, bean)) {
 //            bean.like = true;
 //        }
 
-        if (bean != null) {
+            if (bean != null) {
 
-            OneWordSQLiteOpenHelper.getInstance().insertToHistory(bean);
+                OneWordSQLiteOpenHelper.getInstance().insertToHistory(bean);
+                OneWordFileStation.saveOneWordJSON(bean);
+                BroadcastSender.sendUseNewOneWordBroadcast(this, bean);
 
-//            SharedPreferencesUtil.saveCurOneWordId(this, bean.id);
+                currentWord = bean;
+                toForeground();
+                Log.i(TAG, String.valueOf(currentWord));
+            }
 
-            OneWordFileStation.saveOneWordJSON(bean);
-            BroadcastSender.sendUseNewOneWordInfoBroadcast(this, bean);
         }
 
-        Log.i(LOG_TAG, "锁屏一言自动更新服务 执行完毕");
+        Log.i(TAG, "锁屏一言自动更新服务 执行完毕");
     }
 
 
     @Override
     public void onDestroy() {
 
-        Log.e(LOG_TAG, "onDestroy");
+        Log.i(TAG, "onDestroy");
 
+        clearSchedule();
+
+        OneWordSQLiteOpenHelper.closeDataBase();
+
+        super.onDestroy();
+
+        System.exit(0);
+
+    }
+
+    private void clearSchedule() {
 
         if (mTimer != null) {
             mTimer.cancel();
@@ -296,24 +357,20 @@ public class OneWordAutoRefreshService extends Service implements Observer<WordB
             mUserPresentBroadCastReceiver = null;
         }
 
-        OneWordSQLiteOpenHelper.closeDataBase();
-
-        super.onDestroy();
-
     }
 
 
-    //implement reference Observer
+    //implement reference WordRequestObserver
 
     @Override
-    public void onSubscribe(Disposable d) {
+    public void onStart(ApiBean apiBean) {
 
     }
 
     @Override
-    public void onNext(WordBean wordBean) {
+    public void onAcquire(ApiBean apiBean, WordBean wordBean) {
 
-        Log.i(LOG_TAG, "成功获取到一言");
+        Log.i(TAG, "成功获取到一言");
 
         OneWordSQLiteOpenHelper.getInstance().insertToToShow(wordBean);
 
@@ -321,25 +378,74 @@ public class OneWordAutoRefreshService extends Service implements Observer<WordB
 
 
     @Override
-    public void onError(Throwable e) {
-        Log.e(LOG_TAG, "error when get new oneword");
+    public void onError(ApiBean apiBean, Throwable e) {
+        Log.i(TAG, "error when get new oneword");
 //        BugUtil.printAndSaveCrashThrow2File(e);
     }
 
-    @Override
-    public void onComplete() {
 
-    }
+    private static final String CHANNEL_ID = "top.imlk.oneword.notification_channel";
+
+    private NotificationCompat.Builder builder;
+    private RemoteViews remoteViews;
+
+    public synchronized void toForeground() {
+
+        if (builder == null) {
+
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                    .setContentTitle("锁屏一言·自动刷新服务")
+                    .setSmallIcon(R.mipmap.ic_oneword_icon)
+                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_oneword_icon))
+                    .setAutoCancel(false)
+                    .setContentIntent(PendingIntent.getActivity(this, 1, new Intent(this, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT))
+//                .setDeleteIntent(PendingIntent.getBroadcast(this, 0, new Intent(), PendingIntent.FLAG_CANCEL_CURRENT))
+                    .setWhen(System.currentTimeMillis());
+
+            RemoteViews remoteViews = new RemoteViews(this.getPackageName(), R.layout.notification_oneword);
 
 
-    public void toForeground() {
-        Notification notification = new Notification.Builder(this)
-                .setContentText("锁屏一言自动刷新服务")
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setWhen(System.currentTimeMillis())
-                .build();
+            if (!SharedPreferencesUtil.isShowNotificationTitleOpened(this)) {
+                remoteViews.setViewVisibility(R.id.ll_notification_title, View.GONE);
+            }
 
-        startForeground(1, notification);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+                NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, "锁屏一言自动刷新服务", NotificationManager.IMPORTANCE_HIGH);
+                notificationChannel.enableLights(false);
+                notificationChannel.setShowBadge(false);
+                notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+
+                NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                manager.createNotificationChannel(notificationChannel);
+//                builder.setCustomContentView(remoteViews);
+            }
+
+            builder.setChannelId(CHANNEL_ID);
+//            builder.setContent(remoteViews);
+            builder.setPriority(NotificationCompat.PRIORITY_MAX);
+
+
+            this.builder = builder;
+            this.remoteViews = remoteViews;
+
+        }
+
+        remoteViews.setTextViewText(R.id.tv_content, currentWord.content);
+
+        if (TextUtils.isEmpty(currentWord.reference)) {
+            remoteViews.setTextViewText(R.id.tv_reference, "");
+            remoteViews.setViewVisibility(R.id.tv_reference, View.GONE);
+        } else {
+            remoteViews.setTextViewText(R.id.tv_reference, "——" + currentWord.reference);
+            remoteViews.setViewVisibility(R.id.tv_reference, View.VISIBLE);
+        }
+
+
+        builder.setCustomContentView(remoteViews);
+        builder.setCustomBigContentView(remoteViews);
+
+        startForeground(1, builder.build());
     }
 
 }

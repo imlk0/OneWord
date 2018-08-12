@@ -23,4 +23,8 @@
     <dimen name="popup_context_item_padding_l">12dp</dimen>
     <dimen name="popup_context_item_padding_b">8dp</dimen>
     <dimen name="popup_context_item_padding_t">8dp</dimen>
+    <dimen name="preference_item_padding_l">16dp</dimen>
+    <dimen name="preference_item_padding_r">16dp</dimen>
+    <dimen name="item_wordlist_icon_distance">14dp</dimen>
+    <dimen name="item_wordlist_icon_size">42dp</dimen>
 </resources>

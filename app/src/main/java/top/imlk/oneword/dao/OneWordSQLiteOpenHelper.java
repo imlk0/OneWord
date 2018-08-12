@@ -47,7 +47,7 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
     public static final String KEY_URL = "url";
     public static final String KEY_REQ_METHOD = "req_method";
     public static final String KEY_REQ_ARGS_JSON = "req_args_json";
-    public static final String KEY_RESP_FORM_JSON = "resp_form_json";
+    public static final String KEY_RESP_FORM = "resp_form";
     public static final String KEY_ENABLED = "enabled";
 
 
@@ -109,8 +109,8 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
 
 
             // id 是自增列，不需要填值
-            contentValues.put(KEY_CONTENT, wordBean.content);
-            contentValues.put(KEY_REFERENCE, wordBean.reference);
+            contentValues.put(KEY_CONTENT, nullToVoid(wordBean.content));
+            contentValues.put(KEY_REFERENCE, nullToVoid(wordBean.reference));
             contentValues.put(KEY_TARGET_URL, wordBean.target_url);
 
             return (int) sqLiteDatabase.insertWithOnConflict(TABLE_ALL_ONEWORD, null, contentValues, CONFLICT_IGNORE);
@@ -128,7 +128,7 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
         synchronized (this) {
             SQLiteDatabase sqLiteDatabase = getReadableDatabase();
             Cursor cursor = sqLiteDatabase.rawQuery("SELECT " + KEY_ID + " FROM " + TABLE_ALL_ONEWORD + " WHERE " + KEY_CONTENT + "=? AND " + KEY_REFERENCE + "=?", new String[]{
-                    wordBean.content, wordBean.reference
+                    nullToVoid(wordBean.content), nullToVoid(wordBean.reference)
             });
 
             int result = -1;
@@ -287,6 +287,19 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
             }
             sqLiteDatabase.execSQL("DELETE FROM " + tableName + " WHERE " + KEY_ONEWORD_ID + "=?", new Object[]{id});
 
+        }
+    }
+
+
+    public void clearToShow() {
+        clearSubTable(TABLE_TOSHOW);
+    }
+
+    private void clearSubTable(String tableName) {
+        synchronized (this) {
+            SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+
+            sqLiteDatabase.execSQL("DELETE FROM " + tableName + " WHERE 1");
         }
     }
 
@@ -473,7 +486,7 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
                 contentValues.put(KEY_REQ_METHOD, apiBean.req_method);
             }
             contentValues.put(KEY_REQ_ARGS_JSON, apiBean.req_args_json);
-            contentValues.put(KEY_RESP_FORM_JSON, apiBean.resp_form_json);
+            contentValues.put(KEY_RESP_FORM, apiBean.resp_form);
             contentValues.put(KEY_ENABLED, apiBean.enabled);
 
             sqLiteDatabase.insertWithOnConflict(TABLE_API, null, contentValues, CONFLICT_REPLACE);
@@ -510,7 +523,7 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
         db.execSQL("BEGIN TRANSACTION");
 
         db.execSQL("CREATE TABLE all_oneword (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE CHECK (id > 0), content TEXT, reference TEXT, target_url TEXT)");
-        db.execSQL("CREATE TABLE api (id INTEGER PRIMARY KEY UNIQUE NOT NULL CHECK (id > 0), name TEXT NOT NULL, url TEXT NOT NULL, req_method TEXT NOT NULL DEFAULT 'GET', req_args_json TEXT, resp_form_json TEXT NOT NULL, enabled BOOLEAN NOT NULL DEFAULT 1)");
+        db.execSQL("CREATE TABLE api (id INTEGER PRIMARY KEY UNIQUE NOT NULL CHECK (id > 0), name TEXT NOT NULL, url TEXT NOT NULL, req_method TEXT NOT NULL DEFAULT 'GET', req_args_json TEXT, resp_form TEXT , enabled BOOLEAN NOT NULL DEFAULT 1)");
         db.execSQL("CREATE TABLE favor (oneword_id INTEGER REFERENCES all_oneword (id) ON DELETE CASCADE UNIQUE NOT NULL, added_at INTEGER NOT NULL COLLATE BINARY)");
         db.execSQL("CREATE TABLE history (oneword_id INTEGER REFERENCES all_oneword (id) ON DELETE CASCADE NOT NULL UNIQUE, added_at INTEGER COLLATE BINARY NOT NULL)");
         db.execSQL("CREATE TABLE toshow (oneword_id INTEGER REFERENCES all_oneword (id) ON DELETE CASCADE UNIQUE NOT NULL, added_at INTEGER NOT NULL COLLATE BINARY)");
@@ -522,15 +535,19 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE INDEX index_toshow_addedat ON toshow (added_at DESC)");
         db.execSQL("CREATE INDEX index_toshow_onewordid ON toshow (oneword_id)");
 
+        db.execSQL("CREATE TRIGGER clear_toshow_when_api_deleted AFTER DELETE ON api FOR EACH ROW BEGIN DELETE FROM toshow; END");
+        db.execSQL("CREATE TRIGGER clear_toshow_when_api_enable_updated AFTER UPDATE OF enabled ON api FOR EACH ROW BEGIN DELETE FROM toshow; END");
+
         db.execSQL("COMMIT TRANSACTION");
 
-        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form_json,enabled) VALUES('Hitokoto-动漫', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"a\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
-        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form_json,enabled) VALUES('Hitokoto-漫画', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"b\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
-        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form_json,enabled) VALUES('Hitokoto-游戏', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"c\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
-        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form_json,enabled) VALUES('Hitokoto-小说', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"d\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
-        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form_json,enabled) VALUES('Hitokoto-原创', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"e\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
-        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form_json,enabled) VALUES('Hitokoto-来自网络', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"f\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
-        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form_json,enabled) VALUES('Hitokoto-其他', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"g\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
+        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('Hitokoto-动漫', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"a\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
+        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('Hitokoto-漫画', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"b\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
+        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('Hitokoto-游戏', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"c\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
+        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('Hitokoto-小说', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"d\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
+        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('Hitokoto-原创', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"e\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
+        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('Hitokoto-来自网络', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"f\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
+        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('Hitokoto-其他', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"g\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
+        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('yiju-一句', 'http://yiju.ml/api/word.php', 'GET', '', '——', 1)");
 
     }
 
@@ -558,12 +575,12 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
                 ContentValues contentValues_favor = new ContentValues();
 
                 while (cursor.moveToNext()) {
-                    contentValues_all.put(KEY_CONTENT, cursor.getString(1));
-                    contentValues_all.put(KEY_REFERENCE, cursor.getString(3));
+                    contentValues_all.put(KEY_CONTENT, nullToVoid(cursor.getString(1)));
+                    contentValues_all.put(KEY_REFERENCE, nullToVoid(cursor.getString(3)));
 
                     // 避免重复
                     Cursor cursor_0 = db.rawQuery("SELECT " + KEY_ID + " FROM " + TABLE_ALL_ONEWORD + " WHERE " + KEY_CONTENT + "=? AND " + KEY_REFERENCE + "=?", new String[]{
-                            cursor.getString(1), cursor.getString(3)
+                            nullToVoid(cursor.getString(1)), nullToVoid(cursor.getString(3))
                     });
 
                     if (cursor_0.getCount() == 0) {
@@ -609,5 +626,9 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
 
     }
 
+
+    private static String nullToVoid(String str) {
+        return str == null ? "" : str;
+    }
 
 }

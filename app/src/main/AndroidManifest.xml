@@ -4,11 +4,10 @@
     package="top.imlk.oneword">
 
     <!-- <uses-permission android:name="android.permission.ACCESS_KEYGUARD_SECURE_STORAGE" /> -->
-    <uses-permission android:name="permission android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_LOGS" />
@@ -16,6 +15,7 @@
     <!-- android:sharedUserId="android.uid.systemui" -->
     <!-- android:process="com.android.systemui" -->
     <application
+        android:name=".application.client.application.OneWordApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -24,16 +24,25 @@
         android:theme="@style/GreenTheme">
         <activity
             android:name=".application.client.activity.MainActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait">
-
-
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".application.client.activity.AllApiActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".application.client.activity.EditApiActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".application.client.activity.AdjustStyleActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".application.client.activity.CustomWordActivity"
+            android:launchMode="singleTop" />
 
         <service
             android:name=".application.client.service.OneWordAutoRefreshService"
@@ -53,34 +62,19 @@
             </intent-filter>
         </receiver>
 
-        <provider
-            android:name=".application.client.provider.OneWordDBProvider"
-            android:authorities="top.imlk.oneword.application.client.provider.OneWordDBProvider" />
-
         <meta-data
             android:name="xposedmodule"
             android:value="true" />
         <meta-data
             android:name="xposeddescription"
-            android:value="OneWord - 锁屏一言\ndeveloper: imlk\ncoolapk: https://www.coolapk.com/apk/top.imlk.oneword" />
+            android:value="OneWord - 锁屏一言模块\ndeveloper: imlk\ncoolapk: https://www.coolapk.com/apk/top.imlk.oneword" />
         <meta-data
             android:name="xposedminversion"
             android:value="36" />
 
-        <activity
-            android:name=".application.client.activity.AllApiActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".application.client.activity.EditApiActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".application.client.activity.AdjustStyleActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"></activity>
-
-
+        <meta-data
+            android:name="InstallChannel"
+            android:value="${InstallChannel}" />
         <!-- <provider -->
         <!-- android:name="net.grandcentrix.tray.provider.TrayContentProvider" -->
         <!-- android:authorities="top.imlk.oneword.tray" -->

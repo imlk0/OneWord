@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import top.imlk.oneword.bean.WordBean;
+import top.imlk.oneword.bean.WordViewConfig;
 import top.imlk.oneword.systemui.view.OneWordView;
 
 
@@ -18,14 +19,11 @@ import top.imlk.oneword.systemui.view.OneWordView;
  */
 public class BaseUIFixer {
 
-    protected OneWordView oneWordView;
+    private OneWordView oneWordView;
 
     public BaseUIFixer(TextView onerInfoTextView) {
 
         oneWordView = new OneWordView(onerInfoTextView.getContext());
-
-        oneWordView.setTextSize(TypedValue.COMPLEX_UNIT_PX, onerInfoTextView.getTextSize());
-        oneWordView.setTextColor(onerInfoTextView.getCurrentTextColor());
 
     }
 
@@ -49,33 +47,27 @@ public class BaseUIFixer {
 
         parent.addView(oneWordView, index + 1, layoutParams);
 
-
-    }
-
-
-    public void onSetOneWord(WordBean wordBean) {
-
-        if (oneWordView == null) {
-            return;
-        }
-
-        if (wordBean == null) {
-            return;
-        }
-
-        // TODO 增加软件更新后重启提示
-
-
-        oneWordView.setOneWord(wordBean);
     }
 
     public void onSetTextSize(int unit, float size) {
-        oneWordView.setTextSize(unit, size);
+//        oneWordView.setTextSize(unit, size);
     }
 
     public void onSetTextColor(int color) {
-        oneWordView.setTextColor(color);
+//        oneWordView.setTextColor(color);
     }
 
+
+    public void setOneWord(WordBean word) {
+        if (oneWordView != null) {
+            oneWordView.setOneWord(word);
+        }
+    }
+
+    public void applyWordViewConfig(WordViewConfig config) {
+        if (oneWordView != null) {
+            oneWordView.applyWordViewConfig(config);
+        }
+    }
 
 }

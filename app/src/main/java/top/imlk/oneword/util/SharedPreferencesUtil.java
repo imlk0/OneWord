@@ -17,8 +17,8 @@ public class SharedPreferencesUtil {
     private static final String LOG_TAG = "SharedPreferencesUtil";
 
 
-    public static final String SHARED_PER_CURRENT_STATE = "SHARED_PER_CURRENT_STATE";
-    public static final String SHARED_PER_KEY_CURRENT_ONEWORD_ID = "current_id";
+//    public static final String SHARED_PER_CURRENT_STATE = "SHARED_PER_CURRENT_STATE";
+//    public static final String SHARED_PER_KEY_CURRENT_ONEWORD_ID = "current_id";
 //    public static final String SHARED_PER_KEY_CURRENT_ONEWORD_TYPE = "current_type";
 //    public static final String SHARED_PER_KEY_CURRENT_ONEWORD_MSG = "current_msg";
 //    public static final String SHARED_PER_KEY_CURRENT_ONEWORD_FROM = "current_from";
@@ -30,19 +30,19 @@ public class SharedPreferencesUtil {
     public static final String SHARED_PER_AUTO_REFRESH_STATE = "SHARED_PER_AUTO_REFRESH_STATE";
     public static final String SHARED_PER_KEY_IS_REFRESH_OPENED = "is_refresh_opened";
     public static final String SHARED_PER_KEY_REFRESH_MODE = "frequency_to_refresh";
-
-
-//    public static final String SHARED_PER_ONEWORD_TYPE_SELECT_STATE = "SHARED_PER_ONEWORD_TYPE_SELECT_STATE";
-
+    public static final String SHARED_PER_KEY_IS_SHOW_NOTIFICATION_TITLE_OPENED = "is_show_notification_title_opened";
 
     public static final String SHARED_PER_USER_INF = "SHARED_PER_USER_INF";
     public static final String SHARED_PER_KEY_FIRSTTIME_INSTALL = "is_first_time_install";
     public static final String SHARED_PER_KEY_APP_VERSION_CODE = "versionCode";
+    public static final String SHARED_PER_KEY_HAS_BEEN_SHOWEN_DONATE = "has_been_show_donate";
 
 
-    public static final String SHARED_PER_USER_CONFIG = "SHARED_PER_USER_CONFIG";
-    public static final String SHARED_PER_KEY_SELECTED_THEME_NAME = "selected_theme_name";
+//    public static final String SHARED_PER_USER_CONFIG = "SHARED_PER_USER_CONFIG";
+//    public static final String SHARED_PER_KEY_SELECTED_THEME_NAME = "selected_theme_name";
 
+
+//    public static final String SHARED_PER_ONEWORD_TYPE_SELECT_STATE = "SHARED_PER_ONEWORD_TYPE_SELECT_STATE";
 
 //    public static final String SHARED_PER_KEY_ONEWORD_TYPE_ANIME = "Anime";
 //    public static final String SHARED_PER_KEY_ONEWORD_TYPE_COMIC = "Comic";
@@ -53,18 +53,18 @@ public class SharedPreferencesUtil {
 //    public static final String SHARED_PER_KEY_ONEWORD_TYPE_OTHER = "Other";
 
 
-    public static WordBean readSavedOneWord(Context context) {
-
-        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PER_CURRENT_STATE, Context.MODE_PRIVATE);
-
-        int id = sharedPreferences.getInt(SHARED_PER_KEY_CURRENT_ONEWORD_ID, -1);
-
-        if (id > 0) {
-            return OneWordSQLiteOpenHelper.getInstance().queryOneWordInAllOneWordById(id);
-        }
-
-        return null;
-    }
+//    public static WordBean readSavedOneWord(Context context) {
+//
+//        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PER_CURRENT_STATE, Context.MODE_PRIVATE);
+//
+//        int id = sharedPreferences.getInt(SHARED_PER_KEY_CURRENT_ONEWORD_ID, -1);
+//
+//        if (id > 0) {
+//            return OneWordSQLiteOpenHelper.getInstance().queryOneWordInAllOneWordById(id);
+//        }
+//
+//        return null;
+//    }
 
 
 //    public static void saveCurOneWordId(Context context, int id) {
@@ -112,22 +112,47 @@ public class SharedPreferencesUtil {
 //        editor.commit();
 //    }
 
-    public static boolean isRefreshOpened(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PER_AUTO_REFRESH_STATE, Context.MODE_PRIVATE);
+    public static boolean isAutoRefreshOpened(Context context) {
 
-        return sharedPreferences.getBoolean(SHARED_PER_KEY_IS_REFRESH_OPENED, false);
+        return getBooleanValue(context, SHARED_PER_AUTO_REFRESH_STATE, SHARED_PER_KEY_IS_REFRESH_OPENED, false);
 
     }
 
     public static void setAutoRefreshOpened(Context context, boolean opened) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PER_AUTO_REFRESH_STATE, Context.MODE_PRIVATE);
+        setBooleanValue(context, SHARED_PER_AUTO_REFRESH_STATE, SHARED_PER_KEY_IS_REFRESH_OPENED, opened);
+    }
+
+
+    public static boolean isShowNotificationTitleOpened(Context context) {
+        return getBooleanValue(context, SHARED_PER_AUTO_REFRESH_STATE, SHARED_PER_KEY_IS_SHOW_NOTIFICATION_TITLE_OPENED, true);
+    }
+
+    public static void setShowNotificationTitleOpened(Context context, boolean opened) {
+        setBooleanValue(context, SHARED_PER_AUTO_REFRESH_STATE, SHARED_PER_KEY_IS_SHOW_NOTIFICATION_TITLE_OPENED, opened);
+    }
+
+    public static boolean hasBeenShowDonate(Context context) {
+        return getBooleanValue(context, SHARED_PER_USER_INF, SHARED_PER_KEY_HAS_BEEN_SHOWEN_DONATE, false);
+    }
+
+    public static void setHasBeenShowDonate(Context context, boolean showed) {
+        setBooleanValue(context, SHARED_PER_USER_INF, SHARED_PER_KEY_HAS_BEEN_SHOWEN_DONATE, showed);
+    }
+
+    private static boolean getBooleanValue(Context context, String perferenceName, String key, boolean defaultVal) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(perferenceName, Context.MODE_PRIVATE);
+
+        return sharedPreferences.getBoolean(key, defaultVal);
+    }
+
+    private static void setBooleanValue(Context context, String perferenceName, String key, boolean value) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(perferenceName, Context.MODE_PRIVATE);
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        editor.putBoolean(SHARED_PER_KEY_IS_REFRESH_OPENED, opened);
+        editor.putBoolean(key, value);
 
         editor.commit();
-
     }
 
 
@@ -190,9 +215,18 @@ public class SharedPreferencesUtil {
             if (oldVerCode > 0 && !firstTimeInstall) {
                 onAppUpgrade(context, oldVerCode, curVerCode);
             }
-
-
         }
+
+        if ((!hasBeenShowDonate(context)) && isAutoRefreshOpened(context)) {
+            ShowDialogUtil.showDonateDialog(context);
+            setHasBeenShowDonate(context, true);
+        }
+
+        if (!AppStatus.hasBeenHooked()) {
+            ShowDialogUtil.showModuleNotStartUpDialog(context);
+        }
+
+
     }
 
     public static void onAppFirstTimeInstall(Context context) {
@@ -205,39 +239,16 @@ public class SharedPreferencesUtil {
         switch (oldVerCode) {
             case 1:
 
-                SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PER_CURRENT_STATE, Context.MODE_PRIVATE);
-
-                WordBean wordBean = new WordBean();
-                wordBean.content = sharedPreferences.getString("current_msg", null);
-                wordBean.reference = sharedPreferences.getString("current_from", null);
-
-                if (wordBean.content != null) {
-                    wordBean.id = OneWordSQLiteOpenHelper.getInstance().queryIdOfOneWordInAllOneWord(wordBean);
-                }
-
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-
-                editor.remove("current_id");
-                editor.remove("current_type");
-                editor.remove("current_msg");
-                editor.remove("current_from");
-                editor.remove("current_creator");
-                editor.remove("current_created_at");
-                editor.remove("current_like");
-
-                editor.remove("Anime");
-                editor.remove("Comic");
-                editor.remove("Game");
-                editor.remove("Novel");
-                editor.remove("Myself");
-                editor.remove("Internet");
-                editor.remove("Other");
-
-                if (wordBean.id > 0) {
-                    editor.putInt(SHARED_PER_KEY_CURRENT_ONEWORD_ID, wordBean.id);
-                }
-
+                SharedPreferences.Editor editor;
+                editor = context.getSharedPreferences("SHARED_PER_CURRENT_STATE", Context.MODE_PRIVATE).edit();
+                editor.clear();
                 editor.commit();
+
+                editor = context.getSharedPreferences("SHARED_PER_ONEWORD_TYPE_SELECT_STATE", Context.MODE_PRIVATE).edit();
+                editor.clear();
+                editor.commit();
+
+                ShowDialogUtil.showAboutAppDialog(context);
 
                 break;
         }

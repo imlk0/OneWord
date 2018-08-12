@@ -3,6 +3,7 @@ package top.imlk.oneword.util;
 import android.app.ActivityThread;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.text.TextUtils;
 
 import com.google.gson.Gson;
 
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import top.imlk.oneword.bean.WordBean;
+import top.imlk.oneword.bean.WordViewConfig;
 
 /**
  * Created by imlk on 2018/8/4.
@@ -28,6 +30,7 @@ import top.imlk.oneword.bean.WordBean;
 public class OneWordFileStation {
 
     private static final String ONEWORD_FILE_NAME = "oneword.json";
+    private static final String WORDVIEW_CONFIG_FILE_NAME = "wordview_config.json";
 
     protected static String BASE_FILES_PATH;
 
@@ -41,8 +44,26 @@ public class OneWordFileStation {
 
 
     public static void saveOneWordJSON(WordBean wordBean) {
+        saveObjJsonAtBasePath(ONEWORD_FILE_NAME, wordBean, WordBean.class);
+    }
 
-        if (wordBean == null) {
+    public static WordBean readOneWordJSON() {
+        return readObjJsonAtBasePath(ONEWORD_FILE_NAME, WordBean.class);
+    }
+
+
+    public static void saveWordViewConfigJSON(WordViewConfig wordViewConfig) {
+        saveObjJsonAtBasePath(WORDVIEW_CONFIG_FILE_NAME, wordViewConfig, WordViewConfig.class);
+    }
+
+    public static WordViewConfig readWordViewConfigJSON() {
+        return readObjJsonAtBasePath(WORDVIEW_CONFIG_FILE_NAME, WordViewConfig.class);
+    }
+
+
+    private static <T> void saveObjJsonAtBasePath(String filename, T bean, Class<T> tClass) {
+
+        if (bean == null) {
             return;
         }
 
@@ -51,14 +72,14 @@ public class OneWordFileStation {
             files_dir.mkdirs();
         }
 
-        File oneword_json_file = new File(files_dir, ONEWORD_FILE_NAME);
+        File json_file = new File(files_dir, filename);
 
         FileOutputStream fileOutputStream = null;
 
         try {
-            fileOutputStream = new FileOutputStream(oneword_json_file);
+            fileOutputStream = new FileOutputStream(json_file);
 
-            fileOutputStream.write(new Gson().toJson(wordBean, WordBean.class).getBytes());
+            fileOutputStream.write(new Gson().toJson(bean, tClass).getBytes());
 
         } catch (java.io.IOException e) {
             BugUtil.printAndSaveCrashThrow2File(e);
@@ -74,30 +95,34 @@ public class OneWordFileStation {
 
     }
 
-    public static WordBean readOneWordJSON() {
+    private static <T> T readObjJsonAtBasePath(String fileName, Class<T> tClass) {
         File files_dir = new File(BASE_FILES_PATH);
         if (!files_dir.exists()) {
             return null;
         }
 
-        File oneword_json_file = new File(files_dir, ONEWORD_FILE_NAME);
+        File json_file = new File(files_dir, fileName);
 
-        if (!oneword_json_file.exists()) {
+        if (!json_file.exists()) {
             return null;
         }
 
-        WordBean wordBean = null;
+        T bean = null;
         FileInputStream fileInputStream = null;
         try {
-            fileInputStream = new FileInputStream(oneword_json_file);
+            fileInputStream = new FileInputStream(json_file);
 
-            byte[] bytes = new byte[((int) oneword_json_file.length())];
+            byte[] bytes = new byte[((int) json_file.length())];
 
             fileInputStream.read(bytes);
 
             String json = new String(bytes);
 
-            wordBean = new Gson().fromJson(json, WordBean.class);
+            if (TextUtils.isEmpty(json)) {
+                return null;
+            }
+
+            bean = new Gson().fromJson(json, tClass);
 
         } catch (java.io.IOException e) {
             BugUtil.printAndSaveCrashThrow2File(e);
@@ -111,7 +136,7 @@ public class OneWordFileStation {
             }
         }
 
-        return wordBean;
+        return bean;
     }
 
 

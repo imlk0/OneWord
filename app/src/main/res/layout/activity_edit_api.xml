@@ -64,7 +64,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="给这个api取名吧"
-                        android:lines="1" />
+                        android:lines="1"
+                        android:textSize="14sp" />
 
                 </LinearLayout>
 
@@ -89,7 +90,8 @@
                         android:layout_height="wrap_content"
                         android:hint="请求URL，带http://或https://"
                         android:inputType="textUri"
-                        android:lines="1" />
+                        android:lines="1"
+                        android:textSize="14sp" />
                 </LinearLayout>
 
 
@@ -112,7 +114,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="请求方式 GET/POST"
-                        android:lines="1" />
+                        android:lines="1"
+                        android:textSize="14sp" />
 
                 </LinearLayout>
 
@@ -148,7 +151,8 @@
                         android:id="@+id/et_req_arg_json"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="API请求参数，JSON格式，对于GET方式而且需要参数的请求，允许将参数直接加到URL中而不填此项" />
+                        android:hint="API请求参数，JSON格式，对于GET方式而且需要参数的请求，允许将参数直接加到URL中而不填此项"
+                        android:textSize="14sp" />
                 </LinearLayout>
 
 
@@ -168,7 +172,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingLeft="4dp"
-                            android:text="响应的解析模板（JSON格式）（可选）"
+                            android:text="响应的解析模板（JSON格式 或 分隔符）（可选）"
                             android:textColor="?attr/color_secondary_text"
                             android:textSize="14sp" />
 
@@ -181,10 +185,11 @@
 
 
                     <EditText
-                        android:id="@+id/et_resp_form_json"
+                        android:id="@+id/et_resp_form"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="API响应格式，作为解析请求结果的模板" />
+                        android:hint="API响应格式，作为解析请求结果的模板\n解析支持json和分隔符两种模式\n\n匹配失败或值为空则直接将请求返回的结果作为一言正文显示"
+                        android:textSize="14sp" />
                 </LinearLayout>
 
 

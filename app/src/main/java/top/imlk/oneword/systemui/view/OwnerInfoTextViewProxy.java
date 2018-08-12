@@ -63,11 +63,6 @@ public class OwnerInfoTextViewProxy extends TextView {
         }
     }
 
-    public void setOneWord(WordBean word) {
-        if (uiFixer != null) {
-            uiFixer.onSetOneWord(word);
-        }
-    }
 
 //    @Override
 //    public void setSelected(boolean selected) {

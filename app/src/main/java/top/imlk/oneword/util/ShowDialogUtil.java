@@ -27,6 +27,8 @@ import top.imlk.oneword.application.client.service.OneWordAutoRefreshService;
  * Created by imlk on 2018/6/3.
  */
 public class ShowDialogUtil {
+
+
     public static void showSelectRefreshModeDialog(final Context context) {
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter(context, R.layout.item_dialog_choose_refresh_mode, R.id.tv_item_name, context.getResources().getStringArray(R.array.auto_update_time_item));
@@ -82,20 +84,34 @@ public class ShowDialogUtil {
                 .setTopColor(AppStyleHelper.getColorByAttributeId(context, R.attr.color_primary))
                 .setIcon(R.drawable.ic_info_outline_white_48dp)
                 .setTitle("食用说明")
-                .setMessage("- 这个应用是基于Xposed的，所以Xposed框架是必须的\n" +
-                        "- 应用对 锁屏界面（属于SystemUI） 进行了hook\n" +
-                        "- 是基于AOSP的SystemUI.apk的源码开发的，理论上 原生和类原生 的系统才可以使用，MIUI之类的没有试过\n" +
-                        "- 默认开启后台自动更新锁屏一言（每次锁屏后刷新）\n" +
-                        "- 再说一次！应用基于Xposed框架！！！\n" +
-                        "- 若有问题请到本应用在酷安的评论区反馈，最好带上SystemUI.apk（最近比较忙，我不一定会去适配）\n\n" +
-                        "- \\(@^0^@)/\n" +
-                        "- 如果你喜欢，请不要吝惜票票支持一波\n" +
-                        "- 希望各位玩得开心"
+                .setMessage(
+                        "- 禁用模块后锁屏仍然 残留一言 的旧版用户，在 系统设置->锁屏或安全->锁定屏幕消息 里可清除掉残留的内容，新版更改了储存机制，将不再有残留\n" +
+                                "\n" +
+                                "- 这个应用是基于Xposed的，所以Xposed框架是必须的\n" +
+                                "- 通过对 锁屏界面（属于SystemUI）进行修改，基于原生系统开发\n" +
+                                "- 若有问题请到本应用在酷安的评论区反馈，最好带上SystemUI.apk（最近比较忙，我不一定会去适配）\n\n" +
+                                "- \\(@^0^@)/\n" +
+                                "- 如果你喜欢，请不要吝惜票票支持一波\n" +
+                                "- 希望各位玩得开心"
                 )
                 .show();
 
 
     }
+
+
+    public static void showModuleNotStartUpDialog(Context context) {
+
+        new LovelyInfoDialog(context)
+                .setTopColor(AppStyleHelper.getColorByAttributeId(context, R.attr.color_primary))
+                .setIcon(R.drawable.ic_extension_black_48dp)
+                .setTitle("模块未被启用")
+                .setMessage("模块似乎并未被启用，这种情况下，将不能正常使用锁屏一言，请前往XposedInstaller模块列表勾选启用锁屏一言模块。\n\n但你仍然可以开启自动刷新服务，然后享受在锁屏通知上显示的锁屏一言，那也会是挺不错的体验，事实上我的一台没有Xposed的设备就是这样玩的")
+                .show();
+
+
+    }
+
 
     public static void showDonateDialog(final Context context) {
 
@@ -104,7 +120,7 @@ public class ShowDialogUtil {
                 .setTopColor(AppStyleHelper.getColorByAttributeId(context, R.attr.color_primary))
                 .setTitle("赏点小费吧")
                 .setIcon(R.drawable.ic_local_atm_white_48dp)
-                .setMessage("个人开发者，迷上了Xposed，在学习之余开发了这个软件，如果这个软件让您喜欢的话，就请不要吝惜吧！\n每元捐赠都是给我的最大鼓励\n（话说，捐一分钱这种骚操作还是别玩吧\n/_ \\，惊喜夹杂着失望的感觉真**）\n谢谢了")
+                .setMessage("如果这个软件让您喜欢的话，就请不要吝惜吧！\n帮助开发者将更多的想法变成现实\n每份捐赠都是给我的最大鼓励\n\n谢谢了")
                 .setItems(arrayAdapter, new LovelyChoiceDialog.OnItemSelectedListener<String>() {
                     @Override
                     public void onItemSelected(int position, String item) {
@@ -124,7 +140,7 @@ public class ShowDialogUtil {
                                         .setView(R.layout.item_donate)
                                         .setTopColor(AppStyleHelper.getColorByAttributeId(context, R.attr.color_primary))
                                         .setTitle("感谢您使用微信来捐赠")
-                                        .setMessage("这是我的支付二维码，截图捐赠，谢谢\n建议一元起捐，不设上限(￣y▽,￣)╭")
+                                        .setMessage("这是我的支付二维码，请截图扫码捐赠，谢谢\n建议五元起捐，不设上限(￣y▽,￣)╭")
                                         .setIcon(R.drawable.ic_local_atm_white_48dp)
                                         .configureView(new ViewConfigurator<View>() {
                                             @Override
@@ -141,7 +157,7 @@ public class ShowDialogUtil {
                                         .setView(R.layout.item_donate)
                                         .setTopColor(AppStyleHelper.getColorByAttributeId(context, R.attr.color_primary))
                                         .setTitle("感谢您使用QQ来捐赠")
-                                        .setMessage("这是我的支付二维码，截图捐赠，谢谢\n建议一元起捐，不设上限(￣y▽,￣)╭")
+                                        .setMessage("这是我的支付二维码，请截图扫码捐赠，谢谢\n建议五元起捐，不设上限(￣y▽,￣)╭")
                                         .setIcon(R.drawable.ic_local_atm_white_48dp)
                                         .configureView(new ViewConfigurator<View>() {
                                             @Override
@@ -175,9 +191,10 @@ public class ShowDialogUtil {
         titleAndSummaries.add(new TitleAndSummary("MagicIndicator", "https://github.com/hackware1993/MagicIndicator"));
         titleAndSummaries.add(new TitleAndSummary("LovelyDialog", "https://github.com/yarolegovich/LovelyDialog"));
         titleAndSummaries.add(new TitleAndSummary("SmartRefreshLayout", "https://github.com/scwang90/SmartRefreshLayout"));
-        titleAndSummaries.add(new TitleAndSummary("SwipeToAction", "https://github.com/KB5201314/SwipeToAction"));
+        titleAndSummaries.add(new TitleAndSummary("SwipeToAction(fork)", "https://github.com/vcalvello/SwipeToAction"));
         titleAndSummaries.add(new TitleAndSummary("AndroidDonate", "https://github.com/didikee/AndroidDonate"));
         titleAndSummaries.add(new TitleAndSummary("material-design-icons", "https://github.com/google/material-design-icons"));
+        titleAndSummaries.add(new TitleAndSummary("ColorPicker", "https://github.com/jaredrummler/ColorPicker"));
 
 
         ItemArrayAdapter itemArrayAdapter = new ItemArrayAdapter(context, titleAndSummaries);

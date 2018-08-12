@@ -5,11 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-import com.google.gson.Gson;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
@@ -18,6 +18,7 @@ import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import top.imlk.oneword.bean.WordBean;
+import top.imlk.oneword.bean.WordViewConfig;
 import top.imlk.oneword.systemui.uifixer.BaseUIFixer;
 import top.imlk.oneword.systemui.view.OwnerInfoTextViewProxy;
 import top.imlk.oneword.util.BroadcastSender;
@@ -44,6 +45,7 @@ public class KeyguardStatusViewHooker {
     public static WeakReference<Object> ref_keyguardStatusView;
     //    public static WeakReference<LockPatternUtils> ref_mLockPatternUtils;
     public static WeakReference<OwnerInfoTextViewProxy> ref_OwnerInfoTextViewProxy;
+    public static WeakReference<BaseUIFixer> ref_BaseUIFixer;
 
 
     public static void init(ClassLoader classLoader) throws NoSuchFieldException {
@@ -76,15 +78,23 @@ public class KeyguardStatusViewHooker {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 
-//                CrashReport.initCrashReport(((View) param.thisObject).getContext().getApplicationContext(), "03e888691d", false);
-//
-//                CrashReport.testJavaCrash();
+                XposedBridge.log("doHook_onFinishInflate()");
 
                 Context context = ((View) param.thisObject).getContext();
 
+
                 try {
 
-                    XposedBridge.log("doHook_onFinishInflate()");
+                    try {
+
+                        ViewGroup.LayoutParams layoutParams = ((View) param.thisObject).getLayoutParams();
+
+                        XposedBridge.log("View.getLP：" + layoutParams);
+
+                    } catch (Throwable e) {
+                        XposedBridge.log(e);
+                    }
+
 
                     ref_mOwnerInfo = new WeakReference(field_com_android_keyguard_KeyguardStatusView_mOwnerInfo.get(param.thisObject));
 //                    ref_mLockPatternUtils = new WeakReference(field_com_android_keyguard_KeyguardStatusView_mLockPatternUtils.get(param.thisObject));
@@ -97,11 +107,14 @@ public class KeyguardStatusViewHooker {
 
                     proxyView.setUiFixer(uiFixer);
 
+                    ref_BaseUIFixer = new WeakReference<>(uiFixer);
                     ref_OwnerInfoTextViewProxy = new WeakReference<>(proxyView);
 
                     field_com_android_keyguard_KeyguardStatusView_mOwnerInfo.set(param.thisObject, ref_OwnerInfoTextViewProxy.get());
 
+
                     getAndSetOneWord();
+                    getAndApplyWordViewConfig();
 
                 } catch (Throwable e) {
 //                    XposedBridge.log(e);
@@ -115,25 +128,32 @@ public class KeyguardStatusViewHooker {
         });
     }
 
-    public static void getAndSetOneWord() {
+    private static void getAndSetOneWord() {
 
         WordBean wordBean = OneWordFileStation.readOneWordJSON();
 
+        ref_BaseUIFixer.get().setOneWord(wordBean);
+
         if (wordBean == null) {
-
             Toast.makeText(((View) ref_keyguardStatusView.get()).getContext(), "解析保存的一言失败，去设置一言？", Toast.LENGTH_SHORT).show();
-        } else {
-
-            ref_OwnerInfoTextViewProxy.get().setOneWord(wordBean);
-
         }
+
+    }
+
+    private static void getAndApplyWordViewConfig() {
+        WordViewConfig wordViewConfig = OneWordFileStation.readWordViewConfigJSON();
+
+        ref_BaseUIFixer.get().applyWordViewConfig(wordViewConfig);
+
     }
 
 
     public static void registerBroadcastReceiver() {
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(BroadcastSender.CMD_BROADCAST_SET_NEW_LOCK_SCREEN_INFO);
-        intentFilter.addAction(BroadcastSender.CMD_BROADCAST_UPDATE_LOCK_SCREEN_INFO);
+        intentFilter.addAction(BroadcastSender.CMD_BROADCAST_SET_NEW_WORDBEAN);
+        intentFilter.addAction(BroadcastSender.CMD_BROADCAST_RELOAD_WORDBEAN);
+        intentFilter.addAction(BroadcastSender.CMD_BROADCAST_SET_NEW_WORDVIEWCONFIG);
+        intentFilter.addAction(BroadcastSender.CMD_BROADCAST_RELOAD_WORDVIEWCONFIG);
         ref_mOwnerInfo.get().getContext().registerReceiver(new SystemUICmdBroadcastReceiver(), intentFilter);
         XposedBridge.log("create SystemUICmdBroadcastReceiver");
 
@@ -150,41 +170,65 @@ public class KeyguardStatusViewHooker {
 
             try {
                 switch (intent.getAction()) {
-                    case BroadcastSender.CMD_BROADCAST_SET_NEW_LOCK_SCREEN_INFO:
+                    case BroadcastSender.CMD_BROADCAST_SET_NEW_WORDBEAN:
 
-                        XposedBridge.log("received");
-                        XposedBridge.log(intent.getStringExtra(BroadcastSender.THE_NEW_LOCK_SCREEN_INFO_JSON));
+//                        KeyguardStatusViewHelper.setOwnerInfo(intent.getStringExtra(BroadcastSender.THE_NEW_WORDBEAN));
 
-//                        KeyguardStatusViewHelper.setOwnerInfo(intent.getStringExtra(BroadcastSender.THE_NEW_LOCK_SCREEN_INFO_JSON));
-
-
-                        WordBean wordBean = new Gson().fromJson(intent.getStringExtra(BroadcastSender.THE_NEW_LOCK_SCREEN_INFO_JSON), WordBean.class);
+                        WordBean wordBean = intent.getParcelableExtra(BroadcastSender.THE_NEW_WORDBEAN);
 
 
-                        XposedBridge.log("resolved");
+                        XposedBridge.log("wordbean received");
+                        XposedBridge.log(wordBean.toString());
 
-                        ref_OwnerInfoTextViewProxy.get().setOneWord(wordBean);
+//                        XposedBridge.log("resolved");
+
+                        ref_BaseUIFixer.get().setOneWord(wordBean);
 
 //                        Toast.makeText(context, "一言已收到", Toast.LENGTH_SHORT).show();
 
-                        XposedBridge.log("updated");
+                        XposedBridge.log("wordbean updated");
 
                         break;
 
-                    case BroadcastSender.CMD_BROADCAST_UPDATE_LOCK_SCREEN_INFO:
+                    case BroadcastSender.CMD_BROADCAST_RELOAD_WORDBEAN:
 
                         getAndSetOneWord();
 
-                        XposedBridge.log("updated byself");
+                        XposedBridge.log("wordbean updated byself");
 
                         break;
+
+                    case BroadcastSender.CMD_BROADCAST_SET_NEW_WORDVIEWCONFIG:
+
+
+                        WordViewConfig config = intent.getParcelableExtra(BroadcastSender.THE_NEW_WORDVIEWCONFIG);
+
+
+                        XposedBridge.log("wordviewconfig received");
+                        XposedBridge.log(config.toString());
+
+//                        XposedBridge.log("resolved");
+
+                        ref_BaseUIFixer.get().applyWordViewConfig(config);
+
+
+                        XposedBridge.log("wordviewconfig updated");
+
+                        break;
+
+                    case BroadcastSender.CMD_BROADCAST_RELOAD_WORDVIEWCONFIG:
+
+                        getAndApplyWordViewConfig();
+
+                        break;
+
                 }
             } catch (Throwable e) {
 //                XposedBridge.log(e);
 
                 String logPath = BugUtil.printAndSaveCrashThrow2File(e);
 
-                Toast.makeText(context, String.format("写入一言的时候不小心搞崩了,灰常抱歉，日志在\n%s", logPath), Toast.LENGTH_LONG).show();
+                Toast.makeText(context, String.format("不小心搞崩了,灰常抱歉，日志在\n%s", logPath), Toast.LENGTH_LONG).show();
 
             }
         }

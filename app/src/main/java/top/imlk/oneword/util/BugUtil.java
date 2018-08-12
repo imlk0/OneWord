@@ -2,6 +2,8 @@ package top.imlk.oneword.util;
 
 import android.util.Log;
 
+import com.tencent.bugly.crashreport.CrashReport;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
@@ -40,6 +42,7 @@ public class BugUtil {
     public static String printAndSaveCrashThrow2File(Throwable th) {
 
         if (hasXP) {
+            CrashReport.postCatchedException(th);
             XposedBridge.log(th);
         } else {
             Log.e(TAG, "save Crashing", th);
