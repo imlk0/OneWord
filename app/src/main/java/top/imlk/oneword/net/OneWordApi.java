@@ -162,44 +162,50 @@ public class OneWordApi {
 
                             try {
 
-                                responseBody = response.body().string();
+                                if (response.code() == 200) {
 
-                                WordBean wordBean = new WordBean();
+                                    responseBody = response.body().string();
 
-                                if (!TextUtils.isEmpty(apiBean.resp_form)) {// 结果格式不为空
+                                    WordBean wordBean = new WordBean();
 
-                                    try {// 尝试用json格式解析
-                                        JSONTokener jsonForm = new JSONTokener(apiBean.resp_form);
+                                    if (!TextUtils.isEmpty(apiBean.resp_form)) {// 结果格式不为空
 
-                                        JSONTokener jsonReal = new JSONTokener(responseBody);
+                                        try {// 尝试用json格式解析
+                                            JSONTokener jsonForm = new JSONTokener(apiBean.resp_form);
 
-                                        OneWordInJsonExtracter.direction(jsonForm.nextValue(), jsonReal.nextValue(), wordBean);
-                                    } catch (Throwable e0) {// 解析出错，改用分隔符解析
+                                            JSONTokener jsonReal = new JSONTokener(responseBody);
 
+                                            OneWordInJsonExtracter.direction(jsonForm.nextValue(), jsonReal.nextValue(), wordBean);
+                                        } catch (Throwable e0) {// 解析出错，改用分隔符解析
+
+                                        }
                                     }
-                                }
 
 
-                                if (TextUtils.isEmpty(wordBean.content) && !TextUtils.isEmpty(apiBean.resp_form)) {
-                                    String[] substr = responseBody.split(apiBean.resp_form);
+                                    if (TextUtils.isEmpty(wordBean.content) && !TextUtils.isEmpty(apiBean.resp_form)) {
+                                        String[] substr = responseBody.split(apiBean.resp_form);
 
-                                    StringBuilder builder = new StringBuilder();
-                                    for (int i = 0; i < substr.length - 1; i++) {
-                                        builder.append(substr[i]);
+                                        StringBuilder builder = new StringBuilder();
+                                        for (int i = 0; i < substr.length - 1; i++) {
+                                            builder.append(substr[i]);
+                                        }
+                                        wordBean.content = builder.toString();
+                                        wordBean.reference = substr[substr.length - 1];
                                     }
-                                    wordBean.content = builder.toString();
-                                    wordBean.reference = substr[substr.length - 1];
+
+                                    if (TextUtils.isEmpty(wordBean.content)) {
+                                        wordBean = new WordBean(responseBody, null);
+                                    }
+
+                                    emitter.onNext(wordBean);
+
+                                    emitter.onComplete();
+
+                                } else {
+
+                                    emitter.onError(new RuntimeException("不正确的HTTP状态码：" + response.code()));
+
                                 }
-
-                                if (TextUtils.isEmpty(wordBean.content)) {
-                                    wordBean = new WordBean(responseBody, null);
-                                }
-
-                                emitter.onNext(wordBean);
-
-                                emitter.onComplete();
-
-
                             } catch (Throwable throwable) {
 
                                 RuntimeException re = new RuntimeException("responseBody=\n" + responseBody + "\napiBean=\n" + apiBean, throwable);
@@ -212,8 +218,8 @@ public class OneWordApi {
                     });
 
                 } catch (Throwable throwable) {
-                    emitter.onError(new RuntimeException("未知异常", throwable));
                     CrashReport.postCatchedException(throwable);
+                    emitter.onError(new RuntimeException("未知异常", throwable));
                 }
 
 

@@ -15,7 +15,6 @@ import java.util.Date;
 
 import de.robv.android.xposed.XposedBridge;
 
-import static top.imlk.oneword.util.OneWordFileStation.BASE_FILES_PATH;
 
 /**
  * Created by imlk on 2018/7/30.
@@ -39,21 +38,32 @@ public class BugUtil {
         }
     }
 
-    public static String printAndSaveCrashThrow2File(Throwable th) {
+
+    public static void printThrowable(Throwable e) {
 
         if (hasXP) {
-            CrashReport.postCatchedException(th);
-            XposedBridge.log(th);
+            XposedBridge.log(e);
         } else {
-            Log.e(TAG, "save Crashing", th);
+            CrashReport.postCatchedException(e);
+            Log.e(TAG, Log.getStackTraceString(e));
         }
+    }
 
-        if (BASE_FILES_PATH == null) {
-            if (hasXP) {
-                XposedBridge.log("BASE_FILES_PATH = null, unable to save log to file !!!!!");
-            } else {
-                Log.e(TAG, "BASE_FILES_PATH = null, unable to save log to file !!!!!");
-            }
+    public static void printMessage(String str) {
+        if (hasXP) {
+            XposedBridge.log(str);
+        } else {
+            Log.e(TAG, str);
+        }
+    }
+
+    public static String printAndSaveCrashThrow2File(Throwable th) {
+
+        printThrowable(th);
+
+        String base_file_path;
+        if ((base_file_path = OneWordFileStation.getBaseFilesPath()) == null) {
+            printMessage("BASE_FILES_PATH = null, unable to save log to file !!!!!");
 
             return null;
         }
@@ -80,7 +90,7 @@ public class BugUtil {
             String logTime = time + "-" + timestamp;
 //            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
 
-            String path = BASE_FILES_PATH + "/crash_log/";
+            String path = base_file_path + "/crash_log/";
 
             File dir = new File(path);
             if (!dir.exists()) {

@@ -4,6 +4,7 @@ import android.app.ActivityThread;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -15,6 +16,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
+import de.robv.android.xposed.XposedBridge;
+import top.imlk.oneword.BuildConfig;
 import top.imlk.oneword.bean.WordBean;
 import top.imlk.oneword.bean.WordViewConfig;
 
@@ -32,13 +35,39 @@ public class OneWordFileStation {
     private static final String ONEWORD_FILE_NAME = "oneword.json";
     private static final String WORDVIEW_CONFIG_FILE_NAME = "wordview_config.json";
 
-    protected static String BASE_FILES_PATH;
+    private static String BASE_FILES_PATH;
 
     static {
+        initBaseFilePath();
+    }
+
+    public static String getBaseFilesPath() {
+        if (BASE_FILES_PATH == null) {
+            initBaseFilePath();
+        }
+
+        return BASE_FILES_PATH;
+    }
+
+
+    public synchronized static void initBaseFilePath() {
+
         try {
-            BASE_FILES_PATH = ActivityThread.currentApplication().createPackageContext("top.imlk.oneword", Context.CONTEXT_IGNORE_SECURITY).getExternalFilesDir(null).getAbsolutePath();
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+
+            File file = null;
+            try {
+                file = ActivityThread.currentApplication().createPackageContext(BuildConfig.APPLICATION_ID, Context.CONTEXT_IGNORE_SECURITY).getExternalFilesDir(null);
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+            try {
+                BASE_FILES_PATH = file.getAbsolutePath();
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+
+        } catch (Throwable e) {
+            BugUtil.printThrowable(e);
         }
     }
 
@@ -67,7 +96,15 @@ public class OneWordFileStation {
             return;
         }
 
-        File files_dir = new File(BASE_FILES_PATH);
+        String base_file_path;
+        if ((base_file_path = getBaseFilesPath()) == null) {
+            BugUtil.printMessage("BASE_FILES_PATH = null, unable to save obj " + bean);
+
+            return;
+        }
+
+
+        File files_dir = new File(base_file_path);
         if (!files_dir.exists()) {
             files_dir.mkdirs();
         }
@@ -96,7 +133,15 @@ public class OneWordFileStation {
     }
 
     private static <T> T readObjJsonAtBasePath(String fileName, Class<T> tClass) {
-        File files_dir = new File(BASE_FILES_PATH);
+
+        String base_file_path;
+        if ((base_file_path = getBaseFilesPath()) == null) {
+            BugUtil.printMessage("BASE_FILES_PATH = null, unable to read " + fileName);
+
+            return null;
+        }
+
+        File files_dir = new File(base_file_path);
         if (!files_dir.exists()) {
             return null;
         }

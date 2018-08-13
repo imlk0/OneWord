@@ -239,7 +239,7 @@ public class OneWordAutoRefreshService extends Service implements WordRequestObs
                 case Intent.ACTION_SCREEN_OFF:
 
 
-                    if (updateByLockTimes) {
+                    if (updateByLockTimes) {// 若根据锁屏次数来刷新
 
                         lockTimesCount++;
 
@@ -253,7 +253,7 @@ public class OneWordAutoRefreshService extends Service implements WordRequestObs
                     toForeground();
                     break;
                 case Intent.ACTION_SCREEN_ON:
-                    if (!updateByLockTimes) {
+                    if (!updateByLockTimes) {//根据时间间隔刷新
                         canUpdate = true;
                     }
                     break;
@@ -320,6 +320,7 @@ public class OneWordAutoRefreshService extends Service implements WordRequestObs
                 BroadcastSender.sendUseNewOneWordBroadcast(this, bean);
 
                 currentWord = bean;
+                canUpdate = false;
                 toForeground();
                 Log.i(TAG, String.valueOf(currentWord));
             }

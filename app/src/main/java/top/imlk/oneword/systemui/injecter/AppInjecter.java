@@ -67,7 +67,7 @@ public class AppInjecter implements IXposedHookLoadPackage {
 //            Debug.waitForDebugger();
             KeyguardStatusViewHooker.init(lpparam.classLoader);
             KeyguardStatusViewHooker.doHook_onFinishInflate();
-        } else if ("top.imlk.oneword".equals(lpparam.packageName)) {
+        } else if (BuildConfig.APPLICATION_ID.equals(lpparam.packageName)) {
             XposedHelpers.findAndHookMethod(AppStatus.class.getName(), lpparam.classLoader, "hasBeenHooked", new XC_MethodHook() {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {

@@ -20,6 +20,7 @@ public class OneWordApplication extends Application {
 
         strategy.setAppChannel(BuildConfig.FLAVOR);
 
+        strategy.setAppVersion(BuildConfig.VERSION_NAME + "(" + BuildConfig.VERSION_CODE + ")");
 //        strategy.setAppReportDelay(5000);
 
         CrashReport.setIsDevelopmentDevice(this, BuildConfig.DEBUG);
