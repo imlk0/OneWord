@@ -84,9 +84,14 @@ public class AdjustStyleActivity extends BaseActivity implements ColorPickerDial
         initStartLineIntoModule();
         initRefAddLineModule();
 
-        syncValue();
-
         initFAB();
+
+        toolbar.post(new Runnable() {
+            @Override
+            public void run() {
+                syncValue();
+            }
+        });
     }
 
     FloatingActionButton fabDefaultConfig;

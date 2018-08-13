@@ -124,7 +124,7 @@ public class SharedPreferencesUtil {
 
 
     public static boolean isShowNotificationTitleOpened(Context context) {
-        return getBooleanValue(context, SHARED_PER_AUTO_REFRESH_STATE, SHARED_PER_KEY_IS_SHOW_NOTIFICATION_TITLE_OPENED, true);
+        return getBooleanValue(context, SHARED_PER_AUTO_REFRESH_STATE, SHARED_PER_KEY_IS_SHOW_NOTIFICATION_TITLE_OPENED, false);
     }
 
     public static void setShowNotificationTitleOpened(Context context, boolean opened) {

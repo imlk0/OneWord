@@ -44,7 +44,9 @@
 
 -keep public class top.imlk.oneword.util.AppStatus{*;}
 
--keep public class top.imlk.oneword.net.Hitokoto.HitokotoBean {*;}
+-keep public class top.imlk.oneword.bean.ApiBean{*;}
+-keep public class top.imlk.oneword.bean.WordBean{*;}
+-keep public class top.imlk.oneword.bean.WordViewConfig{*;}
 
 -dontwarn com.tencent.bugly.**
 -keep public class com.tencent.bugly.**{*;}

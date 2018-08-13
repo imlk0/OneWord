@@ -40,7 +40,7 @@ public class ShareUtil {
 
     public static void shareOneWord(Context context, WordBean wordBean) {
         ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-        cm.setPrimaryClip(ClipData.newPlainText("锁屏一言", wordBean.content + "\n——" + wordBean.reference));
+        cm.setPrimaryClip(ClipData.newPlainText("锁屏一言", wordBean.content + "——" + wordBean.reference));
         Toast.makeText(context, "成功复制到剪切板", Toast.LENGTH_SHORT).show();
 
     }
