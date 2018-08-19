@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements WordRequestObserv
 
         killRunningServices();
 
-//        CrashReport.testJavaCrash();
+//        CrashReport.testJavaCrashI();
 
 //        setTheme(R.style.GreenTheme);
 

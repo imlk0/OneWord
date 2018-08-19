@@ -26,6 +26,11 @@ public class BootCompletedReceiver extends BroadcastReceiver {
 
                 Log.i("BootCompletedReceiver", "ACTION_BOOT_COMPLETED");
 
+                Log.i("BootCompletedReceiver", "isAutoRefreshOpened:" + SharedPreferencesUtil.isAutoRefreshOpened(context));
+
+                BroadcastSender.sendReloadOneWordBySelfBroadcast(context);
+                BroadcastSender.sendReloadWordViewConfigBySelfBroadcast(context);
+
                 if (SharedPreferencesUtil.isAutoRefreshOpened(context)) {
                     Intent service = new Intent(context, OneWordAutoRefreshService.class);
                     intent.setAction(BroadcastSender.CMD_SERVICES_START_AUTO_REFRESH_SERVICE);
@@ -34,9 +39,9 @@ public class BootCompletedReceiver extends BroadcastReceiver {
                     } else {
                         context.startService(service);
                     }
-                } else {
-                    Log.i("BootCompletedReceiver", "isAutoRefreshOpened : false");
                 }
+
+
                 break;
         }
 
