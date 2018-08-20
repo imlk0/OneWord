@@ -95,17 +95,20 @@ public class MainActivity extends AppCompatActivity implements WordRequestObserv
 
     public void updateAndSetCurWordBean(WordBean wordBean) {
         if (wordBean != null) {
-
-            oneWordShowPanel.updateCurWordBeanOnUI(wordBean);
-//            SharedPreferencesUtil.saveCurOneWordId(this, wordBean.id);
-            pastedNestedScrollView.scrollToTop();
-            OneWordSQLiteOpenHelper.getInstance().insertToHistory(wordBean);
+            updateButDoNOTSetCurWordBean(wordBean);
             OneWordFileStation.saveOneWordJSON(wordBean);
             BroadcastSender.sendUseNewOneWordBroadcast(this, wordBean);
             Toast.makeText(this, "设置锁屏一言中...", Toast.LENGTH_SHORT).show();
-
         }
+    }
 
+    public void updateButDoNOTSetCurWordBean(WordBean wordBean) {
+        if (wordBean != null) {
+
+            oneWordShowPanel.updateCurWordBeanOnUI(wordBean);
+            pastedNestedScrollView.scrollToTop();
+            OneWordSQLiteOpenHelper.getInstance().insertToHistory(wordBean);
+        }
     }
 
 
@@ -138,10 +141,10 @@ public class MainActivity extends AppCompatActivity implements WordRequestObserv
 
         wordBean.id = id;
 
-        updateAndSetCurWordBean(wordBean);
+        // 获取到一言后不再自动设置
+        updateButDoNOTSetCurWordBean(wordBean);
 
         refreshLayout.finishRefresh(300, true);
-
 
     }
 
