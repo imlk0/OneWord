@@ -1,1 +1,4 @@
-include ':app', ':SwipeToAction'
+include ':app', ':SwipeToAction_fork', ':AutoFitTextViewLibrary_fork'
+
+project(':SwipeToAction_fork').projectDir = new File('..\\SwipeToAction\\library')
+project(':AutoFitTextViewLibrary_fork').projectDir = new File('..\\AutoFitTextView_fork\\AutoFitTextViewLibrary')

@@ -36,11 +36,11 @@ public class MainActivity extends AppCompatActivity implements WordRequestObserv
 
     private PastedNestedScrollView pastedNestedScrollView;
 
+    private RefreshLayout refreshLayout;
+
     private MainOneWordView mainOneWordView;
 
     private OneWordShowPanel oneWordShowPanel;
-
-    private RefreshLayout refreshLayout;
 
 
     @Override

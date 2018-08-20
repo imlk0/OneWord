@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="tv_msg_mg_r_side">50dp</dimen>
-    <dimen name="tv_msg_mg_l_side">0dp</dimen>
-    <dimen name="tv_msg_from_mgtop">16dp</dimen>
-    <dimen name="tv_msg_from_mgside">30dp</dimen>
+    <!--<dimen name="iv_msg_quote_icon_size">77dp</dimen>-->
+    <dimen name="tv_msg_content_mg_side">50dp</dimen>
+    <!--<dimen name="tv_msg_content_l_side">0dp</dimen>-->
+    <dimen name="tv_msg_refer_mg_top">16dp</dimen>
+    <dimen name="tv_msg_refer_mg_side">30dp</dimen>
     <dimen name="tv_msg_textsize">30sp</dimen>
-    <dimen name="tv_msg_from_textsize">24sp</dimen>
+    <dimen name="tv_msg_from_textsize">21sp</dimen>
     <dimen name="btn_mgtop">20dp</dimen>
     <dimen name="btn_mgbtm">20dp</dimen>
     <dimen name="item_oneword_height">60dp</dimen>

@@ -6,6 +6,7 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,7 +19,7 @@ import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
 /**
  * Created by imlk on 2018/5/26.
  */
-public class OneWordShowPanel extends RelativeLayout implements View.OnClickListener {
+public class OneWordShowPanel extends LinearLayout implements View.OnClickListener {
 
     public TextView tvMsgMain;
     public TextView tvMsgFrom;
@@ -81,7 +82,7 @@ public class OneWordShowPanel extends RelativeLayout implements View.OnClickList
     }
 
     public void updateMsgMain(String str) {
-        this.tvMsgMain.setText("  " + str);
+        this.tvMsgMain.setText(str);
     }
 
     public void updateMsgFrom(String str) {

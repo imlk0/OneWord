@@ -28,56 +28,64 @@
                     android:id="@+id/one_word_show_panel"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1">
-
-                    <ImageView
-                        android:layout_width="56sp"
-                        android:layout_height="56sp"
-                        android:layout_alignTop="@id/tv_msg_main"
-                        android:layout_marginLeft="@dimen/tv_msg_mg_l_side"
-                        android:layout_marginRight="-24sp"
-                        android:layout_marginTop="-24sp"
-                        android:layout_toLeftOf="@id/tv_msg_main"
-                        android:minHeight="40sp"
-                        android:minWidth="40sp"
-                        android:rotation="180"
-                        android:src="@drawable/ic_format_quote_white_48dp"
-                        android:tint="?attr/color_primary_light" />
-
-                    <TextView
-                        android:id="@+id/tv_msg_main"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-
-                        android:layout_centerInParent="true"
-                        android:layout_marginRight="@dimen/tv_msg_mg_r_side"
-                        android:gravity="center"
-                        android:text="  当前一言"
-                        android:textColor="@android:color/white"
-                        android:textIsSelectable="true"
-                        android:textSize="@dimen/tv_msg_textsize"
-                        android:textStyle="bold" />
-
-
-                    <TextView
-                        android:id="@+id/tv_msg_from"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/tv_msg_main"
-                        android:layout_marginLeft="@dimen/tv_msg_from_mgside"
-                        android:layout_marginRight="@dimen/tv_msg_from_mgside"
-                        android:layout_marginTop="@dimen/tv_msg_from_mgtop"
-                        android:gravity="right"
-                        android:text="——出处 "
-                        android:textColor="@android:color/white"
-                        android:textIsSelectable="true"
-                        android:textSize="@dimen/tv_msg_from_textsize"
-                        android:textStyle="italic" />
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingTop="@dimen/iv_msg_operator_size">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true">
+                        android:layout_height="0dp"
+                        android:layout_weight="1">
+
+
+                        <!--<ImageView-->
+                        <!--android:layout_width="@dimen/iv_msg_quote_icon_size"-->
+                        <!--android:layout_height="@dimen/iv_msg_quote_icon_size"-->
+                        <!--android:layout_alignTop="@id/tv_msg_main"-->
+                        <!--android:layout_marginLeft="-6dp"-->
+                        <!--android:layout_marginRight="-100dp"-->
+                        <!--android:layout_marginTop="-12dp"-->
+                        <!--android:layout_toLeftOf="@id/tv_msg_main"-->
+                        <!--android:rotation="180"-->
+                        <!--android:src="@drawable/ic_format_quote_white_48dp"-->
+                        <!--android:tint="?attr/color_primary_light"-->
+                        <!--android:visibility="gone" />-->
+
+                        <com.lb.auto_fit_textview.AutoResizeTextView
+                            android:id="@+id/tv_msg_main"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:layout_marginRight="@dimen/tv_msg_content_mg_side"
+                            android:gravity="left"
+                            android:maxHeight="350dp"
+                            android:text="当前一言"
+                            android:textColor="@android:color/white"
+                            android:textIsSelectable="true"
+                            android:textSize="@dimen/tv_msg_textsize"
+                            android:textStyle="bold" />
+
+
+                        <com.lb.auto_fit_textview.AutoResizeTextView
+                            android:id="@+id/tv_msg_from"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/tv_msg_main"
+                            android:layout_marginLeft="@dimen/tv_msg_refer_mg_side"
+                            android:layout_marginRight="@dimen/tv_msg_refer_mg_side"
+                            android:layout_marginTop="@dimen/tv_msg_refer_mg_top"
+                            android:gravity="right"
+                            android:maxLines="1"
+                            android:text="——出处 "
+                            android:textColor="@android:color/white"
+                            android:textIsSelectable="true"
+                            android:textSize="@dimen/tv_msg_from_textsize"
+                            android:textStyle="italic" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
                         <ImageView
                             android:id="@+id/iv_msg_favor"
