@@ -8,7 +8,7 @@
         android:title="保存" />
 
     <item
-        android:id="@+id/item_delete"
+        android:id="@+id/iv_delete"
         android:icon="@drawable/ic_delete_white_48dp"
         android:title="删除" />
 

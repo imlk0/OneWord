@@ -49,8 +49,6 @@ public class MainActivity extends AppCompatActivity implements WordRequestObserv
 
         killRunningServices();
 
-//        CrashReport.testJavaCrashI();
-
 //        setTheme(R.style.GreenTheme);
 
         setContentView(R.layout.activity_main);

@@ -4,37 +4,26 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
-import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import top.imlk.oneword.R;
 import top.imlk.oneword.application.client.activity.EditApiActivity;
 import top.imlk.oneword.bean.ApiBean;
-import top.imlk.oneword.bean.WordBean;
 import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
 import top.imlk.oneword.util.ShareUtil;
 
@@ -119,7 +108,7 @@ public class AllApisRVAdapter extends RecyclerView.Adapter<AllApisRVAdapter.ApiI
                 case R.id.item_edit:
                     this.onClick(itemView);
                     return true;
-                case R.id.item_share:
+                case R.id.iv_share:
                     ShareUtil.shareAPI(context, apiBean);
                     return true;
             }

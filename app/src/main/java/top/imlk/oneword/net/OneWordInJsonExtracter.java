@@ -59,6 +59,9 @@ public class OneWordInJsonExtracter {
             case WordBean.FIELD_TARGET_URL:
                 wordBean.target_url = real;
                 break;
+            case WordBean.FIELD_TARGET_NAME:
+                wordBean.target_name = real;
+                break;
         }
     }
 

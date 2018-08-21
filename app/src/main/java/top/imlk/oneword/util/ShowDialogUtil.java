@@ -195,6 +195,7 @@ public class ShowDialogUtil {
         titleAndSummaries.add(new TitleAndSummary("AndroidDonate", "https://github.com/didikee/AndroidDonate"));
         titleAndSummaries.add(new TitleAndSummary("material-design-icons", "https://github.com/google/material-design-icons"));
         titleAndSummaries.add(new TitleAndSummary("ColorPicker", "https://github.com/jaredrummler/ColorPicker"));
+        titleAndSummaries.add(new TitleAndSummary("AutoFitTextView(fork)", "https://github.com/AndroidDeveloperLB/AutoFitTextView"));
 
 
         ItemArrayAdapter itemArrayAdapter = new ItemArrayAdapter(context, titleAndSummaries);

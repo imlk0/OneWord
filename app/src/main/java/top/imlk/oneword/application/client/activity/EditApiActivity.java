@@ -77,7 +77,7 @@ public class EditApiActivity extends BaseActivity implements Toolbar.OnMenuItemC
 
         if (id <= 0) {
             toolbar.setTitle("新建一言API");
-            toolbar.getMenu().findItem(R.id.item_delete).setVisible(false);
+            toolbar.getMenu().findItem(R.id.iv_delete).setVisible(false);
             apiBean = getIntent().getParcelableExtra(TO_BE_ADDED_APIBEAN);
 
             if (apiBean == null) {
@@ -204,7 +204,7 @@ public class EditApiActivity extends BaseActivity implements Toolbar.OnMenuItemC
                 OneWordSQLiteOpenHelper.getInstance().inserAApi(apiBean);
                 finish();
                 return true;
-            case R.id.item_delete:
+            case R.id.iv_delete:
                 alertDeleteSave();
                 return true;
             case R.id.item_test:

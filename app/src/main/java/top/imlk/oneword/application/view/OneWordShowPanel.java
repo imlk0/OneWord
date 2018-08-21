@@ -2,12 +2,14 @@ package top.imlk.oneword.application.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,11 +23,14 @@ import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
  */
 public class OneWordShowPanel extends LinearLayout implements View.OnClickListener {
 
-    public TextView tvMsgMain;
-    public TextView tvMsgFrom;
+    private TextView tvContent;
+    private TextView tvReference;
 
-    public ImageView ivFavor;
-    public ImageView ivSetIt;
+    private LinearLayout llTargetTag;
+    private TextView tvTargetName;
+
+    private ImageView ivFavor;
+    private ImageView ivSetIt;
 
     public WordBean curWordBean;
     private MainActivity mainActivity;
@@ -53,8 +58,13 @@ public class OneWordShowPanel extends LinearLayout implements View.OnClickListen
         this.mainActivity = mainActivity;
 
 
-        this.tvMsgMain = findViewById(R.id.tv_msg_main);
-        this.tvMsgFrom = findViewById(R.id.tv_msg_from);
+        this.tvContent = findViewById(R.id.tv_content);
+        this.tvReference = findViewById(R.id.tv_reference);
+
+        this.tvTargetName = findViewById(R.id.tv_target_name);
+        this.llTargetTag = findViewById(R.id.ll_target_tag);
+        this.llTargetTag.setOnClickListener(this);
+
 
         this.ivFavor = findViewById(R.id.iv_msg_favor);
         this.ivFavor.setOnClickListener(this);
@@ -81,19 +91,30 @@ public class OneWordShowPanel extends LinearLayout implements View.OnClickListen
         updateCurWordBeanOnUI(new WordBean("当前一言", "出处"));
     }
 
-    public void updateMsgMain(String str) {
-        this.tvMsgMain.setText(str);
+    public void updateContent(String str) {
+        this.tvContent.setText(str);
     }
 
-    public void updateMsgFrom(String str) {
-        this.tvMsgFrom.setText("——" + str);
+    public void updateReference(String str) {
+        this.tvReference.setText("——" + str);
+    }
+
+    public void updateTarget(String str) {
+        if (TextUtils.isEmpty(str)) {
+            llTargetTag.setVisibility(GONE);
+            tvTargetName.setText("");
+        } else {
+            llTargetTag.setVisibility(VISIBLE);
+            tvTargetName.setText(str);
+        }
     }
 
     public void updateCurWordBeanOnUI(WordBean wordBean) {
         this.curWordBean = wordBean;
         this.updateLike(OneWordSQLiteOpenHelper.getInstance().checkIfInFavor(wordBean.id));
-        this.updateMsgMain(wordBean.content);
-        this.updateMsgFrom(wordBean.reference);
+        this.updateContent(wordBean.content);
+        this.updateReference(wordBean.reference);
+        this.updateTarget(wordBean.target_name);
     }
 
     private void updateLike(boolean like) {
@@ -130,6 +151,12 @@ public class OneWordShowPanel extends LinearLayout implements View.OnClickListen
                     mainActivity.updateAndSetCurWordBean(this.curWordBean);
                 } else {
                     Toast.makeText(mainActivity, "还没有拉取任何一条一言哦", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case R.id.ll_target_tag:
+                if (!TextUtils.isEmpty(curWordBean.target_url)) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(curWordBean.target_url));
+                    mainActivity.startActivity(intent);
                 }
                 break;
         }

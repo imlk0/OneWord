@@ -11,11 +11,13 @@ public class WordBean implements Parcelable {
     public static final String FIELD_CONTENT = "[content]";
     public static final String FIELD_REFERENCE = "[reference]";
     public static final String FIELD_TARGET_URL = "[target_url]";
+    public static final String FIELD_TARGET_NAME = "[target_name]";
 
     public int id;
     public String content;
     public String reference;
     public String target_url;// TODO 相关链接
+    public String target_name;
 
     public WordBean() {
     }
@@ -25,11 +27,12 @@ public class WordBean implements Parcelable {
         this.reference = reference;
     }
 
-    public WordBean(int id, String content, String reference, String target_url) {
+    public WordBean(int id, String content, String reference, String target_url, String target_name) {
         this.id = id;
         this.content = content;
         this.reference = reference;
         this.target_url = target_url;
+        this.target_name = target_name;
     }
 
     public WordBean(WordBean wordBean) {
@@ -37,7 +40,7 @@ public class WordBean implements Parcelable {
         this.content = wordBean.content;
         this.reference = wordBean.reference;
         this.target_url = wordBean.target_url;
-
+        this.target_name = wordBean.target_name;
     }
 
 
@@ -46,6 +49,7 @@ public class WordBean implements Parcelable {
         content = in.readString();
         reference = in.readString();
         target_url = in.readString();
+        target_name = in.readString();
     }
 
     public static final Creator<WordBean> CREATOR = new Creator<WordBean>() {
@@ -67,6 +71,7 @@ public class WordBean implements Parcelable {
                 ", content='" + content + '\'' +
                 ", reference='" + reference + '\'' +
                 ", target_url='" + target_url + '\'' +
+                ", target_name='" + target_name + '\'' +
                 '}';
     }
 
@@ -81,6 +86,7 @@ public class WordBean implements Parcelable {
         dest.writeString(content);
         dest.writeString(reference);
         dest.writeString(target_url);
+        dest.writeString(target_name);
     }
 
 

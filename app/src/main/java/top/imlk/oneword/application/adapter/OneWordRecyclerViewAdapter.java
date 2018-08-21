@@ -1,14 +1,14 @@
 package top.imlk.oneword.application.adapter;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,7 +22,6 @@ import top.imlk.oneword.bean.WordBean;
 import top.imlk.oneword.R;
 import top.imlk.oneword.application.client.activity.MainActivity;
 import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
-import top.imlk.oneword.util.BroadcastSender;
 import top.imlk.oneword.util.ShareUtil;
 
 
@@ -78,15 +77,36 @@ public class OneWordRecyclerViewAdapter extends RecyclerView.Adapter implements 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        FrameLayout frameLayout;
 
+        OneWordItemHolder holder;
         if (PageType.HISTORY_PAGE == pageType) {
-            frameLayout = (FrameLayout) FrameLayout.inflate(mainActivity, R.layout.item_history_oneword, null);
+
+            holder = new OneWordItemHolder(View.inflate(mainActivity, R.layout.item_history_oneword, null));
+
+            holder.ivFavor = holder.itemView.findViewById(R.id.iv_favor);
+            holder.ivFavor.setOnClickListener(holder);
+
         } else {
-            frameLayout = (FrameLayout) FrameLayout.inflate(mainActivity, R.layout.item_like_oneword, null);
+            holder = new OneWordItemHolder(View.inflate(mainActivity, R.layout.item_like_oneword, null));
+
         }
 
-        return new OneWordItemHolder(frameLayout);
+
+        holder.tvContent = holder.itemView.findViewById(R.id.tv_content);
+        holder.tvReference = holder.itemView.findViewById(R.id.tv_reference);
+        holder.ivDelete = holder.itemView.findViewById(R.id.iv_delete);
+        holder.ivSet = holder.itemView.findViewById(R.id.iv_set);
+        holder.ivShare = holder.itemView.findViewById(R.id.iv_share);
+
+        holder.tvTargetName = holder.itemView.findViewById(R.id.tv_target_name);
+        holder.llTargetTag = holder.itemView.findViewById(R.id.ll_target_tag);
+        holder.llTargetTag.setOnClickListener(holder);
+
+        holder.ivDelete.setOnClickListener(holder);
+        holder.ivSet.setOnClickListener(holder);
+        holder.ivShare.setOnClickListener(holder);
+
+        return holder;
     }
 
     @Override
@@ -98,17 +118,22 @@ public class OneWordRecyclerViewAdapter extends RecyclerView.Adapter implements 
         oneWordItemHolder.data = wordBeans.get(position);
 
 
-        ((TextView) oneWordItemHolder.itemView.findViewById(R.id.item_oneword_msg)).setText(oneWordItemHolder.data.content);
-        ((TextView) oneWordItemHolder.itemView.findViewById(R.id.item_oneword_from)).setText("——" + oneWordItemHolder.data.reference);
-        oneWordItemHolder.itemView.findViewById(R.id.item_delete).setOnClickListener(oneWordItemHolder);
-        oneWordItemHolder.itemView.findViewById(R.id.item_set).setOnClickListener(oneWordItemHolder);
-        oneWordItemHolder.itemView.findViewById(R.id.item_share).setOnClickListener(oneWordItemHolder);
+        oneWordItemHolder.tvContent.setText(oneWordItemHolder.data.content);
+        oneWordItemHolder.tvReference.setText("——" + oneWordItemHolder.data.reference);
 
-        if (pageType == PageType.HISTORY_PAGE) {
-            oneWordItemHolder.itemView.findViewById(R.id.item_favor_state).setOnClickListener(oneWordItemHolder);
-            oneWordItemHolder.updateFavorStateImage(OneWordSQLiteOpenHelper.getInstance().checkIfInFavor(oneWordItemHolder.data.id));
+
+        if (TextUtils.isEmpty(oneWordItemHolder.data.target_name)) {
+            oneWordItemHolder.llTargetTag.setVisibility(View.GONE);
+            oneWordItemHolder.tvTargetName.setText("");
+        } else {
+            oneWordItemHolder.llTargetTag.setVisibility(View.VISIBLE);
+            oneWordItemHolder.tvTargetName.setText(oneWordItemHolder.data.target_name);
         }
 
+
+        if (pageType == PageType.HISTORY_PAGE) {
+            oneWordItemHolder.updateFavorStateImage(OneWordSQLiteOpenHelper.getInstance().checkIfInFavor(oneWordItemHolder.data.id));
+        }
 
     }
 
@@ -123,30 +148,41 @@ public class OneWordRecyclerViewAdapter extends RecyclerView.Adapter implements 
 
 //        public boolean isClosed = true;
 
+        public TextView tvContent;
+        public TextView tvReference;
+        public ImageView ivDelete;
+        public ImageView ivSet;
+        public ImageView ivShare;
+        public ImageView ivFavor;
+
+
+        public LinearLayout llTargetTag;
+        public TextView tvTargetName;
+
 
         public OneWordItemHolder(View v) {
             super(v);
         }
 
         public void updateFavorStateImage(boolean favor) {
-            ((ImageView) itemView.findViewById(R.id.item_favor_state)).setImageResource(favor ? R.drawable.ic_favorite_white_48dp : R.drawable.ic_favorite_border_white_48dp);
+            ivFavor.setImageResource(favor ? R.drawable.ic_favorite_white_48dp : R.drawable.ic_favorite_border_white_48dp);
         }
 
         @Override
         public void onClick(View v) {
 
             switch (v.getId()) {
-                case R.id.item_share:
+                case R.id.iv_share:
 
                     ShareUtil.shareOneWord(mainActivity, this.data);
                     break;
 
-                case R.id.item_set:
+                case R.id.iv_set:
 
                     mainActivity.updateAndSetCurWordBean(this.data);
 
                     break;
-                case R.id.item_favor_state:
+                case R.id.iv_favor:
                     if (pageType == PageType.FAVOR_PAGE) {
                         //不存在的操作
                         break;
@@ -169,7 +205,7 @@ public class OneWordRecyclerViewAdapter extends RecyclerView.Adapter implements 
 
                     break;
 
-                case R.id.item_delete:
+                case R.id.iv_delete:
 
                     if (pageType == PageType.FAVOR_PAGE) {
 
@@ -185,6 +221,12 @@ public class OneWordRecyclerViewAdapter extends RecyclerView.Adapter implements 
                     OneWordRecyclerViewAdapter.this.notifyItemRemoved(ind);
 
 
+                    break;
+                case R.id.ll_target_tag:
+                    if (!TextUtils.isEmpty(data.target_url)) {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(data.target_url));
+                        mainActivity.startActivity(intent);
+                    }
                     break;
             }
         }

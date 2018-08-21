@@ -15,7 +15,7 @@
 
 
         <ImageView
-            android:id="@+id/item_set"
+            android:id="@+id/iv_set"
             android:layout_width="@dimen/item_wordlist_icon_size"
             android:layout_height="@dimen/item_wordlist_icon_size"
             android:layout_alignParentLeft="true"
@@ -26,11 +26,11 @@
 
 
         <ImageView
-            android:id="@+id/item_share"
+            android:id="@+id/iv_share"
             android:layout_width="@dimen/item_wordlist_icon_size"
             android:layout_height="@dimen/item_wordlist_icon_size"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/item_set"
+            android:layout_toRightOf="@+id/iv_set"
             android:background="@drawable/bg_circle_botton"
             android:src="@drawable/ic_share_white_48dp" />
 
@@ -48,7 +48,7 @@
         android:visibility="gone">
 
         <ImageView
-            android:id="@+id/item_delete"
+            android:id="@+id/iv_delete"
             android:layout_width="@dimen/item_wordlist_icon_size"
             android:layout_height="@dimen/item_wordlist_icon_size"
             android:layout_alignParentRight="true"
@@ -83,7 +83,7 @@
             android:tint="?attr/color_primary_light" />
 
         <TextView
-            android:id="@+id/item_oneword_msg"
+            android:id="@+id/tv_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
@@ -95,15 +95,22 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/item_oneword_from"
+            android:id="@+id/tv_reference"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/item_oneword_msg"
+            android:layout_below="@+id/tv_content"
             android:layout_marginTop="3dp"
             android:gravity="right"
             android:textColor="@android:color/white"
             android:textSize="14dp"
             android:textStyle="italic" />
+
+        <include
+            layout="@layout/tag_oneword_target"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@id/tv_reference"
+            android:layout_below="@id/tv_reference" />
     </RelativeLayout>
 
 
