@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/ll_target_tag"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -7,8 +8,10 @@
     android:clickable="true"
     android:gravity="center_vertical"
     android:orientation="horizontal"
+    android:paddingBottom="1dp"
     android:paddingLeft="5dp"
-    android:paddingRight="7dp">
+    android:paddingRight="7dp"
+    android:paddingTop="1dp">
 
     <ImageView
         android:layout_width="16sp"
@@ -20,7 +23,9 @@
         android:id="@+id/tv_target_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="网易云音乐"
+        android:autoSizeMinTextSize="7sp"
+        android:gravity="right"
+        android:text="链接"
         android:textColor="@android:color/white"
         android:textSize="12sp" />
 </LinearLayout>

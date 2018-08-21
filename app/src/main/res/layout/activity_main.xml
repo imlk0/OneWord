@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.scwang.smartrefresh.layout.SmartRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/refreshLayout"
     android:layout_width="match_parent"
@@ -61,19 +62,13 @@
                             android:layout_centerInParent="true"
                             android:layout_marginRight="@dimen/tv_msg_content_mg_side"
                             android:gravity="left"
-                            android:maxHeight="350dp"
+                            android:maxHeight="280dp"
                             android:text="当前一言"
                             android:textColor="@android:color/white"
                             android:textIsSelectable="true"
                             android:textSize="@dimen/tv_msg_textsize"
                             android:textStyle="bold" />
 
-                        <include
-                            layout="@layout/tag_oneword_target"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignRight="@id/tv_reference"
-                            android:layout_below="@id/tv_reference" />
 
                         <com.lb.auto_fit_textview.AutoResizeTextView
                             android:id="@+id/tv_reference"
@@ -88,8 +83,17 @@
                             android:text="——出处 "
                             android:textColor="@android:color/white"
                             android:textIsSelectable="true"
-                            android:textSize="@dimen/tv_msg_from_textsize"
-                            android:textStyle="italic" />
+                            android:textSize="@dimen/tv_msg_reference_textsize"
+                            android:textStyle="italic"
+                            app:minTextSize="7sp" />
+
+                        <include
+                            layout="@layout/tag_oneword_target"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignRight="@id/tv_reference"
+                            android:layout_below="@id/tv_reference"
+                            android:layout_marginLeft="@dimen/tv_msg_refer_mg_side" />
 
 
                     </RelativeLayout>

@@ -7,11 +7,14 @@ import android.net.Uri;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.lb.auto_fit_textview.AutoResizeTextView;
 
 import top.imlk.oneword.application.client.activity.MainActivity;
 import top.imlk.oneword.bean.WordBean;
@@ -37,15 +40,15 @@ public class OneWordShowPanel extends LinearLayout implements View.OnClickListen
 
 
     public OneWordShowPanel(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public OneWordShowPanel(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
     }
 
     public OneWordShowPanel(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+        this(context, attrs, defStyleAttr, 0);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -70,6 +73,7 @@ public class OneWordShowPanel extends LinearLayout implements View.OnClickListen
         this.ivFavor.setOnClickListener(this);
         this.ivSetIt = findViewById(R.id.iv_msg_set);
         this.ivSetIt.setOnClickListener(this);
+
 
         loadAndShowCurneWord();
     }

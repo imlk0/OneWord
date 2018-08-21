@@ -630,6 +630,7 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
             case 3:
             case 4:
                 db.execSQL("ALTER TABLE all_oneword ADD COLUMN target_name TEXT");
+                db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('网易云音乐歌评-民谣', 'http://w4y.imlk.top/simpleApi', 'GET', '{\"cat\":\"d\"}', '{\n    \"content\": \"[content]\",\n    \"reference\": \"[reference]\",\n    \"target_url\": \"[target_url]\",\n    \"target_name\": \"[target_name]\"\n}', 1)");
 
         }
 
