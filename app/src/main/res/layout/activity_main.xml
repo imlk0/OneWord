@@ -93,7 +93,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignRight="@id/tv_reference"
                             android:layout_below="@id/tv_reference"
-                            android:layout_marginLeft="@dimen/tv_msg_refer_mg_side" />
+                            android:layout_marginStart="@dimen/tv_msg_refer_mg_side" />
 
 
                     </RelativeLayout>
