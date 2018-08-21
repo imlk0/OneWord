@@ -35,7 +35,7 @@ public class OneWordShowPanel extends LinearLayout implements View.OnClickListen
     private ImageView ivFavor;
     private ImageView ivSetIt;
 
-    public WordBean curWordBean;
+    private WordBean curWordBean;
     private MainActivity mainActivity;
 
 
@@ -75,7 +75,9 @@ public class OneWordShowPanel extends LinearLayout implements View.OnClickListen
         this.ivSetIt.setOnClickListener(this);
 
 
-        loadAndShowCurneWord();
+        if (curWordBean == null) {
+            loadAndShowCurneWord();
+        }
     }
 
     public void loadAndShowCurneWord() {
@@ -114,6 +116,7 @@ public class OneWordShowPanel extends LinearLayout implements View.OnClickListen
     }
 
     public void updateCurWordBeanOnUI(WordBean wordBean) {
+
         this.curWordBean = wordBean;
         this.updateLike(OneWordSQLiteOpenHelper.getInstance().checkIfInFavor(wordBean.id));
         this.updateContent(wordBean.content);
@@ -173,4 +176,17 @@ public class OneWordShowPanel extends LinearLayout implements View.OnClickListen
 
         return new WordBean(curWordBean);
     }
+
+    public void checkIfCurBeanFavorStateChanged(WordBean wordBean) {
+        if (curWordBean != null && wordBean.id == curWordBean.id) {
+            updateCurWordBeanOnUI(wordBean);
+        }
+    }
+
+    public void checkIfCurBeanRemoved(WordBean wordBean) {
+        if (curWordBean != null && wordBean.id == curWordBean.id) {
+            loadAndShowCurneWord();
+        }
+    }
+
 }

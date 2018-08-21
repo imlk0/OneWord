@@ -121,6 +121,10 @@ public class OneWordView extends LinearLayout {
         }
     }
 
+    private void defaultSetOneWord() {
+        setOneWord(WordBean.generateDefaultBean());
+    }
+
 
     private void setContent() {
 
@@ -160,11 +164,6 @@ public class OneWordView extends LinearLayout {
                 tvReference.setText(wordBean.reference);
             }
         }
-    }
-
-
-    private void defaultSetOneWord() {
-        setOneWord(WordBean.generateDefaultBean());
     }
 
 
@@ -242,6 +241,10 @@ public class OneWordView extends LinearLayout {
         tvReference.setTextColor(color);
     }
 
+
+    public WordBean getCurWordBean() {
+        return wordBean;
+    }
 
 //    @Override
 //    public void onClick(View v) {

@@ -3,6 +3,7 @@ package top.imlk.oneword.util;
 import android.content.Context;
 import android.content.Intent;
 
+import top.imlk.oneword.BuildConfig;
 import top.imlk.oneword.bean.WordBean;
 import top.imlk.oneword.bean.WordViewConfig;
 
@@ -30,6 +31,10 @@ public class BroadcastSender {
 
     public static final String CMD_SERVICES_START_AUTO_REFRESH_SERVICE = "top.imlk.oneword.start_auto_refresh_service";
     public static final String CMD_SERVICES_STOP_SERVICE = "top.imlk.oneword.stop_service";
+
+
+    public static final String CMD_INTENT_START_MAIN_ACTICITY_WHEN_CLICKED = "top.imlk.oneword.start_main_activity_when_clicked";
+    public static final String THE_CLICKED_WORDBEAN = "top.imlk.oneword.the_clicked_word_bean";
 
 
     private BroadcastSender() {
@@ -75,5 +80,15 @@ public class BroadcastSender {
         context.sendBroadcast(intent);
     }
 
+    public static void sendStartMainActivityWhenClickedBroadcast(Context context, WordBean wordBean) {
+
+        Intent intent = context.getPackageManager().getLaunchIntentForPackage(BuildConfig.APPLICATION_ID);
+        if (intent != null) {
+
+            intent.putExtra(BroadcastSender.THE_CLICKED_WORDBEAN, wordBean);
+
+            context.startActivity(intent);
+        }
+    }
 
 }

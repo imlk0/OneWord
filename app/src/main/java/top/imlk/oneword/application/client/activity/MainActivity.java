@@ -1,13 +1,16 @@
 package top.imlk.oneword.application.client.activity;
 
+import android.app.KeyguardManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Rect;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -76,6 +79,31 @@ public class MainActivity extends AppCompatActivity implements WordRequestObserv
 
         lpResolved = false;
         isOnConfigurationChanged = false;
+
+        resolveIntent(getIntent());
+    }
+
+    private void resolveIntent(Intent intent) {
+        if (intent == null || intent.getAction() == null) {
+            return;
+        }
+        switch (intent.getAction()) {
+            case Intent.ACTION_MAIN:
+                WordBean wordBean = intent.getParcelableExtra(BroadcastSender.THE_CLICKED_WORDBEAN);
+                if (wordBean != null) {
+
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        KeyguardManager keyguardManager = (KeyguardManager) this.getSystemService(KEYGUARD_SERVICE);
+                        keyguardManager.requestDismissKeyguard(this, null);
+                    } else {
+                        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+                    }
+
+                    oneWordShowPanel.updateCurWordBeanOnUI(wordBean);
+                }
+                break;
+        }
     }
 
 
@@ -111,15 +139,11 @@ public class MainActivity extends AppCompatActivity implements WordRequestObserv
 
 
     public void checkIfCurBeanFavorStateChanged(WordBean wordBean) {
-        if (oneWordShowPanel.curWordBean != null && wordBean.id == oneWordShowPanel.curWordBean.id) {
-            oneWordShowPanel.updateCurWordBeanOnUI(wordBean);
-        }
+        oneWordShowPanel.checkIfCurBeanFavorStateChanged(wordBean);
     }
 
     public void checkIfCurBeanRemoved(WordBean wordBean) {
-        if (oneWordShowPanel.curWordBean != null && wordBean.id == oneWordShowPanel.curWordBean.id) {
-            oneWordShowPanel.loadAndShowCurneWord();
-        }
+        oneWordShowPanel.checkIfCurBeanRemoved(wordBean);
     }
 
     //implement reference WordRequestObserver
@@ -276,4 +300,6 @@ public class MainActivity extends AppCompatActivity implements WordRequestObserv
         super.onConfigurationChanged(newConfig);
         isOnConfigurationChanged = true;
     }
+
+
 }

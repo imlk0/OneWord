@@ -115,8 +115,11 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
             contentValues.put(KEY_TARGET_URL, wordBean.target_url);
             contentValues.put(KEY_TARGET_NAME, wordBean.target_name);
 
-            return (int) sqLiteDatabase.insertWithOnConflict(TABLE_ALL_ONEWORD, null, contentValues, CONFLICT_IGNORE);
+            int id = (int) sqLiteDatabase.insertWithOnConflict(TABLE_ALL_ONEWORD, null, contentValues, CONFLICT_IGNORE);
 
+            wordBean.id = id;
+
+            return id;
         }
     }
 
@@ -138,6 +141,7 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
             if (cursor.moveToNext()) {
                 result = cursor.getInt(0);
             }
+            wordBean.id = result;
             cursor.close();
             return result;
         }

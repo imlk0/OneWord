@@ -12,6 +12,8 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_LOGS" />
 
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+
     <!-- android:sharedUserId="android.uid.systemui" -->
     <!-- android:process="com.android.systemui" -->
     <application
