@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -74,7 +75,7 @@ public class NotificationHelper {
 
     private static final String CHANNEL_ID = "top.imlk.oneword.notification_channel";
 
-    public synchronized Notification getShowingCurOnewordNotification(Context context, WordBean currentWord, WordViewConfig wordViewConfig) {
+    public synchronized Notification getShowingCurOnewordNotification(Context context, WordBean currentWord, WordViewConfig curViewConfig) {
         if (currentWord == null) {
             currentWord = WordBean.generateDefaultBean();
         }
@@ -83,7 +84,7 @@ public class NotificationHelper {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                     .setContentTitle("锁屏一言·一言")
                     .setSmallIcon(R.mipmap.ic_oneword_icon)
-                    .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_oneword_icon))
+//                    .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_oneword_icon))
                     .setAutoCancel(false);
 //                .setDeleteIntent(PendingIntent.getBroadcast(this, 0, new Intent(), PendingIntent.FLAG_CANCEL_CURRENT))
 
@@ -111,8 +112,34 @@ public class NotificationHelper {
 
         }
 
+        //文本位置
+        switch (curViewConfig.conPos) {
+            case 0:
+                showingCurOnewordRemoteViews.setInt(R.id.ll_content, "setGravity", Gravity.LEFT);
+                break;
+            default:
+            case 1:
+                showingCurOnewordRemoteViews.setInt(R.id.ll_content, "setGravity", Gravity.CENTER_HORIZONTAL);
+                break;
+            case 2:
+                showingCurOnewordRemoteViews.setInt(R.id.ll_content, "setGravity", Gravity.RIGHT);
+                break;
+        }
+        switch (curViewConfig.refPos) {
+            case 0:
+                showingCurOnewordRemoteViews.setInt(R.id.ll_reference, "setGravity", Gravity.LEFT);
+                break;
+            case 1:
+                showingCurOnewordRemoteViews.setInt(R.id.ll_reference, "setGravity", Gravity.CENTER_HORIZONTAL);
+                break;
+            default:
+            case 2:
+                showingCurOnewordRemoteViews.setInt(R.id.ll_reference, "setGravity", Gravity.RIGHT);
+                break;
+        }
+
         // content
-        if (wordViewConfig.toTraditional) {
+        if (curViewConfig.toTraditional) {
             showingCurOnewordRemoteViews.setTextViewText(R.id.tv_content, ChineseConverter.convert(currentWord.content, ConversionType.S2T, context));
         } else {
             showingCurOnewordRemoteViews.setTextViewText(R.id.tv_content, currentWord.content);
@@ -123,7 +150,7 @@ public class NotificationHelper {
             showingCurOnewordRemoteViews.setTextViewText(R.id.tv_reference, "");
             showingCurOnewordRemoteViews.setViewVisibility(R.id.tv_reference, View.GONE);
         } else {
-            if (wordViewConfig.toTraditional) {
+            if (curViewConfig.toTraditional) {
                 showingCurOnewordRemoteViews.setTextViewText(R.id.tv_reference, ChineseConverter.convert("——" + currentWord.reference, ConversionType.S2T, context));
             } else {
                 showingCurOnewordRemoteViews.setTextViewText(R.id.tv_reference, "——" + currentWord.reference);

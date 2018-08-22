@@ -36,37 +36,34 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/ll_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:paddingRight="18dp">
 
-            <LinearLayout
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="3dp"
+                android:rotation="180"
+                android:src="@drawable/ic_format_quote_white_48dp"
+                android:tint="#8A000000" />
+
+            <TextView
+                android:id="@+id/tv_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingRight="18dp">
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginRight="3dp"
-                    android:rotation="180"
-                    android:src="@drawable/ic_format_quote_white_48dp"
-                    android:tint="#8A000000" />
-
-                <TextView
-                    android:id="@+id/tv_content"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="一言正文"
-                    android:textColor="#8A000000"
-                    android:textSize="14sp" />
-            </LinearLayout>
+                android:layout_weight="1"
+                android:gravity="left"
+                android:text="一言正文"
+                android:textColor="#8A000000"
+                android:textSize="14sp" />
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ll_reference"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="right"

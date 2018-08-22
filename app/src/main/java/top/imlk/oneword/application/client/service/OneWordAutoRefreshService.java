@@ -95,7 +95,7 @@ public class OneWordAutoRefreshService extends Service implements WordRequestObs
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i(TAG, "Hello~");
 
-        Log.i(TAG, intent == null ? "intent is null" : "intent.getAction()" + intent.getAction());
+        Log.i(TAG, intent == null ? "intent is null" : "intent.getAction():" + intent.getAction());
 
         if (intent != null && !TextUtils.isEmpty(intent.getAction())) {
             switch (intent.getAction()) {
@@ -131,13 +131,13 @@ public class OneWordAutoRefreshService extends Service implements WordRequestObs
                     isShowNotificationOnewordOn = true;
 
                     WordBean wordBean = intent.getParcelableExtra(BroadcastSender.THE_INIT_WORDBEAN);
-                    if (wordBean == null && currentWord == null) {
+                    if (wordBean != null) {
+                        currentWord = wordBean;
+                    } else if (currentWord == null) {
                         currentWord = OneWordFileStation.readOneWordJSON();
                         if (currentWord == null) {
                             currentWord = WordBean.generateDefaultBean();
                         }
-                    } else {
-                        currentWord = wordBean;
                     }
 
                     if (currentConfig == null) {
@@ -447,6 +447,7 @@ public class OneWordAutoRefreshService extends Service implements WordRequestObs
 //            intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
             intentFilter.addAction(Intent.ACTION_SCREEN_ON);
             intentFilter.addAction(BroadcastSender.CMD_BROADCAST_SET_NEW_WORDBEAN);
+            intentFilter.addAction(BroadcastSender.CMD_BROADCAST_SET_NEW_WORDVIEWCONFIG);
             this.reSetNotificationWordSignReceiver = new ReSetNotificationWordSignReceiver();
             registerReceiver(this.reSetNotificationWordSignReceiver, intentFilter);
         }
