@@ -22,7 +22,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import top.imlk.oneword.R;
-import top.imlk.oneword.application.client.activity.EditApiActivity;
+import top.imlk.oneword.application.client.activity.ApiEditActivity;
 import top.imlk.oneword.bean.ApiBean;
 import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
 import top.imlk.oneword.util.ShareUtil;
@@ -63,12 +63,12 @@ public class AllApisRVAdapter extends RecyclerView.Adapter<AllApisRVAdapter.ApiI
 
             switch (getItemViewType()) {
                 case 0:
-                    intent = new Intent(context, EditApiActivity.class);
-                    intent.putExtra(EditApiActivity.EDITING_API_ID, apiBean.id);
+                    intent = new Intent(context, ApiEditActivity.class);
+                    intent.putExtra(ApiEditActivity.EDITING_API_ID, apiBean.id);
                     context.startActivity(intent);
                     break;
                 case 1:
-                    intent = new Intent(context, EditApiActivity.class);
+                    intent = new Intent(context, ApiEditActivity.class);
                     context.startActivity(intent);
                     break;
                 case 2:
@@ -218,8 +218,8 @@ public class AllApisRVAdapter extends RecyclerView.Adapter<AllApisRVAdapter.ApiI
                     ApiBean apiBean = ShareUtil.parseReceivedAPI(context, str);
                     if (apiBean != null) {
 
-                        Intent intent = new Intent(context, EditApiActivity.class);
-                        intent.putExtra(EditApiActivity.TO_BE_ADDED_APIBEAN, apiBean);
+                        Intent intent = new Intent(context, ApiEditActivity.class);
+                        intent.putExtra(ApiEditActivity.TO_BE_ADDED_APIBEAN, apiBean);
                         context.startActivity(intent);
 
                     }

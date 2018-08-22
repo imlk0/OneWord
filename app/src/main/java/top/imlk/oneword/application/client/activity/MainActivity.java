@@ -3,6 +3,7 @@ package top.imlk.oneword.application.client.activity;
 import android.app.KeyguardManager;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -32,7 +33,7 @@ import top.imlk.oneword.application.view.OneWordShowPanel;
 import top.imlk.oneword.application.view.PastedNestedScrollView;
 
 
-public class MainActivity extends AppCompatActivity implements WordRequestObserver, OnRefreshListener, PastedNestedScrollView.OnPasteListener {
+public class MainActivity extends BaseActivity implements WordRequestObserver, OnRefreshListener, PastedNestedScrollView.OnPasteListener {
 
 
     private PastedNestedScrollView pastedNestedScrollView;

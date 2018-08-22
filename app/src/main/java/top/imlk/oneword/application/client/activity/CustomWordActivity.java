@@ -1,30 +1,25 @@
 package top.imlk.oneword.application.client.activity;
 
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import top.imlk.oneword.R;
 import top.imlk.oneword.bean.WordBean;
-import top.imlk.oneword.bean.WordViewConfig;
 import top.imlk.oneword.systemui.view.OneWordView;
+import top.imlk.oneword.util.AppStyleHelper;
 import top.imlk.oneword.util.BroadcastSender;
 import top.imlk.oneword.util.OneWordFileStation;
 
-public class CustomWordActivity extends AdjustStyleActivity {
+public class CustomWordActivity extends BaseOnewordEditActivity {
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_custom_word);
+
 
         toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -34,9 +29,9 @@ public class CustomWordActivity extends AdjustStyleActivity {
             }
         });
 
-        llOnewordviewContent = findViewById(R.id.ll_onewordview_content);
+        llOnewordviewContainer = findViewById(R.id.ll_onewordview_container);
         oneWordView = new OneWordView(this);
-        llOnewordviewContent.addView(oneWordView);
+        llOnewordviewContainer.addView(oneWordView);
 
         wordBean = new WordBean();
 
@@ -51,7 +46,7 @@ public class CustomWordActivity extends AdjustStyleActivity {
     FloatingActionButton fabSaveWordBean;
 
 
-    private void initFAB() {
+    protected void initFAB() {
         fabSaveWordBean = findViewById(R.id.fab_save_oneword);
 
         fabSaveWordBean.setOnClickListener(new View.OnClickListener() {

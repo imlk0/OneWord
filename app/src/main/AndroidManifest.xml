@@ -37,7 +37,7 @@
             android:name=".application.client.activity.AllApiActivity"
             android:launchMode="singleTop" />
         <activity
-            android:name=".application.client.activity.EditApiActivity"
+            android:name=".application.client.activity.ApiEditActivity"
             android:launchMode="singleTop" />
         <activity
             android:name=".application.client.activity.AdjustStyleActivity"

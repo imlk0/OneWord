@@ -1,11 +1,9 @@
 package top.imlk.oneword.application.client.activity;
 
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -24,31 +22,20 @@ import top.imlk.oneword.R;
 import top.imlk.oneword.bean.WordBean;
 import top.imlk.oneword.bean.WordViewConfig;
 import top.imlk.oneword.systemui.view.OneWordView;
+import top.imlk.oneword.util.AppStyleHelper;
 import top.imlk.oneword.util.BroadcastSender;
 import top.imlk.oneword.util.OneWordFileStation;
 
-public class AdjustStyleActivity extends BaseActivity implements ColorPickerDialogListener {
+public class AdjustStyleActivity extends BaseOnewordEditActivity implements ColorPickerDialogListener {
 
     public static String ADJUST_SAMPLE_ONEWORD = "ADJUST_SAMPLE_ONEWORD";
-
-    protected Toolbar toolbar;
-    protected LinearLayout llOnewordviewContent;
-
-    protected OneWordView oneWordView;
-    protected WordBean wordBean;
-
-    private WordViewConfig config;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (this.getClass() != AdjustStyleActivity.class) {
-            return;
-        }
-
-
         setContentView(R.layout.activity_adjust_style);
+
 
         toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -59,9 +46,9 @@ public class AdjustStyleActivity extends BaseActivity implements ColorPickerDial
         });
 
 
-        llOnewordviewContent = findViewById(R.id.ll_onewordview_content);
+        llOnewordviewContainer = findViewById(R.id.ll_onewordview_container);
         oneWordView = new OneWordView(this);
-        llOnewordviewContent.addView(oneWordView);
+        llOnewordviewContainer.addView(oneWordView);
 
 
         wordBean = getIntent().getParcelableExtra(ADJUST_SAMPLE_ONEWORD);
@@ -97,7 +84,7 @@ public class AdjustStyleActivity extends BaseActivity implements ColorPickerDial
     FloatingActionButton fabDefaultConfig;
     FloatingActionButton fabSaveConfig;
 
-    private void initFAB() {
+    protected void initFAB() {
 
         fabDefaultConfig = findViewById(R.id.fab_default_config);
         fabSaveConfig = findViewById(R.id.fab_save_config);
@@ -461,72 +448,6 @@ public class AdjustStyleActivity extends BaseActivity implements ColorPickerDial
 
             }
         });
-    }
-
-
-    private void notifyWordBeanChanged() {
-        oneWordView.setOneWord(wordBean);
-    }
-
-    protected void notifyWordViewConfigChanged() {
-        oneWordView.applyWordViewConfig(config);
-    }
-
-    /**
-     * EditText
-     */
-    private EditText etContent;
-    private EditText etReference;
-
-    protected void initEditText() {
-        etContent = findViewById(R.id.et_content);
-        etReference = findViewById(R.id.et_reference);
-
-        etContent.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                wordBean.content = s.toString();
-                notifyWordBeanChanged();
-            }
-        });
-
-        etReference.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                wordBean.reference = s.toString();
-                notifyWordBeanChanged();
-            }
-        });
-
-    }
-
-
-    public void initConfig() {
-        config = OneWordFileStation.readWordViewConfigJSON();
-        if (config == null) {
-            config = WordViewConfig.generateDefaultBean();
-        }
-
     }
 
 

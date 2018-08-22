@@ -16,28 +16,28 @@ import top.imlk.oneword.bean.WordBean;
 import top.imlk.oneword.net.WordRequestObserver;
 import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
 import top.imlk.oneword.net.OneWordApi;
+import top.imlk.oneword.util.AppStyleHelper;
 
-public class EditApiActivity extends BaseActivity implements Toolbar.OnMenuItemClickListener {
+public class ApiEditActivity extends BaseEditActivity implements Toolbar.OnMenuItemClickListener {
 
     public static final String EDITING_API_ID = "EDITING_API_ID";
     public static final String TO_BE_ADDED_APIBEAN = "TO_BE_ADDED_APIBEAN";
 
     private ApiBean apiBean;
 
-    Toolbar toolbar;
-
-    EditText etName;
-    EditText etURL;
-    EditText etReqMethod;
-    EditText etReqArgJson;
-    EditText etRespFormJson;
-    ImageView ivHelpReqArg;
-    ImageView ivHelpRespForm;
+    private EditText etName;
+    private EditText etURL;
+    private EditText etReqMethod;
+    private EditText etReqArgJson;
+    private EditText etRespFormJson;
+    private ImageView ivHelpReqArg;
+    private ImageView ivHelpRespForm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_api);
+
 
         toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -212,21 +212,21 @@ public class EditApiActivity extends BaseActivity implements Toolbar.OnMenuItemC
                 OneWordApi.requestOneWordByAPI(new WordRequestObserver() {
                     @Override
                     public void onStart(ApiBean apiBean) {
-                        Toast.makeText(EditApiActivity.this, String.format("尝试请求:\n%s\n%s\n%s", apiBean.name, apiBean.url, apiBean.req_method), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ApiEditActivity.this, String.format("尝试请求:\n%s\n%s\n%s", apiBean.name, apiBean.url, apiBean.req_method), Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onAcquire(ApiBean apiBean, WordBean wordBean) {
 
-                        Toast.makeText(EditApiActivity.this, "解析结果-内容（必须）:\n" + wordBean.content, Toast.LENGTH_LONG).show();
-                        Toast.makeText(EditApiActivity.this, "解析结果-出处（可选）:\n" + wordBean.reference, Toast.LENGTH_LONG).show();
-                        Toast.makeText(EditApiActivity.this, "解析结果-相关链接（可选）:\n" + wordBean.target_url, Toast.LENGTH_LONG).show();
+                        Toast.makeText(ApiEditActivity.this, "解析结果-内容（必须）:\n" + wordBean.content, Toast.LENGTH_LONG).show();
+                        Toast.makeText(ApiEditActivity.this, "解析结果-出处（可选）:\n" + wordBean.reference, Toast.LENGTH_LONG).show();
+                        Toast.makeText(ApiEditActivity.this, "解析结果-相关链接（可选）:\n" + wordBean.target_url, Toast.LENGTH_LONG).show();
                     }
 
                     @Override
                     public void onError(ApiBean apiBean, Throwable e) {
-                        Toast.makeText(EditApiActivity.this, "发生异常，获取失败", Toast.LENGTH_SHORT).show();
-                        Toast.makeText(EditApiActivity.this, e.getMessage() + "\n" + e.getCause(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(ApiEditActivity.this, "发生异常，获取失败", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ApiEditActivity.this, e.getMessage() + "\n" + e.getCause(), Toast.LENGTH_LONG).show();
                     }
 
 

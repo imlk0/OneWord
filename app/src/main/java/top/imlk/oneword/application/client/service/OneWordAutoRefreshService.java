@@ -407,6 +407,7 @@ public class OneWordAutoRefreshService extends Service implements WordRequestObs
 
             switch (intent.getAction()) {
                 case Intent.ACTION_SCREEN_OFF:
+                case Intent.ACTION_SCREEN_ON:
 
                     updateNotification();
                     break;
@@ -426,7 +427,8 @@ public class OneWordAutoRefreshService extends Service implements WordRequestObs
     private void scheduleReSetNotificationWord() {
         if (this.reSetNotificationWordSignReceiver == null) {
             IntentFilter intentFilter = new IntentFilter();
-            intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+//            intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+            intentFilter.addAction(Intent.ACTION_SCREEN_ON);
             intentFilter.addAction(BroadcastSender.CMD_BROADCAST_SET_NEW_WORDBEAN);
             this.reSetNotificationWordSignReceiver = new ReSetNotificationWordSignReceiver();
             registerReceiver(this.reSetNotificationWordSignReceiver, intentFilter);

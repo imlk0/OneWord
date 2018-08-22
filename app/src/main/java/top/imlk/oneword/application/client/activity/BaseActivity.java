@@ -1,31 +1,20 @@
 package top.imlk.oneword.application.client.activity;
 
-import android.content.Context;
-import android.content.DialogInterface;
-import android.support.v7.app.AlertDialog;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
+
+import top.imlk.oneword.R;
+import top.imlk.oneword.util.AppStyleHelper;
 
 /**
- * Created by imlk on 2018/8/8.
+ * Created by imlk on 2018/8/22.
  */
 public abstract class BaseActivity extends AppCompatActivity {
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getWindow().setNavigationBarColor(AppStyleHelper.getColorByAttributeId(this, R.attr.color_primary_dark));
 
-
-    protected void alertDoesNotSave() {
-
-        new AlertDialog.Builder(this).setTitle("确定要退出编辑吗").setMessage("要放弃此次修改，退出编辑吗？").setPositiveButton("退出", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                finish();
-            }
-        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        }).setCancelable(true).show();
     }
-
 }

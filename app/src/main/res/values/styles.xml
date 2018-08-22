@@ -27,7 +27,6 @@
         <item name="color_secondary_text">@color/green_secondary_text</item>
         <item name="color_icons">@color/green_icons</item>
         <item name="color_divider">@color/green_divider</item>
-        <item name="android:windowBackground">@android:color/black</item>
 
     </style>
 
@@ -148,7 +147,6 @@
         <item name="color_secondary_text">@color/green_secondary_text</item>
         <item name="color_icons">@color/green_icons</item>
         <item name="color_divider">@color/green_divider</item>
-        <item name="android:windowBackground">@color/green_colorPrimaryDark</item>
 
     </style>
 

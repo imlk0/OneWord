@@ -1,25 +1,20 @@
 package top.imlk.oneword.application.client.activity;
 
-import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.ContextMenu;
-import android.view.Menu;
 import android.view.View;
-import android.widget.ActionMenuView;
 import android.widget.Toolbar;
 
 import top.imlk.oneword.R;
 import top.imlk.oneword.application.adapter.AllApisRVAdapter;
+import top.imlk.oneword.util.AppStyleHelper;
 
-public class AllApiActivity extends BaseActivity {
+public class AllApiActivity extends BaseToolBarActivity {
 
-    Toolbar toolbar;
-    RecyclerView recyclerView;
-    AllApisRVAdapter allApisRVAdapter;
+    protected RecyclerView recyclerView;
+    protected AllApisRVAdapter allApisRVAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
