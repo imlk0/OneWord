@@ -301,7 +301,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
                         android:layout_marginTop="8dp"
-                        android:text="边距"
+                        android:text="四周边距"
                         android:textColor="?attr/color_primary_text"
                         android:textSize="@dimen/item_setting_title_ts" />
 
@@ -739,7 +739,6 @@
                         android:layout_height="26dp"
                         android:layout_marginRight="24dp"
                         android:layout_weight="1"
-                        android:rotation="180"
                         android:scaleType="fitCenter"
                         android:src="@drawable/ic_more_horiz_black_24dp" />
                 </LinearLayout>
@@ -803,9 +802,9 @@
                         android:layout_height="26dp"
                         android:layout_marginRight="24dp"
                         android:layout_weight="1"
-                        android:rotation="180"
                         android:scaleType="fitCenter"
-                        android:src="@drawable/ic_more_horiz_black_24dp" />
+                        android:src="@drawable/ic_simple_traditional_chinese"
+                        android:tint="#757575" />
                 </LinearLayout>
 
                 <LinearLayout
