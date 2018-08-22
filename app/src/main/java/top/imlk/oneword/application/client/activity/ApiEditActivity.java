@@ -16,7 +16,6 @@ import top.imlk.oneword.bean.WordBean;
 import top.imlk.oneword.net.WordRequestObserver;
 import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
 import top.imlk.oneword.net.OneWordApi;
-import top.imlk.oneword.util.AppStyleHelper;
 
 public class ApiEditActivity extends BaseEditActivity implements Toolbar.OnMenuItemClickListener {
 
@@ -130,41 +129,47 @@ public class ApiEditActivity extends BaseEditActivity implements Toolbar.OnMenuI
                         dialog.dismiss();
                     }
                 })
-                .setMessage("API响应格式，作为解析请求结果的模板，\n" +
-                        "\n" +
-                        "分隔符模式：\n" +
-                        "键入分隔符，将根据分隔符最后一次出现的位置把请求结果分割成一言正文和一言出处\n" +
-                        "例如，对于请求结果：\n" +
-                        "露下旗濛濛，寒金鸣夜刻。——李贺《塞下曲》\n" +
-                        "可填写分隔符为：\n" +
-                        "——\n" +
-                        "将匹配出\n" +
-                        "正文：\n" +
-                        "露下旗濛濛，寒金鸣夜刻。\n" +
-                        "出处：\n" +
-                        "李贺《塞下曲》\n" +
-                        "\n" +
-                        "\n" +
-                        "------\n" +
-                        "JSON模式：\n" +
-                        "例如，对于请求结果:\n" +
-                        "{\n" +
-                        "  \"id\": 3697,\n" +
-                        "  \"hitokoto\": \"我喜欢的人…也能喜欢上自己，我认为这就是奇迹。\",\n" +
-                        "  \"type\": \"a\",\n" +
-                        "  \"from\": \"月色真美\",\n" +
-                        "  \"creator\": \"Jerx2y\",\n" +
-                        "  \"created_at\": \"1530183116\"\n" +
-                        "}\n" +
-                        "可用占位符填充关键位置，将模板填写为\n" +
-                        "{\n" +
-                        "  \"hitokoto\": \"[content]\",\n" +
-                        "  \"from\": \"[reference]\",\n" +
-                        "}\n" +
-                        "占位符有:\n" +
-                        "[content]：表示一言的内容，必须\n" +
-                        "[reference]：表示一言内容的出处，可选\n" +
-                        "[target_url]：表示与这条一言有关的链接，在锁屏上点击一言后将发起链接跳转，可选（其实这个选项还没写好\uD83D\uDE04）")
+                .setMessage(
+                        "API响应格式，作为解析请求结果的模板，\n" +
+                                "----------\n" +
+                                "分隔符模式：\n" +
+                                "键入分隔符，将根据分隔符最后一次出现的位置把请求结果分割成一言正文和一言出处\n" +
+                                "例如，对于请求结果：\n" +
+                                "露下旗濛濛，寒金鸣夜刻。——李贺《塞下曲》\n" +
+                                "可填写分隔符为：\n" +
+                                "——\n" +
+                                "将匹配出\n" +
+                                "正文：\n" +
+                                "露下旗濛濛，寒金鸣夜刻。\n" +
+                                "出处：\n" +
+                                "李贺《塞下曲》\n" +
+                                "\n" +
+                                "\n" +
+                                "----------\n" +
+                                "JSON模板模式：\n" +
+                                "[content]：必须，表示一言的内容\n" +
+                                "[reference]：可选，表示一言内容的出处\n" +
+                                "[target_url]：可选，表示与这条一言有关的链接，将以小标签的形式展示\n" +
+                                "[target_text]：可选，小标签上的文字，若为空则小标签不会显示\n" +
+                                "若想指定以上占位符字段为固定值，可以将占位符作为键，将固定值作为字符串。\n" +
+                                "\n" +
+                                "例如，对于请求结果:\n" +
+                                "{\n" +
+                                "  \"id\": 3697,\n" +
+                                "  \"hitokoto\": \"我喜欢的人…也能喜欢上自己，我认为这就是奇迹。\",\n" +
+                                "  \"type\": \"a\",\n" +
+                                "  \"from\": \"月色真美\",\n" +
+                                "  \"creator\": \"Jerx2y\",\n" +
+                                "  \"created_at\": \"1530183116\"\n" +
+                                "}\n" +
+                                "可用占位符填充关键位置，将模板填写为\n" +
+                                "{\n" +
+                                "  \"hitokoto\": \"[content]\",\n" +
+                                "  \"from\": \"[reference]\",\n" +
+                                "  \"[target_text]\": \"Hitokoto一言\"\n" +
+                                "}\n" +
+                                "则将解析出对应位置的字符串作为一言内容与出处。且小标签上的文字为 Hitokoto一言。\n"
+                )
                 .show();
     }
 
@@ -221,6 +226,7 @@ public class ApiEditActivity extends BaseEditActivity implements Toolbar.OnMenuI
                         Toast.makeText(ApiEditActivity.this, "解析结果-内容（必须）:\n" + wordBean.content, Toast.LENGTH_LONG).show();
                         Toast.makeText(ApiEditActivity.this, "解析结果-出处（可选）:\n" + wordBean.reference, Toast.LENGTH_LONG).show();
                         Toast.makeText(ApiEditActivity.this, "解析结果-相关链接（可选）:\n" + wordBean.target_url, Toast.LENGTH_LONG).show();
+                        Toast.makeText(ApiEditActivity.this, "解析结果-相关文字（可选）:\n" + wordBean.target_text, Toast.LENGTH_LONG).show();
                     }
 
                     @Override

@@ -7,14 +7,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.lb.auto_fit_textview.AutoResizeTextView;
 
 import top.imlk.oneword.application.client.activity.MainActivity;
 import top.imlk.oneword.bean.WordBean;
@@ -64,7 +61,7 @@ public class OneWordShowPanel extends LinearLayout implements View.OnClickListen
         this.tvContent = findViewById(R.id.tv_content);
         this.tvReference = findViewById(R.id.tv_reference);
 
-        this.tvTargetName = findViewById(R.id.tv_target_name);
+        this.tvTargetName = findViewById(R.id.tv_target_text);
         this.llTargetTag = findViewById(R.id.ll_target_tag);
         this.llTargetTag.setOnClickListener(this);
 
@@ -121,7 +118,7 @@ public class OneWordShowPanel extends LinearLayout implements View.OnClickListen
         this.updateLike(OneWordSQLiteOpenHelper.getInstance().checkIfInFavor(wordBean.id));
         this.updateContent(wordBean.content);
         this.updateReference(wordBean.reference);
-        this.updateTarget(wordBean.target_name);
+        this.updateTarget(wordBean.target_text);
     }
 
     private void updateLike(boolean like) {

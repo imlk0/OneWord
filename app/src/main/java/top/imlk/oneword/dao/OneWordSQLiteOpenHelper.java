@@ -39,7 +39,7 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
     public static final String KEY_CONTENT = "content";
     public static final String KEY_REFERENCE = "reference";
     public static final String KEY_TARGET_URL = "target_url";
-    public static final String KEY_TARGET_NAME = "target_name";
+    public static final String KEY_TARGET_TEXT = "target_text";
 
     public static final String KEY_ONEWORD_ID = "oneword_id";
     public static final String KEY_ADDED_AT = "added_at";
@@ -113,7 +113,7 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
             contentValues.put(KEY_CONTENT, nullToVoid(wordBean.content));
             contentValues.put(KEY_REFERENCE, nullToVoid(wordBean.reference));
             contentValues.put(KEY_TARGET_URL, wordBean.target_url);
-            contentValues.put(KEY_TARGET_NAME, wordBean.target_name);
+            contentValues.put(KEY_TARGET_TEXT, wordBean.target_text);
 
             int id = (int) sqLiteDatabase.insertWithOnConflict(TABLE_ALL_ONEWORD, null, contentValues, CONFLICT_IGNORE);
 
@@ -528,7 +528,7 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
 
         db.execSQL("BEGIN TRANSACTION");
 
-        db.execSQL("CREATE TABLE all_oneword (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE CHECK (id > 0), content TEXT, reference TEXT, target_url TEXT, target_name TEXT)");
+        db.execSQL("CREATE TABLE all_oneword (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE CHECK (id > 0), content TEXT, reference TEXT, target_url TEXT, target_text TEXT)");
         db.execSQL("CREATE TABLE api (id INTEGER PRIMARY KEY UNIQUE NOT NULL CHECK (id > 0), name TEXT NOT NULL, url TEXT NOT NULL, req_method TEXT NOT NULL DEFAULT 'GET', req_args_json TEXT, resp_form TEXT , enabled BOOLEAN NOT NULL DEFAULT 1)");
         db.execSQL("CREATE TABLE favor (oneword_id INTEGER REFERENCES all_oneword (id) ON DELETE CASCADE UNIQUE NOT NULL, added_at INTEGER NOT NULL COLLATE BINARY)");
         db.execSQL("CREATE TABLE history (oneword_id INTEGER REFERENCES all_oneword (id) ON DELETE CASCADE NOT NULL UNIQUE, added_at INTEGER COLLATE BINARY NOT NULL)");
@@ -555,7 +555,7 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('Hitokoto-其他', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"g\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
         db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('yiju-一句', 'http://yiju.ml/api/word.php', 'GET', '', '——', 1)");
 
-        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('网易云音乐歌评-民谣', 'http://w4y.imlk.top/simpleApi', 'GET', '{\"cat\":\"d\"}', '{\n    \"content\": \"[content]\",\n    \"reference\": \"[reference]\",\n    \"target_url\": \"[target_url]\",\n    \"target_name\": \"[target_name]\"\n}', 1)");
+        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('网易云音乐歌评-民谣', 'http://w4y.imlk.top/simpleApi', 'GET', '{\"cat\":\"d\"}', '{\n    \"content\": \"[content]\",\n    \"reference\": \"[reference]\",\n    \"target_url\": \"[target_url]\",\n    \"target_text\": \"[target_text]\"\n}', 1)");
 
 
     }
@@ -633,8 +633,8 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
             case 2:
             case 3:
             case 4:
-                db.execSQL("ALTER TABLE all_oneword ADD COLUMN target_name TEXT");
-                db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('网易云音乐歌评-民谣', 'http://w4y.imlk.top/simpleApi', 'GET', '{\"cat\":\"d\"}', '{\n    \"content\": \"[content]\",\n    \"reference\": \"[reference]\",\n    \"target_url\": \"[target_url]\",\n    \"target_name\": \"[target_name]\"\n}', 1)");
+                db.execSQL("ALTER TABLE all_oneword ADD COLUMN target_text TEXT");
+                db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('网易云音乐歌评-民谣', 'http://w4y.imlk.top/simpleApi', 'GET', '{\"cat\":\"d\"}', '{\n    \"content\": \"[content]\",\n    \"reference\": \"[reference]\",\n    \"target_url\": \"[target_url]\",\n    \"target_text\": \"[target_text]\"\n}', 1)");
 
         }
 

@@ -55,7 +55,6 @@
                 android:id="@+id/tv_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:gravity="left"
                 android:text="一言正文"
                 android:textColor="#8A000000"

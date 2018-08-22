@@ -98,7 +98,7 @@ public class OneWordRecyclerViewAdapter extends RecyclerView.Adapter implements 
         holder.ivSet = holder.itemView.findViewById(R.id.iv_set);
         holder.ivShare = holder.itemView.findViewById(R.id.iv_share);
 
-        holder.tvTargetName = holder.itemView.findViewById(R.id.tv_target_name);
+        holder.tvTargetName = holder.itemView.findViewById(R.id.tv_target_text);
         holder.llTargetTag = holder.itemView.findViewById(R.id.ll_target_tag);
         holder.llTargetTag.setOnClickListener(holder);
 
@@ -122,12 +122,12 @@ public class OneWordRecyclerViewAdapter extends RecyclerView.Adapter implements 
         oneWordItemHolder.tvReference.setText("——" + oneWordItemHolder.data.reference);
 
 
-        if (TextUtils.isEmpty(oneWordItemHolder.data.target_name)) {
+        if (TextUtils.isEmpty(oneWordItemHolder.data.target_text)) {
             oneWordItemHolder.llTargetTag.setVisibility(View.GONE);
             oneWordItemHolder.tvTargetName.setText("");
         } else {
             oneWordItemHolder.llTargetTag.setVisibility(View.VISIBLE);
-            oneWordItemHolder.tvTargetName.setText(oneWordItemHolder.data.target_name);
+            oneWordItemHolder.tvTargetName.setText(oneWordItemHolder.data.target_text);
         }
 
 

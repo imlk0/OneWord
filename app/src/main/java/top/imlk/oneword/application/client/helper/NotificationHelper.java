@@ -148,14 +148,14 @@ public class NotificationHelper {
         // reference
         if (TextUtils.isEmpty(currentWord.reference)) {
             showingCurOnewordRemoteViews.setTextViewText(R.id.tv_reference, "");
-            showingCurOnewordRemoteViews.setViewVisibility(R.id.tv_reference, View.GONE);
+            showingCurOnewordRemoteViews.setViewVisibility(R.id.ll_reference, View.GONE);
         } else {
             if (curViewConfig.toTraditional) {
                 showingCurOnewordRemoteViews.setTextViewText(R.id.tv_reference, ChineseConverter.convert("——" + currentWord.reference, ConversionType.S2T, context));
             } else {
                 showingCurOnewordRemoteViews.setTextViewText(R.id.tv_reference, "——" + currentWord.reference);
             }
-            showingCurOnewordRemoteViews.setViewVisibility(R.id.tv_reference, View.VISIBLE);
+            showingCurOnewordRemoteViews.setViewVisibility(R.id.ll_reference, View.VISIBLE);
         }
 
         Intent intent = new Intent(context, MainActivity.class);
