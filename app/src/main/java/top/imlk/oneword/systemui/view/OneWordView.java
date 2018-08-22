@@ -14,6 +14,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.zqc.opencc.android.lib.ChineseConverter;
+import com.zqc.opencc.android.lib.ConversionType;
+
 import top.imlk.oneword.bean.WordBean;
 import top.imlk.oneword.bean.WordViewConfig;
 
@@ -41,7 +44,6 @@ public class OneWordView extends LinearLayout {
         super(context);
 
         this.setOrientation(LinearLayout.VERTICAL);
-
 
         // 正文View的样式
         tvContent = new TextView(context);
@@ -138,17 +140,23 @@ public class OneWordView extends LinearLayout {
 
             if (metrics != null && metrics.width >= llContent.getWidth()) {
 
-                tvContent.setText("\u3000\u3000" + wordBean.content);
+                setContentInternal("\u3000\u3000" + wordBean.content);
             } else {
-                tvContent.setText(wordBean.content);
+                setContentInternal(wordBean.content);
             }
         } else {
-            tvContent.setText(wordBean.content);
+            setContentInternal(wordBean.content);
 
         }
-
-
     }
+
+    private void setContentInternal(String str) {
+        if (config != null && config.toTraditional) {
+            str = ChineseConverter.convert(str, ConversionType.S2T, getContext());
+        }
+        tvContent.setText(str);
+    }
+
 
     private void setReference() {
 
@@ -159,11 +167,18 @@ public class OneWordView extends LinearLayout {
 
             boolean refAddLine = config == null ? true : config.refAddLine;
             if (refAddLine) {
-                tvReference.setText("——" + wordBean.reference);
+                setReferenceInternal("——" + wordBean.reference);
             } else {
-                tvReference.setText(wordBean.reference);
+                setReferenceInternal(wordBean.reference);
             }
         }
+    }
+
+    private void setReferenceInternal(String str) {
+        if (config != null && config.toTraditional) {
+            str = ChineseConverter.convert(str, ConversionType.S2T, getContext());
+        }
+        tvReference.setText(str);
     }
 
 
@@ -219,7 +234,6 @@ public class OneWordView extends LinearLayout {
             }
 
             setOneWord(this.wordBean);
-
         } else {
             defaultApplyWordViewConfig();
         }

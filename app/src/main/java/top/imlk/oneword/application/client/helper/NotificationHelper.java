@@ -13,9 +13,14 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.RemoteViews;
 
+import com.zqc.opencc.android.lib.ChineseConverter;
+import com.zqc.opencc.android.lib.ConversionType;
+
 import top.imlk.oneword.R;
 import top.imlk.oneword.application.client.activity.MainActivity;
 import top.imlk.oneword.bean.WordBean;
+import top.imlk.oneword.bean.WordViewConfig;
+import top.imlk.oneword.util.BroadcastSender;
 import top.imlk.oneword.util.SharedPreferencesUtil;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
@@ -69,7 +74,7 @@ public class NotificationHelper {
 
     private static final String CHANNEL_ID = "top.imlk.oneword.notification_channel";
 
-    public synchronized Notification getShowingCurOnewordNotification(Context context, WordBean currentWord) {
+    public synchronized Notification getShowingCurOnewordNotification(Context context, WordBean currentWord, WordViewConfig wordViewConfig) {
         if (currentWord == null) {
             currentWord = WordBean.generateDefaultBean();
         }
@@ -79,8 +84,7 @@ public class NotificationHelper {
                     .setContentTitle("锁屏一言·一言")
                     .setSmallIcon(R.mipmap.ic_oneword_icon)
                     .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_oneword_icon))
-                    .setAutoCancel(false)
-                    .setContentIntent(PendingIntent.getActivity(context, 1, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT));
+                    .setAutoCancel(false);
 //                .setDeleteIntent(PendingIntent.getBroadcast(this, 0, new Intent(), PendingIntent.FLAG_CANCEL_CURRENT))
 
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.notification_oneword);
@@ -107,16 +111,29 @@ public class NotificationHelper {
 
         }
 
-        showingCurOnewordRemoteViews.setTextViewText(R.id.tv_content, currentWord.content);
+        // content
+        if (wordViewConfig.toTraditional) {
+            showingCurOnewordRemoteViews.setTextViewText(R.id.tv_content, ChineseConverter.convert(currentWord.content, ConversionType.S2T, context));
+        } else {
+            showingCurOnewordRemoteViews.setTextViewText(R.id.tv_content, currentWord.content);
+        }
 
+        // reference
         if (TextUtils.isEmpty(currentWord.reference)) {
             showingCurOnewordRemoteViews.setTextViewText(R.id.tv_reference, "");
             showingCurOnewordRemoteViews.setViewVisibility(R.id.tv_reference, View.GONE);
         } else {
-            showingCurOnewordRemoteViews.setTextViewText(R.id.tv_reference, "——" + currentWord.reference);
+            if (wordViewConfig.toTraditional) {
+                showingCurOnewordRemoteViews.setTextViewText(R.id.tv_reference, ChineseConverter.convert("——" + currentWord.reference, ConversionType.S2T, context));
+            } else {
+                showingCurOnewordRemoteViews.setTextViewText(R.id.tv_reference, "——" + currentWord.reference);
+            }
             showingCurOnewordRemoteViews.setViewVisibility(R.id.tv_reference, View.VISIBLE);
         }
 
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(BroadcastSender.THE_CLICKED_WORDBEAN, currentWord);
+        showingCurOnewordBuilder.setContentIntent(PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT));
 
         showingCurOnewordBuilder.setCustomContentView(showingCurOnewordRemoteViews);
         showingCurOnewordBuilder.setCustomBigContentView(showingCurOnewordRemoteViews);

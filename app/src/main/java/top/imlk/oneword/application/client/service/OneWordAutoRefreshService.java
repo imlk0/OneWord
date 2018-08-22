@@ -18,6 +18,7 @@ import java.util.TimerTask;
 import top.imlk.oneword.application.client.helper.NotificationHelper;
 import top.imlk.oneword.bean.ApiBean;
 import top.imlk.oneword.bean.WordBean;
+import top.imlk.oneword.bean.WordViewConfig;
 import top.imlk.oneword.net.WordRequestObserver;
 import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
 import top.imlk.oneword.net.OneWordApi;
@@ -69,6 +70,7 @@ public class OneWordAutoRefreshService extends Service implements WordRequestObs
 
     private ReSetNotificationWordSignReceiver reSetNotificationWordSignReceiver;
     private WordBean currentWord;
+    private WordViewConfig currentConfig;
 
     @Nullable
     @Override
@@ -129,10 +131,19 @@ public class OneWordAutoRefreshService extends Service implements WordRequestObs
                     isShowNotificationOnewordOn = true;
 
                     WordBean wordBean = intent.getParcelableExtra(BroadcastSender.THE_INIT_WORDBEAN);
-                    if (wordBean == null) {
+                    if (wordBean == null && currentWord == null) {
                         currentWord = OneWordFileStation.readOneWordJSON();
                         if (currentWord == null) {
                             currentWord = WordBean.generateDefaultBean();
+                        }
+                    } else {
+                        currentWord = wordBean;
+                    }
+
+                    if (currentConfig == null) {
+                        currentConfig = OneWordFileStation.readWordViewConfigJSON();
+                        if (currentConfig == null) {
+                            currentConfig = WordViewConfig.generateDefaultBean();
                         }
                     }
                     updateNotification();
@@ -417,7 +428,13 @@ public class OneWordAutoRefreshService extends Service implements WordRequestObs
                         currentWord = wordBean;
                         updateNotification();
                     }
-
+                    break;
+                case BroadcastSender.CMD_BROADCAST_SET_NEW_WORDVIEWCONFIG:
+                    WordViewConfig wordViewConfig = intent.getParcelableExtra(BroadcastSender.THE_NEW_WORDVIEWCONFIG);
+                    if (wordViewConfig != null) {
+                        currentConfig = wordViewConfig;
+                        updateNotification();
+                    }
                     break;
             }
 
@@ -446,7 +463,7 @@ public class OneWordAutoRefreshService extends Service implements WordRequestObs
 
     private synchronized void updateNotification() {
         if (isShowNotificationOnewordOn) {
-            startForeground(1, notificationHelper.getShowingCurOnewordNotification(this, currentWord));
+            startForeground(1, notificationHelper.getShowingCurOnewordNotification(this, currentWord, currentConfig));
         } else {
             if (isAutoRefreshOn) {
                 startForeground(1, notificationHelper.getShowingAutoRefreshServiceRunningNotification(this));

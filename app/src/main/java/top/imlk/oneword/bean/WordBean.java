@@ -16,7 +16,7 @@ public class WordBean implements Parcelable {
     public int id;
     public String content;
     public String reference;
-    public String target_url;// TODO 相关链接
+    public String target_url;
     public String target_name;
 
     public WordBean() {

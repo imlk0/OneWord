@@ -55,7 +55,6 @@
                         <!--android:tint="?attr/color_primary_light"-->
                         <!--android:visibility="gone" />-->
 
-                        <!--TODO use google's AutoSizeTeView-->
                         <com.lb.auto_fit_textview.AutoResizeTextView
                             android:id="@+id/tv_content"
                             android:layout_width="match_parent"

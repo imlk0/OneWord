@@ -70,6 +70,7 @@ public class AdjustStyleActivity extends BaseOnewordEditActivity implements Colo
         initItalicModule();
         initStartLineIntoModule();
         initRefAddLineModule();
+        initToTraditionalModule();
 
         initFAB();
 
@@ -139,9 +140,39 @@ public class AdjustStyleActivity extends BaseOnewordEditActivity implements Colo
         cbStartLineInto.setChecked(config.startLineInto);
 
         cbRefAddLine.setChecked(config.refAddLine);
+        cbToTraditional.setChecked(config.toTraditional);
+
 
         etContent.setText(wordBean.content);
         etReference.setText(wordBean.reference);
+    }
+
+
+    /**
+     * 简体转繁体
+     */
+
+    CheckBox cbToTraditional;
+    LinearLayout llToTraditional;
+
+    private void initToTraditionalModule() {
+        cbToTraditional = findViewById(R.id.cb_to_traditional);
+        llToTraditional = findViewById(R.id.ll_to_traditional);
+
+        llToTraditional.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cbToTraditional.setChecked(!cbToTraditional.isChecked());
+            }
+        });
+
+        cbToTraditional.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                config.toTraditional = isChecked;
+                notifyWordViewConfigChanged();
+            }
+        });
     }
 
 

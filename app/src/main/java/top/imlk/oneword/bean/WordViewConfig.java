@@ -30,6 +30,7 @@ public class WordViewConfig implements Parcelable {
 
     public boolean refAddLine;
 
+    public boolean toTraditional;
 
     public WordViewConfig() {
 
@@ -56,10 +57,10 @@ public class WordViewConfig implements Parcelable {
         wordViewConfig.startLineInto = true;
         wordViewConfig.refAddLine = true;
 
+        wordViewConfig.toTraditional = false;
 
         return wordViewConfig;
     }
-
 
     @Override
     public String toString() {
@@ -76,6 +77,7 @@ public class WordViewConfig implements Parcelable {
                 ", refItalic=" + refItalic +
                 ", startLineInto=" + startLineInto +
                 ", refAddLine=" + refAddLine +
+                ", toTraditional=" + toTraditional +
                 '}';
     }
 
@@ -92,6 +94,7 @@ public class WordViewConfig implements Parcelable {
         refItalic = in.readByte() != 0;
         startLineInto = in.readByte() != 0;
         refAddLine = in.readByte() != 0;
+        toTraditional = in.readByte() != 0;
     }
 
     public static final Creator<WordViewConfig> CREATOR = new Creator<WordViewConfig>() {
@@ -125,5 +128,6 @@ public class WordViewConfig implements Parcelable {
         dest.writeByte((byte) (refItalic ? 1 : 0));
         dest.writeByte((byte) (startLineInto ? 1 : 0));
         dest.writeByte((byte) (refAddLine ? 1 : 0));
+        dest.writeByte((byte) (toTraditional ? 1 : 0));
     }
 }

@@ -59,4 +59,8 @@ dependencies {
     implementation 'com.jaredrummler:colorpicker:1.0.2'
 
     implementation project(':AutoFitTextViewLibrary_fork')
+
+//    implementation 'com.android.support:appcompat-v7:27.1.1'
+
+    implementation 'com.zqc.opencc.android.lib:lib-opencc-android:0.8.0@aar'
 }
