@@ -120,7 +120,7 @@ public class ShowDialogUtil {
                 .setTopColor(AppStyleHelper.getColorByAttributeId(context, R.attr.color_primary))
                 .setTitle("赏点小费吧")
                 .setIcon(R.drawable.ic_local_atm_white_48dp)
-                .setMessage("如果这个软件让您喜欢的话，就请不要吝惜吧！\n帮助开发者将更多的想法变成现实\n每份捐赠都是给我的最大鼓励\n\n谢谢了")
+                .setMessage("这个应用以及其中的网易云音乐接口都是我完成的\n\n如果这个软件让您喜欢的话，就请不要吝惜吧！\n\n帮助开发者将更多的想法变成现实\n每份捐赠都是给我的最大鼓励\n\n谢谢了")
                 .setItems(arrayAdapter, new LovelyChoiceDialog.OnItemSelectedListener<String>() {
                     @Override
                     public void onItemSelected(int position, String item) {

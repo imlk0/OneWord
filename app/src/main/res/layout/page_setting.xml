@@ -366,7 +366,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/ll_coolapk_market"
+                android:id="@+id/ll_market"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?android:attr/selectableItemBackground"
@@ -386,7 +386,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="酷安"
+                        android:text="应用市场"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/item_setting_title_ts"
                         android:textStyle="bold" />
@@ -395,6 +395,42 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="记得给我五星呀！"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/item_setting_summary_ts" />
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/ll_qq_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:orientation="horizontal"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingBottom="16dp"
+                    android:paddingTop="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="企鹅群🐧"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/item_setting_title_ts"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="688035539"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/item_setting_summary_ts" />
                 </LinearLayout>

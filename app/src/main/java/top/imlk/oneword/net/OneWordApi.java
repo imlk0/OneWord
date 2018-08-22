@@ -183,14 +183,21 @@ public class OneWordApi {
 
 
                                     if (TextUtils.isEmpty(wordBean.content) && !TextUtils.isEmpty(apiBean.resp_form)) {
-                                        String[] substr = responseBody.split(apiBean.resp_form);
+                                        wordBean = new WordBean();
 
-                                        StringBuilder builder = new StringBuilder();
-                                        for (int i = 0; i < substr.length - 1; i++) {
-                                            builder.append(substr[i]);
+                                        if (responseBody.endsWith(apiBean.resp_form)) {
+                                            wordBean.content = responseBody.substring(0, responseBody.length() - apiBean.resp_form.length());
+                                            wordBean.reference = "";
+                                        } else {
+                                            String[] substr = responseBody.split(apiBean.resp_form);
+
+                                            StringBuilder builder = new StringBuilder();
+                                            for (int i = 0; i < substr.length - 1; i++) {
+                                                builder.append(substr[i]);
+                                            }
+                                            wordBean.content = builder.toString();
+                                            wordBean.reference = substr[substr.length - 1];
                                         }
-                                        wordBean.content = builder.toString();
-                                        wordBean.reference = substr[substr.length - 1];
                                     }
 
                                     if (TextUtils.isEmpty(wordBean.content)) {
@@ -228,4 +235,5 @@ public class OneWordApi {
 
 
     }
+
 }

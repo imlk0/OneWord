@@ -27,7 +27,7 @@ public class OneWordShowPanel extends LinearLayout implements View.OnClickListen
     private TextView tvReference;
 
     private LinearLayout llTargetTag;
-    private TextView tvTargetName;
+    private TextView tvTargetText;
 
     private ImageView ivFavor;
     private ImageView ivSetIt;
@@ -61,7 +61,7 @@ public class OneWordShowPanel extends LinearLayout implements View.OnClickListen
         this.tvContent = findViewById(R.id.tv_content);
         this.tvReference = findViewById(R.id.tv_reference);
 
-        this.tvTargetName = findViewById(R.id.tv_target_text);
+        this.tvTargetText = findViewById(R.id.tv_target_text);
         this.llTargetTag = findViewById(R.id.ll_target_tag);
         this.llTargetTag.setOnClickListener(this);
 
@@ -99,16 +99,22 @@ public class OneWordShowPanel extends LinearLayout implements View.OnClickListen
     }
 
     public void updateReference(String str) {
-        this.tvReference.setText("——" + str);
+        if (TextUtils.isEmpty(str)) {
+            this.tvReference.setVisibility(GONE);
+            this.tvReference.setText("");
+        } else {
+//            this.tvReference.setVisibility(VISIBLE);
+            this.tvReference.setText("——" + str);
+        }
     }
 
     public void updateTarget(String str) {
         if (TextUtils.isEmpty(str)) {
             llTargetTag.setVisibility(GONE);
-            tvTargetName.setText("");
+            tvTargetText.setText("");
         } else {
             llTargetTag.setVisibility(VISIBLE);
-            tvTargetName.setText(str);
+            tvTargetText.setText(str);
         }
     }
 

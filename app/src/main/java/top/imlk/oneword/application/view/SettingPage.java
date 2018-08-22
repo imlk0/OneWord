@@ -18,7 +18,6 @@ import top.imlk.oneword.application.client.activity.AdjustStyleActivity;
 import top.imlk.oneword.application.client.activity.AllApiActivity;
 import top.imlk.oneword.application.client.activity.CustomWordActivity;
 import top.imlk.oneword.application.client.activity.MainActivity;
-import top.imlk.oneword.application.client.helper.NotificationHelper;
 import top.imlk.oneword.util.BroadcastSender;
 import top.imlk.oneword.util.SharedPreferencesUtil;
 import top.imlk.oneword.util.ShowDialogUtil;
@@ -44,7 +43,8 @@ public class SettingPage extends android.support.v4.widget.NestedScrollView impl
 
     public LinearLayout llShowDonate;
     public LinearLayout llShowAboutApp;
-    public LinearLayout llCoolapkMarket;
+    public LinearLayout llMarket;
+    public LinearLayout llQQGroup;
     public LinearLayout llShowThxOpenSource;
     public LinearLayout llVersion;
 
@@ -99,8 +99,11 @@ public class SettingPage extends android.support.v4.widget.NestedScrollView impl
         llShowDonate = findViewById(R.id.ll_show_donate);
         llShowDonate.setOnClickListener(this);
 
-        llCoolapkMarket = findViewById(R.id.ll_coolapk_market);
-        llCoolapkMarket.setOnClickListener(this);
+        llMarket = findViewById(R.id.ll_market);
+        llMarket.setOnClickListener(this);
+
+        llQQGroup = findViewById(R.id.ll_qq_group);
+        llQQGroup.setOnClickListener(this);
 
 
         llShowThxOpenSource = findViewById(R.id.ll_show_thx_open_source);
@@ -156,8 +159,11 @@ public class SettingPage extends android.support.v4.widget.NestedScrollView impl
             case R.id.ll_show_donate:
                 ShowDialogUtil.showDonateDialog(mainActivity);
                 break;
-            case R.id.ll_coolapk_market:
-                mainActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.coolapk.com/apk/top.imlk.oneword")));
+            case R.id.ll_market:
+                mainActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + BuildConfig.APPLICATION_ID)));
+                break;
+            case R.id.ll_qq_group:
+                mainActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("mqqwpa://im/chat?chat_type=group&uin=688035539&version=1")));
                 break;
             case R.id.ll_show_thx_open_source:
                 ShowDialogUtil.showOpenSourceProjectDialog(mainActivity);

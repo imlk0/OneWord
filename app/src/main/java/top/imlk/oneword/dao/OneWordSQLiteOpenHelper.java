@@ -555,8 +555,7 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('Hitokoto-其他', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"g\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
         db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('yiju-一句', 'http://yiju.ml/api/word.php', 'GET', '', '——', 1)");
 
-        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('网易云音乐歌评-民谣', 'http://w4y.imlk.top/simpleApi', 'GET', '{\"cat\":\"d\"}', '{\n    \"content\": \"[content]\",\n    \"reference\": \"[reference]\",\n    \"target_url\": \"[target_url]\",\n    \"target_text\": \"[target_text]\"\n}', 1)");
-
+        insertInternalApi_v5(db);
 
     }
 
@@ -634,13 +633,30 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
             case 3:
             case 4:
                 db.execSQL("ALTER TABLE all_oneword ADD COLUMN target_text TEXT");
-                db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('网易云音乐歌评-民谣', 'http://w4y.imlk.top/simpleApi', 'GET', '{\"cat\":\"d\"}', '{\n    \"content\": \"[content]\",\n    \"reference\": \"[reference]\",\n    \"target_url\": \"[target_url]\",\n    \"target_text\": \"[target_text]\"\n}', 1)");
-
+                insertInternalApi_v5(db);
         }
-
 
     }
 
+
+    private static void insertInternalApi_v5(SQLiteDatabase db) {
+
+        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('网易云音乐歌评-华语', 'http://w4y.imlk.top/thin_api', 'GET', '{\"cat\":\"a\"}', '{\n    \"content\": \"[content]\",\n    \"reference\": \"[reference]\",\n    \"target_url\": \"[target_url]\",\n    \"target_text\": \"[target_text]\"\n}', 1)");
+        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('网易云音乐歌评-流行', 'http://w4y.imlk.top/thin_api', 'GET', '{\"cat\":\"b\"}', '{\n    \"content\": \"[content]\",\n    \"reference\": \"[reference]\",\n    \"target_url\": \"[target_url]\",\n    \"target_text\": \"[target_text]\"\n}', 1)");
+        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('网易云音乐歌评-摇滚', 'http://w4y.imlk.top/thin_api', 'GET', '{\"cat\":\"c\"}', '{\n    \"content\": \"[content]\",\n    \"reference\": \"[reference]\",\n    \"target_url\": \"[target_url]\",\n    \"target_text\": \"[target_text]\"\n}', 1)");
+        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('网易云音乐歌评-民谣', 'http://w4y.imlk.top/thin_api', 'GET', '{\"cat\":\"d\"}', '{\n    \"content\": \"[content]\",\n    \"reference\": \"[reference]\",\n    \"target_url\": \"[target_url]\",\n    \"target_text\": \"[target_text]\"\n}', 1)");
+        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('网易云音乐歌评-电子', 'http://w4y.imlk.top/thin_api', 'GET', '{\"cat\":\"e\"}', '{\n    \"content\": \"[content]\",\n    \"reference\": \"[reference]\",\n    \"target_url\": \"[target_url]\",\n    \"target_text\": \"[target_text]\"\n}', 1)");
+        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('网易云音乐歌评-轻音乐', 'http://w4y.imlk.top/thin_api', 'GET', '{\"cat\":\"f\"}', '{\n    \"content\": \"[content]\",\n    \"reference\": \"[reference]\",\n    \"target_url\": \"[target_url]\",\n    \"target_text\": \"[target_text]\"\n}', 1)");
+        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('网易云音乐歌评-影视原声', 'http://w4y.imlk.top/thin_api', 'GET', '{\"cat\":\"g\"}', '{\n    \"content\": \"[content]\",\n    \"reference\": \"[reference]\",\n    \"target_url\": \"[target_url]\",\n    \"target_text\": \"[target_text]\"\n}', 1)");
+        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('网易云音乐歌评-ACG', 'http://w4y.imlk.top/thin_api', 'GET', '{\"cat\":\"h\"}', '{\n    \"content\": \"[content]\",\n    \"reference\": \"[reference]\",\n    \"target_url\": \"[target_url]\",\n    \"target_text\": \"[target_text]\"\n}', 1)");
+        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('网易云音乐歌评-夜晚', 'http://w4y.imlk.top/thin_api', 'GET', '{\"cat\":\"i\"}', '{\n    \"content\": \"[content]\",\n    \"reference\": \"[reference]\",\n    \"target_url\": \"[target_url]\",\n    \"target_text\": \"[target_text]\"\n}', 1)");
+        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('网易云音乐歌评-学习', 'http://w4y.imlk.top/thin_api', 'GET', '{\"cat\":\"j\"}', '{\n    \"content\": \"[content]\",\n    \"reference\": \"[reference]\",\n    \"target_url\": \"[target_url]\",\n    \"target_text\": \"[target_text]\"\n}', 1)");
+        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('网易云音乐歌评-运动', 'http://w4y.imlk.top/thin_api', 'GET', '{\"cat\":\"k\"}', '{\n    \"content\": \"[content]\",\n    \"reference\": \"[reference]\",\n    \"target_url\": \"[target_url]\",\n    \"target_text\": \"[target_text]\"\n}', 1)");
+        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('网易云音乐歌评-怀旧', 'http://w4y.imlk.top/thin_api', 'GET', '{\"cat\":\"l\"}', '{\n    \"content\": \"[content]\",\n    \"reference\": \"[reference]\",\n    \"target_url\": \"[target_url]\",\n    \"target_text\": \"[target_text]\"\n}', 1)");
+        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('网易云音乐歌评-清新', 'http://w4y.imlk.top/thin_api', 'GET', '{\"cat\":\"m\"}', '{\n    \"content\": \"[content]\",\n    \"reference\": \"[reference]\",\n    \"target_url\": \"[target_url]\",\n    \"target_text\": \"[target_text]\"\n}', 1)");
+        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('网易云音乐歌评-治愈', 'http://w4y.imlk.top/thin_api', 'GET', '{\"cat\":\"n\"}', '{\n    \"content\": \"[content]\",\n    \"reference\": \"[reference]\",\n    \"target_url\": \"[target_url]\",\n    \"target_text\": \"[target_text]\"\n}', 1)");
+
+    }
 
     private static String nullToVoid(String str) {
         return str == null ? "" : str;
