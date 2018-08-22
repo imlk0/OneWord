@@ -15,9 +15,7 @@ import android.widget.Toast;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.tencent.bugly.crashreport.CrashReport;
 
-import top.imlk.oneword.application.client.service.OneWordAutoRefreshService;
 import top.imlk.oneword.bean.ApiBean;
 import top.imlk.oneword.bean.WordBean;
 import top.imlk.oneword.R;
@@ -50,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements WordRequestObserv
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        killRunningServices();
+        fixServiceWhenStartUp();
 
 //        setTheme(R.style.GreenTheme);
 
@@ -184,8 +182,15 @@ public class MainActivity extends AppCompatActivity implements WordRequestObserv
     protected void onDestroy() {
         OneWordSQLiteOpenHelper.closeDataBase();
 
-        if ((!isOnConfigurationChanged) && SharedPreferencesUtil.isAutoRefreshOpened(this)) {
-            startAutoUpdateService();
+        if (!isOnConfigurationChanged) {
+            if (SharedPreferencesUtil.isAutoRefreshOpened(this)) {
+                BroadcastSender.startAutoRefresh(this);
+            }
+
+            if (SharedPreferencesUtil.isShowNotificationOneWordOpened(this)) {
+                BroadcastSender.startShowNitificationOneword(this);
+            }
+
         }
         super.onDestroy();
 //        System.exit(0);
@@ -206,26 +211,17 @@ public class MainActivity extends AppCompatActivity implements WordRequestObserv
     }
 
 
-    public void killRunningServices() {
-//        if(SharedPreferencesUtil.isAutoRefreshOpened(this)){
-//
-//            Intent intent = new Intent(this, OneWordAutoRefreshService.class);
-//
-//            intent.setAction(CMD_SERVICES_STOP_SERVICE);
-//            startService(intent);
-//    }
+    public void fixServiceWhenStartUp() {
 
-        Intent intent = new Intent(this, OneWordAutoRefreshService.class);
-        this.stopService(intent);
+        BroadcastSender.stopAutoRefresh(this);
 
-    }
+        if (SharedPreferencesUtil.isShowNotificationOneWordOpened(this)) {
+            BroadcastSender.startShowNitificationOneword(this);
+        }
 
+//        Intent intent = new Intent(this, OneWordAutoRefreshService.class);
+//        this.stopService(intent);
 
-    public void startAutoUpdateService() {
-        Intent intent = new Intent(this, OneWordAutoRefreshService.class);
-
-        intent.setAction(BroadcastSender.CMD_SERVICES_START_AUTO_REFRESH_SERVICE);
-        startService(intent);
     }
 
 

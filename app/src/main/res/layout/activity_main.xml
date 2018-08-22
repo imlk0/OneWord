@@ -55,6 +55,7 @@
                         <!--android:tint="?attr/color_primary_light"-->
                         <!--android:visibility="gone" />-->
 
+                        <!--TODO use google's AutoSizeTeView-->
                         <com.lb.auto_fit_textview.AutoResizeTextView
                             android:id="@+id/tv_content"
                             android:layout_width="match_parent"
@@ -85,7 +86,7 @@
                             android:textIsSelectable="true"
                             android:textSize="@dimen/tv_msg_reference_textsize"
                             android:textStyle="italic"
-                            app:minTextSize="7sp" />
+                            app:autofit_minTextSize="7sp" />
 
                         <include
                             layout="@layout/tag_oneword_target"

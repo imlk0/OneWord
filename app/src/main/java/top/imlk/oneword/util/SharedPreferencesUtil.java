@@ -30,7 +30,12 @@ public class SharedPreferencesUtil {
     public static final String SHARED_PER_AUTO_REFRESH_STATE = "SHARED_PER_AUTO_REFRESH_STATE";
     public static final String SHARED_PER_KEY_IS_REFRESH_OPENED = "is_refresh_opened";
     public static final String SHARED_PER_KEY_REFRESH_MODE = "frequency_to_refresh";
-    public static final String SHARED_PER_KEY_IS_SHOW_NOTIFICATION_TITLE_OPENED = "is_show_notification_title_opened";
+//    public static final String SHARED_PER_KEY_IS_SHOW_NOTIFICATION_TITLE_OPENED = "is_show_notification_title_opened";
+
+
+    public static final String SHARED_PER_USER_PER = "SHARED_PER_USER_PER";
+    public static final String SHARED_PER_KEY_IS_SHOW_NOTIFICATION_ONEWORD_OPENED = "is_show_notification_oneword_opened";
+
 
     public static final String SHARED_PER_USER_INF = "SHARED_PER_USER_INF";
     public static final String SHARED_PER_KEY_FIRSTTIME_INSTALL = "is_first_time_install";
@@ -123,12 +128,12 @@ public class SharedPreferencesUtil {
     }
 
 
-    public static boolean isShowNotificationTitleOpened(Context context) {
-        return getBooleanValue(context, SHARED_PER_AUTO_REFRESH_STATE, SHARED_PER_KEY_IS_SHOW_NOTIFICATION_TITLE_OPENED, false);
+    public static boolean isShowNotificationOneWordOpened(Context context) {
+        return getBooleanValue(context, SHARED_PER_USER_PER, SHARED_PER_KEY_IS_SHOW_NOTIFICATION_ONEWORD_OPENED, false);
     }
 
-    public static void setShowNotificationTitleOpened(Context context, boolean opened) {
-        setBooleanValue(context, SHARED_PER_AUTO_REFRESH_STATE, SHARED_PER_KEY_IS_SHOW_NOTIFICATION_TITLE_OPENED, opened);
+    public static void setShowNotificationOneWordOpened(Context context, boolean opened) {
+        setBooleanValue(context, SHARED_PER_USER_PER, SHARED_PER_KEY_IS_SHOW_NOTIFICATION_ONEWORD_OPENED, opened);
     }
 
     public static boolean hasBeenShowDonate(Context context) {
@@ -159,7 +164,7 @@ public class SharedPreferencesUtil {
     public static OneWordAutoRefreshService.Mode getRefreshMode(Context context) {
 
         SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PER_AUTO_REFRESH_STATE, Context.MODE_PRIVATE);
-        return OneWordAutoRefreshService.Mode.valueOf(sharedPreferences.getString(SHARED_PER_KEY_REFRESH_MODE, OneWordAutoRefreshService.Mode.TWICE_LOCK.toString()));
+        return OneWordAutoRefreshService.Mode.valueOf(sharedPreferences.getString(SHARED_PER_KEY_REFRESH_MODE, OneWordAutoRefreshService.Mode.defaultMode().toString()));
 
     }
 

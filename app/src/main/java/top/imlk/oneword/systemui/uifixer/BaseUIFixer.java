@@ -1,28 +1,14 @@
 package top.imlk.oneword.systemui.uifixer;
 
-import android.app.KeyguardManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.os.RemoteException;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.WindowManagerGlobal;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.android.internal.policy.IKeyguardDismissCallback;
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 
 import de.robv.android.xposed.XposedBridge;
 import top.imlk.oneword.bean.WordBean;
 import top.imlk.oneword.bean.WordViewConfig;
 import top.imlk.oneword.systemui.view.OneWordView;
 import top.imlk.oneword.util.BroadcastSender;
-
-import static android.content.Context.KEYGUARD_SERVICE;
 
 
 /**
@@ -86,7 +72,7 @@ public class BaseUIFixer implements View.OnClickListener {
     public void onClick(View v) {
         WordBean wordBean = oneWordView.getCurWordBean();
         if (wordBean != null) {
-            BroadcastSender.sendStartMainActivityWhenClickedBroadcast(v.getContext(), wordBean);
+            BroadcastSender.startMainActivityWhenClicked(v.getContext(), wordBean);
         }
     }
 }

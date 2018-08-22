@@ -18,6 +18,8 @@ import top.imlk.oneword.application.client.activity.AdjustStyleActivity;
 import top.imlk.oneword.application.client.activity.AllApiActivity;
 import top.imlk.oneword.application.client.activity.CustomWordActivity;
 import top.imlk.oneword.application.client.activity.MainActivity;
+import top.imlk.oneword.application.client.helper.NotificationHelper;
+import top.imlk.oneword.util.BroadcastSender;
 import top.imlk.oneword.util.SharedPreferencesUtil;
 import top.imlk.oneword.util.ShowDialogUtil;
 
@@ -31,8 +33,8 @@ public class SettingPage extends android.support.v4.widget.NestedScrollView impl
     public SwitchCompat swOpenAutoRefresh;
     public LinearLayout llOpenAutoRefresh;
 
-    public SwitchCompat swOpenShowNotificationTitle;
-    public LinearLayout llOpenShowNotificationTitle;
+    public SwitchCompat swOpenShowNotificationOneWord;
+    public LinearLayout llOpenShowNotificationOneWord;
 
     public LinearLayout llSetRefreshMode;
     public LinearLayout llSetCustomOneWord;
@@ -70,12 +72,12 @@ public class SettingPage extends android.support.v4.widget.NestedScrollView impl
         llOpenAutoRefresh = findViewById(R.id.ll_open_auto_refresh);
         llOpenAutoRefresh.setOnClickListener(this);
 
-        swOpenShowNotificationTitle = findViewById(R.id.sw_open_show_notification_title);
-        swOpenShowNotificationTitle.setChecked(SharedPreferencesUtil.isShowNotificationTitleOpened(mainActivity));
-        swOpenShowNotificationTitle.setOnCheckedChangeListener(this);
+        swOpenShowNotificationOneWord = findViewById(R.id.sw_open_show_notification_oneword);
+        swOpenShowNotificationOneWord.setChecked(SharedPreferencesUtil.isShowNotificationOneWordOpened(mainActivity));
+        swOpenShowNotificationOneWord.setOnCheckedChangeListener(this);
 
-        llOpenShowNotificationTitle = findViewById(R.id.ll_open_show_notification_title);
-        llOpenShowNotificationTitle.setOnClickListener(this);
+        llOpenShowNotificationOneWord = findViewById(R.id.ll_open_show_notification_oneword);
+        llOpenShowNotificationOneWord.setOnClickListener(this);
 
         llSetRefreshMode = findViewById(R.id.ll_set_refresh_mode);
         llSetRefreshMode.setOnClickListener(this);
@@ -121,8 +123,8 @@ public class SettingPage extends android.support.v4.widget.NestedScrollView impl
                 swOpenAutoRefresh.setChecked(!swOpenAutoRefresh.isChecked());
                 break;
 
-            case R.id.ll_open_show_notification_title:
-                swOpenShowNotificationTitle.setChecked(!swOpenShowNotificationTitle.isChecked());
+            case R.id.ll_open_show_notification_oneword:
+                swOpenShowNotificationOneWord.setChecked(!swOpenShowNotificationOneWord.isChecked());
                 break;
 
             case R.id.ll_set_refresh_mode:
@@ -167,6 +169,7 @@ public class SettingPage extends android.support.v4.widget.NestedScrollView impl
 
     }
 
+
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         switch (buttonView.getId()) {
@@ -177,8 +180,15 @@ public class SettingPage extends android.support.v4.widget.NestedScrollView impl
                 }
                 break;
 
-            case R.id.sw_open_show_notification_title:
-                SharedPreferencesUtil.setShowNotificationTitleOpened(mainActivity, isChecked);
+            case R.id.sw_open_show_notification_oneword:
+                SharedPreferencesUtil.setShowNotificationOneWordOpened(mainActivity, isChecked);
+                if (isChecked) {
+                    Toast.makeText(mainActivity, "若通知无法显示，请注意：\n是否曾在系统设置中屏蔽通知\n排除内存清理软件", Toast.LENGTH_LONG).show();
+
+                    BroadcastSender.startShowNitificationOneword(mainActivity);
+                } else {
+                    BroadcastSender.stopShowNitificationOneword(mainActivity);
+                }
                 break;
         }
     }

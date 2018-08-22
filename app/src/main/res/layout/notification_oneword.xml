@@ -8,27 +8,27 @@
     android:paddingRight="16dp"
     android:paddingTop="12dp">
 
-    <LinearLayout
-        android:id="@+id/ll_notification_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:visibility="visible">
+    <!--<LinearLayout-->
+    <!--android:id="@+id/ll_notification_title"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginBottom="4dp"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:orientation="horizontal"-->
+    <!--android:visibility="visible">-->
 
-        <ImageView
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_marginRight="4dp"
-            android:src="@mipmap/ic_oneword_icon" />
+    <!--<ImageView-->
+    <!--android:layout_width="18dp"-->
+    <!--android:layout_height="18dp"-->
+    <!--android:layout_marginRight="4dp"-->
+    <!--android:src="@mipmap/ic_oneword_icon" />-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="锁屏一言·自动刷新服务"
-            android:textSize="12sp" />
-    </LinearLayout>
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="锁屏一言·自动刷新服务"-->
+    <!--android:textSize="12sp" />-->
+    <!--</LinearLayout>-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -77,6 +77,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:gravity="right"
                 android:paddingEnd="4.0dip"
                 android:text="一言出处"
                 android:textColor="#8A000000"

@@ -81,7 +81,7 @@
 
 
             <LinearLayout
-                android:id="@+id/ll_open_show_notification_title"
+                android:id="@+id/ll_open_show_notification_oneword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?android:attr/selectableItemBackground"
@@ -100,7 +100,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="通知上显示“锁屏一言”字样标题"
+                        android:text="于通知上显示锁屏一言"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/item_setting_title_ts"
                         android:textStyle="bold" />
@@ -108,7 +108,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="由于通知在锁屏界面时有显示高度限制，关闭此选项可在通知上留出空间显示更多行的一言内容，但没有标题会显得突兀"
+                        android:text="适用于无法使用xp模块方式的用户，此选项开启在通知上显示的一言"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/item_setting_summary_ts" />
                 </LinearLayout>
@@ -120,7 +120,7 @@
                     android:paddingLeft="16dp">
 
                     <android.support.v7.widget.SwitchCompat
-                        android:id="@+id/sw_open_show_notification_title"
+                        android:id="@+id/sw_open_show_notification_oneword"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"

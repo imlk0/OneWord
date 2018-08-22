@@ -25,35 +25,69 @@ import static android.content.Context.NOTIFICATION_SERVICE;
  */
 public class NotificationHelper {
 
+    private NotificationCompat.Builder showingAutoRefreshServiceBuilder;
 
-    private NotificationCompat.Builder builder;
-    private RemoteViews remoteViews;
+    public synchronized Notification getShowingAutoRefreshServiceRunningNotification(Context context) {
+        if (showingAutoRefreshServiceBuilder == null) {
+
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                    .setContentTitle("锁屏一言·自动刷新服务")
+                    .setContentText("通知用于后台服务保活，可长按选择隐藏，请勿黑阈我")
+                    .setSmallIcon(R.mipmap.ic_oneword_icon)
+                    .setAutoCancel(false);
+
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+                NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, "锁屏一言·一言", NotificationManager.IMPORTANCE_HIGH);
+                notificationChannel.enableLights(false);
+                notificationChannel.setShowBadge(false);
+                notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+
+                NotificationManager manager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
+                manager.createNotificationChannel(notificationChannel);
+//                builder.setCustomContentView(remoteViews);
+            }
+
+
+            builder.setChannelId(CHANNEL_ID);
+            builder.setPriority(NotificationCompat.PRIORITY_MAX);
+
+            this.showingAutoRefreshServiceBuilder = builder;
+        }
+
+
+        showingAutoRefreshServiceBuilder.setWhen(System.currentTimeMillis());
+
+        return showingAutoRefreshServiceBuilder.build();
+
+    }
+
+
+    private NotificationCompat.Builder showingCurOnewordBuilder;
+    private RemoteViews showingCurOnewordRemoteViews;
 
     private static final String CHANNEL_ID = "top.imlk.oneword.notification_channel";
 
     public synchronized Notification getShowingCurOnewordNotification(Context context, WordBean currentWord) {
-
-        if (builder == null) {
+        if (currentWord == null) {
+            currentWord = WordBean.generateDefaultBean();
+        }
+        if (showingCurOnewordBuilder == null) {
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                    .setContentTitle("锁屏一言·自动刷新服务")
+                    .setContentTitle("锁屏一言·一言")
                     .setSmallIcon(R.mipmap.ic_oneword_icon)
                     .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_oneword_icon))
                     .setAutoCancel(false)
-                    .setContentIntent(PendingIntent.getActivity(context, 1, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT))
+                    .setContentIntent(PendingIntent.getActivity(context, 1, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT));
 //                .setDeleteIntent(PendingIntent.getBroadcast(this, 0, new Intent(), PendingIntent.FLAG_CANCEL_CURRENT))
-                    .setWhen(System.currentTimeMillis());
 
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.notification_oneword);
 
-
-            if (!SharedPreferencesUtil.isShowNotificationTitleOpened(context)) {
-                remoteViews.setViewVisibility(R.id.ll_notification_title, View.GONE);
-            }
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
-                NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, "锁屏一言自动刷新服务", NotificationManager.IMPORTANCE_HIGH);
+                NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, "锁屏一言·一言", NotificationManager.IMPORTANCE_HIGH);
                 notificationChannel.enableLights(false);
                 notificationChannel.setShowBadge(false);
                 notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
@@ -68,27 +102,34 @@ public class NotificationHelper {
             builder.setPriority(NotificationCompat.PRIORITY_MAX);
 
 
-            this.builder = builder;
-            this.remoteViews = remoteViews;
+            this.showingCurOnewordBuilder = builder;
+            this.showingCurOnewordRemoteViews = remoteViews;
 
         }
 
-        remoteViews.setTextViewText(R.id.tv_content, currentWord.content);
+        showingCurOnewordRemoteViews.setTextViewText(R.id.tv_content, currentWord.content);
 
         if (TextUtils.isEmpty(currentWord.reference)) {
-            remoteViews.setTextViewText(R.id.tv_reference, "");
-            remoteViews.setViewVisibility(R.id.tv_reference, View.GONE);
+            showingCurOnewordRemoteViews.setTextViewText(R.id.tv_reference, "");
+            showingCurOnewordRemoteViews.setViewVisibility(R.id.tv_reference, View.GONE);
         } else {
-            remoteViews.setTextViewText(R.id.tv_reference, "——" + currentWord.reference);
-            remoteViews.setViewVisibility(R.id.tv_reference, View.VISIBLE);
+            showingCurOnewordRemoteViews.setTextViewText(R.id.tv_reference, "——" + currentWord.reference);
+            showingCurOnewordRemoteViews.setViewVisibility(R.id.tv_reference, View.VISIBLE);
         }
 
 
-        builder.setCustomContentView(remoteViews);
-        builder.setCustomBigContentView(remoteViews);
+        showingCurOnewordBuilder.setCustomContentView(showingCurOnewordRemoteViews);
+        showingCurOnewordBuilder.setCustomBigContentView(showingCurOnewordRemoteViews);
 
-        return builder.build();
+        showingCurOnewordBuilder.setWhen(System.currentTimeMillis());
+
+        return showingCurOnewordBuilder.build();
     }
 
+
+    public static void notify(Context context, int id, Notification notification) {
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(id, notification);
+    }
 
 }

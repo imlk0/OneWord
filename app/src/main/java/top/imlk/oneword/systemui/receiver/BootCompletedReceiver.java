@@ -3,10 +3,8 @@ package top.imlk.oneword.systemui.receiver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.util.Log;
 
-import top.imlk.oneword.application.client.service.OneWordAutoRefreshService;
 import top.imlk.oneword.util.BroadcastSender;
 import top.imlk.oneword.util.SharedPreferencesUtil;
 
@@ -32,13 +30,11 @@ public class BootCompletedReceiver extends BroadcastReceiver {
                 BroadcastSender.sendReloadWordViewConfigBySelfBroadcast(context);
 
                 if (SharedPreferencesUtil.isAutoRefreshOpened(context)) {
-                    Intent service = new Intent(context, OneWordAutoRefreshService.class);
-                    intent.setAction(BroadcastSender.CMD_SERVICES_START_AUTO_REFRESH_SERVICE);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        context.startForegroundService(service);
-                    } else {
-                        context.startService(service);
-                    }
+                    BroadcastSender.startAutoRefresh(context);
+                }
+
+                if (SharedPreferencesUtil.isShowNotificationOneWordOpened(context)) {
+                    BroadcastSender.startShowNitificationOneword(context);
                 }
 
 
