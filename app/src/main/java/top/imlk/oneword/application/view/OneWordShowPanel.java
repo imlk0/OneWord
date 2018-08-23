@@ -1,6 +1,7 @@
 package top.imlk.oneword.application.view;
 
 import android.annotation.TargetApi;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -171,8 +172,12 @@ public class OneWordShowPanel extends LinearLayout implements View.OnClickListen
                 break;
             case R.id.ll_target_tag:
                 if (!TextUtils.isEmpty(curWordBean.target_url)) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(curWordBean.target_url));
-                    mainActivity.startActivity(intent);
+                    try {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(curWordBean.target_url));
+                        mainActivity.startActivity(intent);
+                    } catch (ActivityNotFoundException activityNotFoundException) {
+                        Toast.makeText(mainActivity, "没有找到能打开此链接的应用：\n" + curWordBean.target_url, Toast.LENGTH_SHORT).show();
+                    }
                 }
                 break;
         }
