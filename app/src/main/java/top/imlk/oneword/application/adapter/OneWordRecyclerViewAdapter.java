@@ -200,7 +200,7 @@ public class OneWordRecyclerViewAdapter extends RecyclerView.Adapter implements 
 
                         updateFavorStateImage(!favor);
 
-                        Toast.makeText(mainActivity, favor ? "不喜欢" : "喜欢", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mainActivity, favor ? "取消喜欢" : "喜欢", Toast.LENGTH_SHORT).show();
                     }
 
                     break;

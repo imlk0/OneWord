@@ -106,7 +106,7 @@ public class ShowDialogUtil {
                 .setTopColor(AppStyleHelper.getColorByAttributeId(context, R.attr.color_primary))
                 .setIcon(R.drawable.ic_extension_black_48dp)
                 .setTitle("模块未被启用")
-                .setMessage("模块似乎并未被启用，这种情况下，将不能正常使用锁屏一言，请前往XposedInstaller模块列表勾选启用锁屏一言模块。\n\n但你仍然可以开启自动刷新服务，然后享受在锁屏通知上显示的锁屏一言，那也会是挺不错的体验，事实上我的一台没有Xposed的设备就是这样玩的")
+                .setMessage("模块似乎并未被启用，这种情况下，将无法在锁屏上嵌入一言，请前往XposedInstaller模块列表勾选启用锁屏一言模块。\n\n\n你也可以开启通知栏的一言，那也会是挺不错的体验，适用于没有安装Xposed框架或者不起作用的设备")
                 .show();
 
 

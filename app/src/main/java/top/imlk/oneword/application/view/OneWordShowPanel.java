@@ -10,6 +10,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,11 +18,12 @@ import top.imlk.oneword.application.client.activity.MainActivity;
 import top.imlk.oneword.bean.WordBean;
 import top.imlk.oneword.R;
 import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
+import top.imlk.oneword.util.ShareUtil;
 
 /**
  * Created by imlk on 2018/5/26.
  */
-public class OneWordShowPanel extends LinearLayout implements View.OnClickListener {
+public class OneWordShowPanel extends LinearLayout implements View.OnClickListener, View.OnLongClickListener {
 
     private TextView tvContent;
     private TextView tvReference;
@@ -70,6 +72,10 @@ public class OneWordShowPanel extends LinearLayout implements View.OnClickListen
         this.ivFavor.setOnClickListener(this);
         this.ivSetIt = findViewById(R.id.iv_msg_set);
         this.ivSetIt.setOnClickListener(this);
+
+        this.tvContent.setOnLongClickListener(this);
+        this.tvReference.setOnLongClickListener(this);
+        this.setOnLongClickListener(this);
 
 
         if (curWordBean == null) {
@@ -192,4 +198,19 @@ public class OneWordShowPanel extends LinearLayout implements View.OnClickListen
         }
     }
 
+    @Override
+    public boolean onLongClick(View v) {
+
+        switch (v.getId()) {
+
+            case R.id.tv_content:
+            case R.id.tv_reference:
+            case R.id.one_word_show_panel:
+                if (curWordBean != null) {
+                    ShareUtil.shareOneWord(mainActivity, curWordBean);
+                }
+                return true;
+        }
+        return false;
+    }
 }

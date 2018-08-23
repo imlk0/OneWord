@@ -88,7 +88,6 @@ public class OneWordApi {
             @Override
             public void subscribe(final ObservableEmitter<WordBean> emitter) throws Exception {
 
-
                 try {
 
                     if (apiBean == null) {
@@ -217,6 +216,7 @@ public class OneWordApi {
 
                                 RuntimeException re = new RuntimeException("responseBody=\n" + responseBody + "\napiBean=\n" + apiBean, throwable);
 
+                                CrashReport.postCatchedException(re);
                                 BugUtil.printAndSaveCrashThrow2File(re);
                                 emitter.onError(re);
                             }

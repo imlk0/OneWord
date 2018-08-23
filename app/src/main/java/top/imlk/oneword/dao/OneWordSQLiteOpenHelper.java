@@ -297,11 +297,20 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 
 
-    public void clearToShow() {
-        clearSubTable(TABLE_TOSHOW);
+    public void clearHistory() {
+        clearTable(TABLE_HISTORY);
     }
 
-    private void clearSubTable(String tableName) {
+    public void clearFavor() {
+        clearTable(TABLE_FAVOR);
+    }
+
+    // 在对api进行修改后需要清空
+    public void clearToShow() {
+        clearTable(TABLE_TOSHOW);
+    }
+
+    private void clearTable(String tableName) {
         synchronized (this) {
             SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
@@ -411,6 +420,7 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
         }
     }
 
+
     public ArrayList<ApiBean> queryAllApi() {
         synchronized (this) {
             SQLiteDatabase sqLiteDatabase = getReadableDatabase();
@@ -497,9 +507,16 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
 
             sqLiteDatabase.insertWithOnConflict(TABLE_API, null, contentValues, CONFLICT_REPLACE);
 
+
+            clearToShow();
         }
     }
 
+    public void clearAllApi() {
+        clearTable(TABLE_API);
+
+        clearToShow();
+    }
 
     public void removeApiById(int id) {
         if (id <= 0) {
@@ -510,6 +527,7 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
 
             sqLiteDatabase.execSQL("DELETE FROM " + TABLE_API + " WHERE " + KEY_ID + " =?", new Object[]{id});
 
+            clearToShow();
         }
     }
 
@@ -541,22 +559,12 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE INDEX index_toshow_addedat ON toshow (added_at DESC)");
         db.execSQL("CREATE INDEX index_toshow_onewordid ON toshow (oneword_id)");
 
-        db.execSQL("CREATE TRIGGER clear_toshow_when_api_deleted AFTER DELETE ON api FOR EACH ROW BEGIN DELETE FROM toshow; END");
-        db.execSQL("CREATE TRIGGER clear_toshow_when_api_enable_updated AFTER UPDATE OF enabled ON api FOR EACH ROW BEGIN DELETE FROM toshow; END");
+//        db.execSQL("CREATE TRIGGER clear_toshow_when_api_deleted AFTER DELETE ON api FOR EACH ROW BEGIN DELETE FROM toshow; END");
+//        db.execSQL("CREATE TRIGGER clear_toshow_when_api_enable_updated AFTER UPDATE OF enabled ON api FOR EACH ROW BEGIN DELETE FROM toshow; END");
 
         db.execSQL("COMMIT TRANSACTION");
 
-        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('Hitokoto-动漫', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"a\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
-        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('Hitokoto-漫画', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"b\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
-        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('Hitokoto-游戏', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"c\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
-        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('Hitokoto-小说', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"d\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
-        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('Hitokoto-原创', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"e\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
-        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('Hitokoto-来自网络', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"f\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
-        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('Hitokoto-其他', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"g\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
-        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('yiju-一句', 'http://yiju.ml/api/word.php', 'GET', '', '——', 1)");
-
-        insertInternalApi_v5(db);
-
+        staticInsertInternalApi(db);
     }
 
 
@@ -633,13 +641,38 @@ public class OneWordSQLiteOpenHelper extends SQLiteOpenHelper {
             case 3:
             case 4:
                 db.execSQL("ALTER TABLE all_oneword ADD COLUMN target_text TEXT");
-                insertInternalApi_v5(db);
+                staticInsertInternalApi_v5(db);
         }
 
     }
 
 
-    private static void insertInternalApi_v5(SQLiteDatabase db) {
+    public void insertInternalApi() {
+        synchronized (this) {
+            staticInsertInternalApi(getWritableDatabase());
+        }
+    }
+
+    private static void staticInsertInternalApi(SQLiteDatabase db) {
+        staticInsertInternalApi_v2(db);
+        staticInsertInternalApi_v5(db);
+
+    }
+
+    private static void staticInsertInternalApi_v2(SQLiteDatabase db) {
+
+        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('Hitokoto-动漫', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"a\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
+        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('Hitokoto-漫画', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"b\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
+        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('Hitokoto-游戏', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"c\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
+        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('Hitokoto-小说', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"d\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
+        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('Hitokoto-原创', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"e\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
+        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('Hitokoto-来自网络', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"f\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
+        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('Hitokoto-其他', 'https://v1.hitokoto.cn', 'GET', '{\"c\":\"g\"}', '{\n  \"hitokoto\": \"[content]\",\n  \"from\": \"[reference]\"\n}', 1)");
+        db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('yiju-一句', 'http://yiju.ml/api/word.php', 'GET', '', '——', 1)");
+
+    }
+
+    private static void staticInsertInternalApi_v5(SQLiteDatabase db) {
 
         db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('网易云音乐歌评-华语', 'http://w4y.imlk.top/thin_api', 'GET', '{\"cat\":\"a\"}', '{\n    \"content\": \"[content]\",\n    \"reference\": \"[reference]\",\n    \"target_url\": \"[target_url]\",\n    \"target_text\": \"[target_text]\"\n}', 1)");
         db.execSQL("INSERT INTO api(name,url,req_method,req_args_json,resp_form,enabled) VALUES('网易云音乐歌评-流行', 'http://w4y.imlk.top/thin_api', 'GET', '{\"cat\":\"b\"}', '{\n    \"content\": \"[content]\",\n    \"reference\": \"[reference]\",\n    \"target_url\": \"[target_url]\",\n    \"target_text\": \"[target_text]\"\n}', 1)");

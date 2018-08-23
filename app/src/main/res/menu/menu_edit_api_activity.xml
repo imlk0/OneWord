@@ -4,18 +4,15 @@
 
     <item
         android:id="@+id/item_save"
-        android:icon="@drawable/ic_done_white_48dp"
         android:title="保存" />
-
+    <item
+        android:id="@+id/iv_share"
+        android:title="分享" />
     <item
         android:id="@+id/iv_delete"
-        android:icon="@drawable/ic_delete_white_48dp"
         android:title="删除" />
-
     <item
         android:id="@+id/item_test"
-        android:icon="@drawable/ic_delete_white_48dp"
         android:title="测试可用性" />
-
 
 </menu>

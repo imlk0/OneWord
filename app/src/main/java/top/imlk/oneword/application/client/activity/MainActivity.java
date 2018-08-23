@@ -171,7 +171,6 @@ public class MainActivity extends BaseActivity implements WordRequestObserver, O
 
     @Override
     public void onError(ApiBean apiBean, Throwable e) {
-        BugUtil.printAndSaveCrashThrow2File(e);
 //        Toast.makeText(MainActivity.this, "发生异常，获取失败", Toast.LENGTH_SHORT).show();
         Toast.makeText(MainActivity.this, "请求：" + apiBean.name + " 时出错\n" + e.getMessage() + (e.getCause() == null ? "" : "\ncause:\n" + e.getCause()), Toast.LENGTH_LONG).show();
 

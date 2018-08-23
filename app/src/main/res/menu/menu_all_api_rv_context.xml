@@ -3,9 +3,11 @@
     <item
         android:id="@+id/item_edit"
         android:title="编辑" />
-
     <item
         android:id="@+id/iv_share"
         android:title="分享" />
+    <item
+        android:id="@+id/iv_delete"
+        android:title="删除" />
 
 </menu>

@@ -406,7 +406,7 @@ public class OneWordAutoRefreshService extends Service implements WordRequestObs
 
     @Override
     public void onError(ApiBean apiBean, Throwable e) {
-        Log.i(TAG, "error when get new oneword");
+        Log.e(TAG, "error when get new oneword", e);
 //        BugUtil.printAndSaveCrashThrow2File(e);
     }
 

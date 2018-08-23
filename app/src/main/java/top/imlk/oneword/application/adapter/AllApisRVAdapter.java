@@ -111,10 +111,30 @@ public class AllApisRVAdapter extends RecyclerView.Adapter<AllApisRVAdapter.ApiI
                 case R.id.iv_share:
                     ShareUtil.shareAPI(context, apiBean);
                     return true;
+                case R.id.iv_delete:
+                    deleteApiDialog();
+                    return true;
             }
             return false;
         }
+
+        public void deleteApiDialog() {
+
+            new android.support.v7.app.AlertDialog.Builder(context).setTitle("删除API").setMessage("您确定要删除吗？如果不小心删除了自带api可以在右上角重置").setPositiveButton("删除", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    OneWordSQLiteOpenHelper.getInstance().removeApiById(apiBean.id);
+                    removeItemOnUI(apiBean);
+                }
+            }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            }).setCancelable(true).show();
+        }
     }
+
 
     private ArrayList<ApiBean> data = new ArrayList<>();
 
@@ -128,6 +148,14 @@ public class AllApisRVAdapter extends RecyclerView.Adapter<AllApisRVAdapter.ApiI
         data.clear();
         data.addAll(OneWordSQLiteOpenHelper.getInstance().queryAllApi());
         notifyDataSetChanged();
+    }
+
+    public void removeItemOnUI(ApiBean apiBean) {
+        int ind = data.indexOf(apiBean);
+        if (ind != -1) {
+            data.remove(ind);
+        }
+        notifyItemRemoved(ind);
     }
 
     @NonNull

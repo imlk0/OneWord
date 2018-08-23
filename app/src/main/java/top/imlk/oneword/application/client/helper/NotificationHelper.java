@@ -17,6 +17,7 @@ import android.widget.RemoteViews;
 import com.zqc.opencc.android.lib.ChineseConverter;
 import com.zqc.opencc.android.lib.ConversionType;
 
+import top.imlk.oneword.BuildConfig;
 import top.imlk.oneword.R;
 import top.imlk.oneword.application.client.activity.MainActivity;
 import top.imlk.oneword.bean.WordBean;
@@ -158,7 +159,7 @@ public class NotificationHelper {
             showingCurOnewordRemoteViews.setViewVisibility(R.id.ll_reference, View.VISIBLE);
         }
 
-        Intent intent = new Intent(context, MainActivity.class);
+        Intent intent = context.getPackageManager().getLaunchIntentForPackage(BuildConfig.APPLICATION_ID);
         intent.putExtra(BroadcastSender.THE_CLICKED_WORDBEAN, currentWord);
         showingCurOnewordBuilder.setContentIntent(PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT));
 

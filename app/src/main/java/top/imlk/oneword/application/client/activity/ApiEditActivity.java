@@ -3,6 +3,7 @@ package top.imlk.oneword.application.client.activity;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -16,9 +17,11 @@ import top.imlk.oneword.bean.WordBean;
 import top.imlk.oneword.net.WordRequestObserver;
 import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
 import top.imlk.oneword.net.OneWordApi;
+import top.imlk.oneword.util.ShareUtil;
 
 public class ApiEditActivity extends BaseEditActivity implements Toolbar.OnMenuItemClickListener {
 
+    private static final String TAG = ApiEditActivity.class.getSimpleName();
     public static final String EDITING_API_ID = "EDITING_API_ID";
     public static final String TO_BE_ADDED_APIBEAN = "TO_BE_ADDED_APIBEAN";
 
@@ -48,6 +51,7 @@ public class ApiEditActivity extends BaseEditActivity implements Toolbar.OnMenuI
 
         toolbar.setOnMenuItemClickListener(this);
         toolbar.inflateMenu(R.menu.menu_edit_api_activity);
+        
 
         int id = getIntent().getIntExtra(EDITING_API_ID, -1);
 
@@ -209,6 +213,15 @@ public class ApiEditActivity extends BaseEditActivity implements Toolbar.OnMenuI
                 OneWordSQLiteOpenHelper.getInstance().inserAApi(apiBean);
                 finish();
                 return true;
+            case R.id.iv_share:
+                ShareUtil.shareAPI(this, new ApiBean(-1,
+                        etName.getText().toString(),
+                        etURL.getText().toString(),
+                        etReqMethod.getText().toString(),
+                        etReqArgJson.getText().toString(),
+                        etRespFormJson.getText().toString(),
+                        true));
+                return true;
             case R.id.iv_delete:
                 alertDeleteSave();
                 return true;
@@ -231,6 +244,7 @@ public class ApiEditActivity extends BaseEditActivity implements Toolbar.OnMenuI
 
                     @Override
                     public void onError(ApiBean apiBean, Throwable e) {
+                        Log.i(TAG, "测试api失败", e);
                         Toast.makeText(ApiEditActivity.this, "发生异常，获取失败", Toast.LENGTH_SHORT).show();
                         Toast.makeText(ApiEditActivity.this, e.getMessage() + "\n" + e.getCause(), Toast.LENGTH_LONG).show();
                     }

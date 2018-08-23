@@ -163,7 +163,7 @@ public class SettingPage extends android.support.v4.widget.NestedScrollView impl
                 mainActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + BuildConfig.APPLICATION_ID)));
                 break;
             case R.id.ll_qq_group:
-                mainActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("mqqwpa://im/chat?chat_type=group&uin=688035539&version=1")));
+                mainActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("mqqopensdkapi://bizAgent/qm/qr?url=http%3a%2f%2fqm.qq.com%2fcgi-bin%2fqm%2fqr%3fk%3dAMtSN8HJ1Q7dXezumRs9DK-AVfOiOpvr")));
                 break;
             case R.id.ll_show_thx_open_source:
                 ShowDialogUtil.showOpenSourceProjectDialog(mainActivity);
