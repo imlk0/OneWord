@@ -213,8 +213,9 @@ public class MainActivity extends BaseActivity implements WordRequestObserver, O
 
     public void fixServiceWhenStartUp() {
 
-        BroadcastSender.stopAutoRefresh(this);
-
+        if (SharedPreferencesUtil.isAutoRefreshOpened(this)) {
+            BroadcastSender.pauseAutoRefresh(this);
+        }
         if (SharedPreferencesUtil.isShowNotificationOneWordOpened(this)) {
             BroadcastSender.startShowNitificationOneword(this);
         }

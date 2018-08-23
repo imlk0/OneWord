@@ -32,6 +32,7 @@ public class BroadcastSender {
 
 
     public static final String CMD_SERVICES_START_AUTO_REFRESH = "top.imlk.oneword.start_auto_refresh";
+    public static final String CMD_SERVICES_PAUSE_AUTO_REFRESH = "top.imlk.oneword.pause_auto_refresh";
     public static final String CMD_SERVICES_STOP_AUTO_REFRESH = "top.imlk.oneword.stop_auto_refresh";
     public static final String THE_REFRESH_MODE = "top.imlk.oneword.the_refresh_mode";
 
@@ -104,6 +105,14 @@ public class BroadcastSender {
 
         Intent intent = new Intent(context, OneWordAutoRefreshService.class);
         intent.setAction(BroadcastSender.CMD_SERVICES_STOP_AUTO_REFRESH);
+
+        context.startService(intent);
+    }
+
+    public static void pauseAutoRefresh(Context context) {
+
+        Intent intent = new Intent(context, OneWordAutoRefreshService.class);
+        intent.setAction(BroadcastSender.CMD_SERVICES_PAUSE_AUTO_REFRESH);
 
         context.startService(intent);
     }

@@ -127,6 +127,13 @@ public class OneWordAutoRefreshService extends Service implements WordRequestObs
 
                     Log.i(TAG, "stop auto refresh");
                     break;
+                case BroadcastSender.CMD_SERVICES_PAUSE_AUTO_REFRESH:
+                    isAutoRefreshOn = true;
+                    updateNotification();
+                    stopAutoRefreshTask();
+
+                    Log.i(TAG, "pause auto refresh");
+                    break;
                 case BroadcastSender.CMD_SERVICES_START_SHOW_NOTIFICATION_ONEWORD:
                     isShowNotificationOnewordOn = true;
 
