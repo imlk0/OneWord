@@ -197,6 +197,7 @@ public class ShowDialogUtil {
         titleAndSummaries.add(new TitleAndSummary("ColorPicker", "https://github.com/jaredrummler/ColorPicker"));
         titleAndSummaries.add(new TitleAndSummary("AutoFitTextView(fork)", "https://github.com/AndroidDeveloperLB/AutoFitTextView"));
         titleAndSummaries.add(new TitleAndSummary("android-opencc", "https://github.com/qichuan/android-opencc"));
+        titleAndSummaries.add(new TitleAndSummary("Zip4j", "http://www.lingala.net/zip4j"));
 
 
         ItemArrayAdapter itemArrayAdapter = new ItemArrayAdapter(context, titleAndSummaries);
