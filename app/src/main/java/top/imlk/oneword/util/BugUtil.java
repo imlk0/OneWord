@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import de.robv.android.xposed.XposedBridge;
+import top.imlk.oneword.BuildConfig;
 
 
 /**
@@ -100,6 +101,10 @@ public class BugUtil {
             path = path + logTime + ".log";
             FileOutputStream fos = new FileOutputStream(path, true);
             fos.write(logTime.getBytes());
+            fos.write("\n".getBytes());
+            fos.write(("FLAVOR：" + BuildConfig.FLAVOR).getBytes());
+            fos.write(("VERSION_NAME：" + BuildConfig.VERSION_NAME).getBytes());
+            fos.write(("VERSION_CODE：" + BuildConfig.VERSION_CODE).getBytes());
             fos.write("\n\n\n".getBytes());
             fos.write(sb.toString().getBytes());
 //            fos.write("\n\n\n".getBytes());

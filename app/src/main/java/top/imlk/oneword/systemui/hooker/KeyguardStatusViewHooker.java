@@ -41,11 +41,12 @@ public class KeyguardStatusViewHooker {
 //    public static Method method_com_android_keyguard_KeyguardStatusView_getOwnerInfo;
 //    public static Method method_com_android_keyguard_KeyguardUpdateMonitor_getCurrentUser;
 
-    public static WeakReference<TextView> ref_mOwnerInfo;
-    public static WeakReference<Object> ref_keyguardStatusView;
+    public static TextView mOwnerInfo;
+    public static Object keyguardStatusView;
     //    public static WeakReference<LockPatternUtils> ref_mLockPatternUtils;
-    public static WeakReference<OwnerInfoTextViewProxy> ref_OwnerInfoTextViewProxy;
-    public static WeakReference<BaseUIFixer> ref_BaseUIFixer;
+    public static OwnerInfoTextViewProxy ownerInfoTextViewProxy;
+    public static BaseUIFixer uiFixer;
+    public static Context context;
 
 
     public static void init(ClassLoader classLoader) throws NoSuchFieldException {
@@ -80,26 +81,23 @@ public class KeyguardStatusViewHooker {
 
                 XposedBridge.log("doHook_onFinishInflate()");
 
-                Context context = ((View) param.thisObject).getContext();
+                context = ((View) param.thisObject).getContext().getApplicationContext();
 
 
                 try {
 
-                    ref_mOwnerInfo = new WeakReference(field_com_android_keyguard_KeyguardStatusView_mOwnerInfo.get(param.thisObject));
+                    mOwnerInfo = (TextView) field_com_android_keyguard_KeyguardStatusView_mOwnerInfo.get(param.thisObject);
 //                    ref_mLockPatternUtils = new WeakReference(field_com_android_keyguard_KeyguardStatusView_mLockPatternUtils.get(param.thisObject));
-                    ref_keyguardStatusView = new WeakReference(param.thisObject);
+                    keyguardStatusView = param.thisObject;
 
-                    OwnerInfoTextViewProxy proxyView = new OwnerInfoTextViewProxy(ref_mOwnerInfo.get().getContext());
+                    ownerInfoTextViewProxy = new OwnerInfoTextViewProxy(mOwnerInfo.getContext());
 
-                    BaseUIFixer uiFixer = new BaseUIFixer(ref_mOwnerInfo.get());
-                    uiFixer.fixUI(ref_mOwnerInfo.get());
+                    uiFixer = new BaseUIFixer(mOwnerInfo);
+                    uiFixer.fixUI(mOwnerInfo);
 
-                    proxyView.setUiFixer(uiFixer);
+                    ownerInfoTextViewProxy.setUiFixer(uiFixer);
 
-                    ref_BaseUIFixer = new WeakReference<>(uiFixer);
-                    ref_OwnerInfoTextViewProxy = new WeakReference<>(proxyView);
-
-                    field_com_android_keyguard_KeyguardStatusView_mOwnerInfo.set(param.thisObject, ref_OwnerInfoTextViewProxy.get());
+                    field_com_android_keyguard_KeyguardStatusView_mOwnerInfo.set(param.thisObject, ownerInfoTextViewProxy);
 
 
                     getAndSetOneWord();
@@ -121,18 +119,18 @@ public class KeyguardStatusViewHooker {
 
         WordBean wordBean = OneWordFileStation.readOneWordJSON();
 
-        ref_BaseUIFixer.get().setOneWord(wordBean);
+        uiFixer.setOneWord(wordBean);
 
-        if (wordBean == null) {
-            Toast.makeText(((View) ref_keyguardStatusView.get()).getContext(), "解析保存的一言失败，去设置一言？", Toast.LENGTH_SHORT).show();
-        }
+//        if (wordBean == null) {
+//            Toast.makeText(context, "解析保存的一言失败，去设置一言？", Toast.LENGTH_SHORT).show();
+//        }
 
     }
 
     private static void getAndApplyWordViewConfig() {
         WordViewConfig wordViewConfig = OneWordFileStation.readWordViewConfigJSON();
 
-        ref_BaseUIFixer.get().applyWordViewConfig(wordViewConfig);
+        uiFixer.applyWordViewConfig(wordViewConfig);
 
     }
 
@@ -143,7 +141,7 @@ public class KeyguardStatusViewHooker {
         intentFilter.addAction(BroadcastSender.CMD_BROADCAST_RELOAD_WORDBEAN);
         intentFilter.addAction(BroadcastSender.CMD_BROADCAST_SET_NEW_WORDVIEWCONFIG);
         intentFilter.addAction(BroadcastSender.CMD_BROADCAST_RELOAD_WORDVIEWCONFIG);
-        ref_mOwnerInfo.get().getContext().registerReceiver(new SystemUICmdBroadcastReceiver(), intentFilter);
+        context.registerReceiver(new SystemUICmdBroadcastReceiver(), intentFilter);
         XposedBridge.log("create SystemUICmdBroadcastReceiver");
 
     }
@@ -171,7 +169,7 @@ public class KeyguardStatusViewHooker {
 
 //                        XposedBridge.log("resolved");
 
-                        ref_BaseUIFixer.get().setOneWord(wordBean);
+                        uiFixer.setOneWord(wordBean);
 
 //                        Toast.makeText(context, "一言已收到", Toast.LENGTH_SHORT).show();
 
@@ -198,7 +196,7 @@ public class KeyguardStatusViewHooker {
 
 //                        XposedBridge.log("resolved");
 
-                        ref_BaseUIFixer.get().applyWordViewConfig(config);
+                        uiFixer.applyWordViewConfig(config);
 
 
                         XposedBridge.log("wordviewconfig updated");
