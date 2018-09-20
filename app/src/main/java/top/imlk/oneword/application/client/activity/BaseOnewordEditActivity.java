@@ -6,7 +6,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Toolbar;
 
 import top.imlk.oneword.R;
 import top.imlk.oneword.bean.WordBean;
@@ -21,10 +20,10 @@ public abstract class BaseOnewordEditActivity extends BaseEditActivity {
 
     protected LinearLayout llOnewordviewContainer;
 
-    protected OneWordView oneWordView;
     protected WordBean wordBean;
-
     protected WordViewConfig config;
+
+    protected OneWordView oneWordView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,7 +43,8 @@ public abstract class BaseOnewordEditActivity extends BaseEditActivity {
 
 
     public void initConfig() {
-        config = OneWordFileStation.readWordViewConfigJSON();
+
+        config = OneWordFileStation.readWordViewConfigToJSON();
         if (config == null) {
             config = WordViewConfig.generateDefaultBean();
         }

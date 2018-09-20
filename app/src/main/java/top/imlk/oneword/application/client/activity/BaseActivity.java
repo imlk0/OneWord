@@ -3,6 +3,7 @@ package top.imlk.oneword.application.client.activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import top.imlk.oneword.R;
 import top.imlk.oneword.util.AppStyleHelper;
@@ -17,4 +18,5 @@ public abstract class BaseActivity extends AppCompatActivity {
         getWindow().setNavigationBarColor(AppStyleHelper.getColorByAttributeId(this, R.attr.color_primary_dark));
 
     }
+
 }

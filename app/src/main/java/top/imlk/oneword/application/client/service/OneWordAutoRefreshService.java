@@ -141,14 +141,14 @@ public class OneWordAutoRefreshService extends Service implements WordRequestObs
                     if (wordBean != null) {
                         currentWord = wordBean;
                     } else if (currentWord == null) {
-                        currentWord = OneWordFileStation.readOneWordJSON();
+                        currentWord = OneWordFileStation.readOneWordToJSON();
                         if (currentWord == null) {
                             currentWord = WordBean.generateDefaultBean();
                         }
                     }
 
                     if (currentConfig == null) {
-                        currentConfig = OneWordFileStation.readWordViewConfigJSON();
+                        currentConfig = OneWordFileStation.readWordViewConfigToJSON();
                         if (currentConfig == null) {
                             currentConfig = WordViewConfig.generateDefaultBean();
                         }
@@ -354,7 +354,7 @@ public class OneWordAutoRefreshService extends Service implements WordRequestObs
             if (bean != null) {
 
                 OneWordSQLiteOpenHelper.getInstance().insertToHistory(bean);
-                OneWordFileStation.saveOneWordJSON(bean);
+                OneWordFileStation.saveOneWordToJSON(bean);
                 BroadcastSender.sendUseNewOneWordBroadcast(this, bean);
 
                 currentWord = bean;

@@ -2,17 +2,13 @@ package top.imlk.oneword.application.client.activity;
 
 import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.jaredrummler.android.colorpicker.ColorPanelView;
 import com.jaredrummler.android.colorpicker.ColorPickerDialog;
@@ -22,7 +18,6 @@ import top.imlk.oneword.R;
 import top.imlk.oneword.bean.WordBean;
 import top.imlk.oneword.bean.WordViewConfig;
 import top.imlk.oneword.systemui.view.OneWordView;
-import top.imlk.oneword.util.AppStyleHelper;
 import top.imlk.oneword.util.BroadcastSender;
 import top.imlk.oneword.util.OneWordFileStation;
 
@@ -50,13 +45,7 @@ public class AdjustStyleActivity extends BaseOnewordEditActivity implements Colo
         oneWordView = new OneWordView(this);
         llOnewordviewContainer.addView(oneWordView);
 
-
-        wordBean = getIntent().getParcelableExtra(ADJUST_SAMPLE_ONEWORD);
-        if (wordBean == null) {
-            wordBean = new WordBean("星星只有在夜里才璀璨夺目啊。", "四月是你的谎言");
-        }
-
-
+        initWordBeam();
         initConfig();
 
         notifyWordBeanChanged();
@@ -103,7 +92,7 @@ public class AdjustStyleActivity extends BaseOnewordEditActivity implements Colo
                     case R.id.fab_save_config:
                         Toast.makeText(AdjustStyleActivity.this, "正在应用当前布局", Toast.LENGTH_SHORT).show();
                         BroadcastSender.sendUseNewWordViewConfigBroadcast(AdjustStyleActivity.this, config);
-                        OneWordFileStation.saveWordViewConfigJSON(config);
+                        OneWordFileStation.saveWordViewConfigToJSON(config);
                         finish();
                         break;
                 }
@@ -487,4 +476,11 @@ public class AdjustStyleActivity extends BaseOnewordEditActivity implements Colo
         alertDoesNotSave();
     }
 
+    protected void initWordBeam() {
+        wordBean = getIntent().getParcelableExtra(ADJUST_SAMPLE_ONEWORD);
+        if (wordBean == null) {
+            wordBean = new WordBean("星星只有在夜里才璀璨夺目啊。", "四月是你的谎言");
+        }
+
+    }
 }

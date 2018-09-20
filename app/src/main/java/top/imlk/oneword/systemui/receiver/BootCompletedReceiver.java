@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import top.imlk.oneword.util.BroadcastSender;
+import top.imlk.oneword.util.OneWordFileStation;
 import top.imlk.oneword.util.SharedPreferencesUtil;
 
 
@@ -25,9 +26,13 @@ public class BootCompletedReceiver extends BroadcastReceiver {
                 Log.i("BootCompletedReceiver", "ACTION_BOOT_COMPLETED");
 
                 Log.i("BootCompletedReceiver", "isAutoRefreshOpened:" + SharedPreferencesUtil.isAutoRefreshOpened(context));
+                Log.i("BootCompletedReceiver", "isShowNotificationOneWordOpened:" + SharedPreferencesUtil.isShowNotificationOneWordOpened(context));
 
-                BroadcastSender.sendReloadOneWordBySelfBroadcast(context);
-                BroadcastSender.sendReloadWordViewConfigBySelfBroadcast(context);
+//                BroadcastSender.sendReloadOneWordBySelfBroadcast(context);// TODO 可能存在的权限问题
+//                BroadcastSender.sendReloadWordViewConfigBySelfBroadcast(context);
+
+                BroadcastSender.sendUseNewOneWordBroadcast(context, OneWordFileStation.readOneWordToJSON());
+                BroadcastSender.sendUseNewWordViewConfigBroadcast(context, OneWordFileStation.readWordViewConfigToJSON());
 
                 if (SharedPreferencesUtil.isAutoRefreshOpened(context)) {
                     BroadcastSender.startAutoRefresh(context);

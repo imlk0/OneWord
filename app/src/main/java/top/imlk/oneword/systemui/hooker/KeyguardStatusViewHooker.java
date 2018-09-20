@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
@@ -20,7 +22,6 @@ import de.robv.android.xposed.XposedHelpers;
 import top.imlk.oneword.bean.WordBean;
 import top.imlk.oneword.bean.WordViewConfig;
 import top.imlk.oneword.systemui.uifixer.BaseUIFixer;
-import top.imlk.oneword.systemui.view.OwnerInfoTextViewProxy;
 import top.imlk.oneword.util.BroadcastSender;
 import top.imlk.oneword.util.BugUtil;
 import top.imlk.oneword.util.OneWordFileStation;
@@ -29,7 +30,7 @@ import top.imlk.oneword.util.OneWordFileStation;
 /**
  * Created by imlk on 2018/5/24.
  */
-public class KeyguardStatusViewHooker {
+public class KeyguardStatusViewHooker extends BaseHooker {
 
     public static Class class_com_android_keyguard_KeyguardStatusView;
 //    public static Class class_com_android_keyguard_KeyguardUpdateMonitor;
@@ -41,19 +42,15 @@ public class KeyguardStatusViewHooker {
 //    public static Method method_com_android_keyguard_KeyguardStatusView_getOwnerInfo;
 //    public static Method method_com_android_keyguard_KeyguardUpdateMonitor_getCurrentUser;
 
-    public static TextView mOwnerInfo;
-    public static Object keyguardStatusView;
+//    public static Object keyguardStatusView;
     //    public static WeakReference<LockPatternUtils> ref_mLockPatternUtils;
-    public static OwnerInfoTextViewProxy ownerInfoTextViewProxy;
-    public static BaseUIFixer uiFixer;
-    public static Context context;
+//    public static OwnerInfoTextViewProxy ownerInfoTextViewProxy;
 
 
-    public static void init(ClassLoader classLoader) throws NoSuchFieldException {
+    @Override
+    public boolean initClass(ClassLoader classLoader) {
 
         try {
-
-
             class_com_android_keyguard_KeyguardStatusView = XposedHelpers.findClass("com.android.keyguard.KeyguardStatusView", classLoader);
 //            class_com_android_keyguard_KeyguardUpdateMonitor = XposedHelpers.findClass("com.android.keyguard.KeyguardUpdateMonitor", classLoader);
 
@@ -65,167 +62,33 @@ public class KeyguardStatusViewHooker {
 //        method_com_android_keyguard_KeyguardUpdateMonitor_getCurrentUser = XposedHelpers.findMethodExact(class_com_android_keyguard_KeyguardUpdateMonitor, "getCurrentUser");
 
 //            throw new Throwable();
+
         } catch (Throwable e) {
-//            XposedBridge.log(e);
-            String logPath = BugUtil.printAndSaveCrashThrow2File(e);
-//            Toast.makeText(((View) param.thisObject).getContext(), String.format("Hook时发生异常，可能是系统兼容性问题，日志产生在:\n%s", logPath), Toast.LENGTH_LONG).show();
-
+            XposedBridge.log("------KeyguardStatusViewHooker.initClass()发生异常------");
+            XposedBridge.log(e);
+            XposedBridge.log("-------------------------------------------------------");
+            return false;
         }
+        XposedBridge.log("------KeyguardStatusViewHooker.initClass()顺利------");
+        return true;
     }
 
-
-    public static void doHook_onFinishInflate() {
-        XposedHelpers.findAndHookMethod(class_com_android_keyguard_KeyguardStatusView, "onFinishInflate", new XC_MethodHook() {
-            @Override
-            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-
-                XposedBridge.log("doHook_onFinishInflate()");
-
-                context = ((View) param.thisObject).getContext().getApplicationContext();
-
-
-                try {
-
-                    mOwnerInfo = (TextView) field_com_android_keyguard_KeyguardStatusView_mOwnerInfo.get(param.thisObject);
-//                    ref_mLockPatternUtils = new WeakReference(field_com_android_keyguard_KeyguardStatusView_mLockPatternUtils.get(param.thisObject));
-                    keyguardStatusView = param.thisObject;
-
-                    ownerInfoTextViewProxy = new OwnerInfoTextViewProxy(mOwnerInfo.getContext());
-
-                    uiFixer = new BaseUIFixer(mOwnerInfo);
-                    uiFixer.fixUI(mOwnerInfo);
-
-                    ownerInfoTextViewProxy.setUiFixer(uiFixer);
-
-                    field_com_android_keyguard_KeyguardStatusView_mOwnerInfo.set(param.thisObject, ownerInfoTextViewProxy);
-
-
-                    getAndSetOneWord();
-                    getAndApplyWordViewConfig();
-
-                } catch (Throwable e) {
-//                    XposedBridge.log(e);
-                    String logPath = BugUtil.printAndSaveCrashThrow2File(e);
-                    Toast.makeText(context, String.format("Hook后的操作发生异常，日志产生在:\n%s", logPath), Toast.LENGTH_LONG).show();
-                }
-
-                registerBroadcastReceiver();
-
-            }
-        });
-    }
-
-    private static void getAndSetOneWord() {
-
-        WordBean wordBean = OneWordFileStation.readOneWordJSON();
-
-        uiFixer.setOneWord(wordBean);
-
-//        if (wordBean == null) {
-//            Toast.makeText(context, "解析保存的一言失败，去设置一言？", Toast.LENGTH_SHORT).show();
-//        }
+    @Override
+    public void subcribeHook(ClassLoader classLoader) {
+        doHookMethod(XposedHelpers.findMethodBestMatch(class_com_android_keyguard_KeyguardStatusView, "onFinishInflate"));
 
     }
 
-    private static void getAndApplyWordViewConfig() {
-        WordViewConfig wordViewConfig = OneWordFileStation.readWordViewConfigJSON();
+    public BaseUIFixer performUIFixAfterHookedMethod(XC_MethodHook.MethodHookParam param) throws IllegalAccessException {
 
-        uiFixer.applyWordViewConfig(wordViewConfig);
+        TextView mOwnerInfo = (TextView) field_com_android_keyguard_KeyguardStatusView_mOwnerInfo.get(param.thisObject);
 
-    }
+        BaseUIFixer uiFixer = new BaseUIFixer(mOwnerInfo);
+        uiFixer.fixUI(mOwnerInfo);
 
+        field_com_android_keyguard_KeyguardStatusView_mOwnerInfo.set(param.thisObject, uiFixer.getOwnerInfoTextViewProxy());
 
-    public static void registerBroadcastReceiver() {
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(BroadcastSender.CMD_BROADCAST_SET_NEW_WORDBEAN);
-        intentFilter.addAction(BroadcastSender.CMD_BROADCAST_RELOAD_WORDBEAN);
-        intentFilter.addAction(BroadcastSender.CMD_BROADCAST_SET_NEW_WORDVIEWCONFIG);
-        intentFilter.addAction(BroadcastSender.CMD_BROADCAST_RELOAD_WORDVIEWCONFIG);
-        context.registerReceiver(new SystemUICmdBroadcastReceiver(), intentFilter);
-        XposedBridge.log("create SystemUICmdBroadcastReceiver");
-
-    }
-
-
-    static class SystemUICmdBroadcastReceiver extends BroadcastReceiver {
-
-
-        @Override
-        public void onReceive(Context context, Intent intent) {//此处context具体类型与注册时的context有关
-
-            XposedBridge.log("SystemUICmdBroadcastReceiver -> onReceive" + intent.getAction());
-
-            try {
-                switch (intent.getAction()) {
-                    case BroadcastSender.CMD_BROADCAST_SET_NEW_WORDBEAN:
-
-//                        KeyguardStatusViewHelper.setOwnerInfo(intent.getStringExtra(BroadcastSender.THE_NEW_WORDBEAN));
-
-                        WordBean wordBean = intent.getParcelableExtra(BroadcastSender.THE_NEW_WORDBEAN);
-
-
-                        XposedBridge.log("wordbean received");
-                        XposedBridge.log(wordBean.toString());
-
-//                        XposedBridge.log("resolved");
-
-                        uiFixer.setOneWord(wordBean);
-
-//                        Toast.makeText(context, "一言已收到", Toast.LENGTH_SHORT).show();
-
-                        XposedBridge.log("wordbean updated");
-
-                        break;
-
-                    case BroadcastSender.CMD_BROADCAST_RELOAD_WORDBEAN:
-
-                        getAndSetOneWord();
-
-                        XposedBridge.log("wordbean updated byself");
-
-                        break;
-
-                    case BroadcastSender.CMD_BROADCAST_SET_NEW_WORDVIEWCONFIG:
-
-
-                        WordViewConfig config = intent.getParcelableExtra(BroadcastSender.THE_NEW_WORDVIEWCONFIG);
-
-
-                        XposedBridge.log("wordviewconfig received");
-                        XposedBridge.log(config.toString());
-
-//                        XposedBridge.log("resolved");
-
-                        uiFixer.applyWordViewConfig(config);
-
-
-                        XposedBridge.log("wordviewconfig updated");
-
-                        break;
-
-                    case BroadcastSender.CMD_BROADCAST_RELOAD_WORDVIEWCONFIG:
-
-                        getAndApplyWordViewConfig();
-
-                        break;
-
-                }
-            } catch (Throwable e) {
-//                XposedBridge.log(e);
-
-                String logPath = BugUtil.printAndSaveCrashThrow2File(e);
-
-                Toast.makeText(context, String.format("不小心搞崩了,灰常抱歉，日志在\n%s", logPath), Toast.LENGTH_LONG).show();
-
-            }
-        }
-
-
-//        public static void reportException(Context context, Exception e) {
-//            e.printStackTrace();
-//            //  错误上报
-//
-//        }
+        return uiFixer;
     }
 
 

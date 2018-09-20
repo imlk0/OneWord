@@ -1,7 +1,9 @@
 package top.imlk.oneword.systemui.injecter;
 
 
+import android.app.ActivityThread;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.util.Log;
 
 import com.zqc.opencc.android.lib.ChineseConverter;
@@ -17,9 +19,10 @@ import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import top.imlk.oneword.BuildConfig;
+import top.imlk.oneword.application.client.activity.BaseActivity;
 import top.imlk.oneword.systemui.hooker.KeyguardStatusViewHooker;
+import top.imlk.oneword.systemui.hooker.MiuiKeyguardBaseClockHook;
 import top.imlk.oneword.util.AppStatus;
-import top.imlk.oneword.util.ShowDialogUtil;
 
 /**
  * Created by imlk on 2018/5/24.
@@ -69,10 +72,26 @@ public class AppInjecter implements IXposedHookLoadPackage, IXposedHookZygoteIni
 //            handleLoadPackage_Out(lpparam, MODULE_PATH);
 //        }
 
+
         String[] packages = getRegistedPackage();
 
         for (String pack : packages) {
             if (pack.equals(lpparam.packageName)) {
+
+
+                if (BuildConfig.DEBUG) {
+
+                    String path = "/data/app/top.imlk.oneword-%d/base.apk";
+
+                    File file = null;
+                    for (int i = 1; i <= 2; i++) {
+                        file = new File(String.format(path, i));
+                        if (file.exists()) {
+                            MODULE_PATH = file.getAbsolutePath();
+                            break;
+                        }
+                    }
+                }
 
                 PathClassLoader pathClassLoader = new XposedModuleSoFileClassLoader(MODULE_PATH, MODULE_PATH, ClassLoader.getSystemClassLoader());
 
@@ -94,16 +113,21 @@ public class AppInjecter implements IXposedHookLoadPackage, IXposedHookZygoteIni
         } else if ("com.android.systemui".equals(lpparam.packageName)) {
 //            Debug.waitForDebugger();
 
-            XposedHelpers.findAndHookMethod(ChineseConverter.class, "convert", String.class, ConversionType.class, Context.class, new XC_MethodHook() {
-                @Override
-                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                    param.args[2] = ModuleAppContext.getModuleAppContext();
-                    Log.e("handleLoadPackage_Out", "ChineseConverter#convert Context was replaced");
-                }
-            });
+            XposedBridge.log(lpparam.packageName);
+            hookChineseConverterConvertParam();
 
-            KeyguardStatusViewHooker.init(lpparam.classLoader);
-            KeyguardStatusViewHooker.doHook_onFinishInflate();
+            new KeyguardStatusViewHooker().doHook(lpparam.classLoader);
+            new MiuiKeyguardBaseClockHook().doHook(lpparam.classLoader);
+
+
+        } else if ("com.android.keyguard".equals(lpparam.packageName)) {
+
+            XposedBridge.log(lpparam.packageName);
+            hookChineseConverterConvertParam();
+
+            new MiuiKeyguardBaseClockHook().doHook(lpparam.classLoader);
+
+
         } else if (BuildConfig.APPLICATION_ID.equals(lpparam.packageName)) {
             XposedHelpers.findAndHookMethod(AppStatus.class.getName(), lpparam.classLoader, "hasBeenHooked", new XC_MethodHook() {
                 @Override
@@ -111,6 +135,7 @@ public class AppInjecter implements IXposedHookLoadPackage, IXposedHookZygoteIni
                     param.setResult(true);
                 }
             });
+
         }
 
     }
@@ -122,4 +147,14 @@ public class AppInjecter implements IXposedHookLoadPackage, IXposedHookZygoteIni
         };
     }
 
+
+    private static void hookChineseConverterConvertParam() {
+        XposedHelpers.findAndHookMethod(ChineseConverter.class, "convert", String.class, ConversionType.class, Context.class, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                param.args[2] = ModuleAppContext.getModuleAppContext();
+                Log.e("handleLoadPackage_Out", "ChineseConverter#convert Context was replaced");
+            }
+        });
+    }
 }

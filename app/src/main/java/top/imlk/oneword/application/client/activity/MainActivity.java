@@ -3,11 +3,9 @@ package top.imlk.oneword.application.client.activity;
 import android.app.KeyguardManager;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Window;
@@ -24,7 +22,6 @@ import top.imlk.oneword.net.WordRequestObserver;
 import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
 import top.imlk.oneword.net.OneWordApi;
 import top.imlk.oneword.util.BroadcastSender;
-import top.imlk.oneword.util.BugUtil;
 import top.imlk.oneword.util.OneWordFileStation;
 import top.imlk.oneword.util.SharedPreferencesUtil;
 import top.imlk.oneword.util.AppStyleHelper;
@@ -80,6 +77,7 @@ public class MainActivity extends BaseActivity implements WordRequestObserver, O
         isOnConfigurationChanged = false;
 
         resolveIntent(getIntent());
+
     }
 
     private void resolveIntent(Intent intent) {
@@ -121,7 +119,7 @@ public class MainActivity extends BaseActivity implements WordRequestObserver, O
     public void updateAndSetCurWordBean(WordBean wordBean) {
         if (wordBean != null) {
             updateButDoNOTSetCurWordBean(wordBean);
-            OneWordFileStation.saveOneWordJSON(wordBean);
+            OneWordFileStation.saveOneWordToJSON(wordBean);
             BroadcastSender.sendUseNewOneWordBroadcast(this, wordBean);
             Toast.makeText(this, "设置锁屏一言中...", Toast.LENGTH_SHORT).show();
         }
