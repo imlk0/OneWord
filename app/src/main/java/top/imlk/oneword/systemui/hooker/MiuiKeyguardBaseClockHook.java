@@ -10,6 +10,7 @@ import java.lang.reflect.Method;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
+import top.imlk.oneword.systemui.injecter.AppInjecter;
 import top.imlk.oneword.systemui.uifixer.BaseUIFixer;
 
 /**
@@ -26,13 +27,13 @@ public class MiuiKeyguardBaseClockHook extends BaseHooker {
         try {
             class_com_android_keyguard_MiuiKeyguardBaseClock = XposedHelpers.findClass("com.android.keyguard.MiuiKeyguardBaseClock", classLoader);
         } catch (Throwable e) {
-            XposedBridge.log("------MiuiKeyguardBaseClockHook.initClass()发生异常------");
+            XposedBridge.log("------MiuiKeyguardBaseClockHook.initClass()发生异常[" + AppInjecter.HostPackageName + "]------");
             XposedBridge.log(e);
             XposedBridge.log("--------------------------------------------------------");
 
             return false;
         }
-        XposedBridge.log("------MiuiKeyguardBaseClockHook.initClass()顺利------");
+        XposedBridge.log("------MiuiKeyguardBaseClockHook.initClass()顺利[" + AppInjecter.HostPackageName + "]------");
         return true;
     }
 
@@ -57,6 +58,14 @@ public class MiuiKeyguardBaseClockHook extends BaseHooker {
         Field mOwnerInfoField = XposedHelpers.findField(keyguardBaseClockClass, "mOwnerInfo");
 
         TextView mOwnerInfo = (TextView) mOwnerInfoField.get(param.thisObject);
+
+        if (mOwnerInfo.getClass().getName().equals(BaseUIFixer.OwnerInfoTextViewProxy.class.getName())) {
+            XposedBridge.log("检测到重复注入，操作已被主动中止！！！");
+            XposedBridge.log("Hooker:" + this);
+            XposedBridge.log("HookerClass.getClassLoader():" + this.getClass().getClassLoader() + "@" + Integer.toHexString(this.getClass().getClassLoader().hashCode()));
+//            XposedBridge.log(new Throwable());
+            return null;
+        }
 
         BaseUIFixer uiFixer = new BaseUIFixer(mOwnerInfo);
         uiFixer.fixUI(mOwnerInfo);

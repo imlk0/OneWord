@@ -28,6 +28,7 @@ import top.imlk.oneword.util.AppStyleHelper;
 import top.imlk.oneword.application.view.MainOneWordView;
 import top.imlk.oneword.application.view.OneWordShowPanel;
 import top.imlk.oneword.application.view.PastedNestedScrollView;
+import top.imlk.oneword.util.ShowDialogUtil;
 
 
 public class MainActivity extends BaseActivity implements WordRequestObserver, OnRefreshListener, PastedNestedScrollView.OnPasteListener {
@@ -118,10 +119,10 @@ public class MainActivity extends BaseActivity implements WordRequestObserver, O
 
     public void updateAndSetCurWordBean(WordBean wordBean) {
         if (wordBean != null) {
+            Toast.makeText(this, "设置锁屏一言中...", Toast.LENGTH_SHORT).show();
             updateButDoNOTSetCurWordBean(wordBean);
             OneWordFileStation.saveOneWordToJSON(wordBean);
             BroadcastSender.sendUseNewOneWordBroadcast(this, wordBean);
-            Toast.makeText(this, "设置锁屏一言中...", Toast.LENGTH_SHORT).show();
         }
     }
 

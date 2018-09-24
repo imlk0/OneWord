@@ -1,5 +1,6 @@
 package top.imlk.oneword.util;
 
+import android.os.Process;
 import android.util.Log;
 
 import com.tencent.bugly.crashreport.CrashReport;
@@ -102,10 +103,12 @@ public class BugUtil {
             FileOutputStream fos = new FileOutputStream(path, true);
             fos.write(logTime.getBytes());
             fos.write("\n".getBytes());
-            fos.write(("FLAVOR：" + BuildConfig.FLAVOR).getBytes());
-            fos.write(("VERSION_NAME：" + BuildConfig.VERSION_NAME).getBytes());
-            fos.write(("VERSION_CODE：" + BuildConfig.VERSION_CODE).getBytes());
-            fos.write("\n\n\n".getBytes());
+            fos.write(("FLAVOR：" + BuildConfig.FLAVOR + "\n").getBytes());
+            fos.write(("VERSION_NAME：" + BuildConfig.VERSION_NAME + "\n").getBytes());
+            fos.write(("VERSION_CODE：" + BuildConfig.VERSION_CODE + "\n").getBytes());
+            fos.write(("ClassLoader：" + BugUtil.class.getClassLoader() + Process.myUid() + "\n").getBytes());
+            fos.write(("Thread：" + Thread.currentThread() + "\n").getBytes());
+            fos.write("\n\n".getBytes());
             fos.write(sb.toString().getBytes());
 //            fos.write("\n\n\n".getBytes());
             fos.close();

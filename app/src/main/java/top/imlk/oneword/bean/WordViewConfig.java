@@ -24,6 +24,8 @@ public class WordViewConfig implements Parcelable {
     public int refPos;
 
 
+    public boolean guardWidth;
+
     public boolean refItalic;
 
     public boolean startLineInto;
@@ -32,54 +34,11 @@ public class WordViewConfig implements Parcelable {
 
     public boolean toTraditional;
 
+
     public WordViewConfig() {
 
     }
 
-    public static WordViewConfig generateDefaultBean() {
-        WordViewConfig wordViewConfig = new WordViewConfig();
-
-        wordViewConfig.textSize = 14;
-        wordViewConfig.textColor = 0xB3FFFFFF;
-
-
-        wordViewConfig.disL = 20;
-        wordViewConfig.disT = 10;
-        wordViewConfig.disR = 20;
-        wordViewConfig.disB = 10;
-        wordViewConfig.disC = 0;
-
-        wordViewConfig.conPos = 1;
-        wordViewConfig.refPos = 2;
-
-        wordViewConfig.refItalic = false;
-
-        wordViewConfig.startLineInto = true;
-        wordViewConfig.refAddLine = true;
-
-        wordViewConfig.toTraditional = false;
-
-        return wordViewConfig;
-    }
-
-    @Override
-    public String toString() {
-        return "WordViewConfig{" +
-                "textSize=" + textSize +
-                ", textColor=" + textColor +
-                ", disL=" + disL +
-                ", disT=" + disT +
-                ", disR=" + disR +
-                ", disB=" + disB +
-                ", disC=" + disC +
-                ", conPos=" + conPos +
-                ", refPos=" + refPos +
-                ", refItalic=" + refItalic +
-                ", startLineInto=" + startLineInto +
-                ", refAddLine=" + refAddLine +
-                ", toTraditional=" + toTraditional +
-                '}';
-    }
 
     protected WordViewConfig(Parcel in) {
         textSize = in.readInt();
@@ -91,6 +50,7 @@ public class WordViewConfig implements Parcelable {
         disC = in.readInt();
         conPos = in.readInt();
         refPos = in.readInt();
+        guardWidth = in.readByte() != 0;
         refItalic = in.readByte() != 0;
         startLineInto = in.readByte() != 0;
         refAddLine = in.readByte() != 0;
@@ -125,9 +85,59 @@ public class WordViewConfig implements Parcelable {
         dest.writeInt(disC);
         dest.writeInt(conPos);
         dest.writeInt(refPos);
+        dest.writeByte((byte) (guardWidth ? 1 : 0));
         dest.writeByte((byte) (refItalic ? 1 : 0));
         dest.writeByte((byte) (startLineInto ? 1 : 0));
         dest.writeByte((byte) (refAddLine ? 1 : 0));
         dest.writeByte((byte) (toTraditional ? 1 : 0));
     }
+
+    @Override
+    public String toString() {
+        return "WordViewConfig{" +
+                "textSize=" + textSize +
+                ", textColor=" + textColor +
+                ", disL=" + disL +
+                ", disT=" + disT +
+                ", disR=" + disR +
+                ", disB=" + disB +
+                ", disC=" + disC +
+                ", conPos=" + conPos +
+                ", refPos=" + refPos +
+                ", guardWidth=" + guardWidth +
+                ", refItalic=" + refItalic +
+                ", startLineInto=" + startLineInto +
+                ", refAddLine=" + refAddLine +
+                ", toTraditional=" + toTraditional +
+                '}';
+    }
+
+    public static WordViewConfig generateDefaultBean() {
+        WordViewConfig wordViewConfig = new WordViewConfig();
+
+        wordViewConfig.textSize = 14;
+        wordViewConfig.textColor = 0xB3FFFFFF;
+
+
+        wordViewConfig.disL = 20;
+        wordViewConfig.disT = 10;
+        wordViewConfig.disR = 20;
+        wordViewConfig.disB = 10;
+        wordViewConfig.disC = 0;
+
+        wordViewConfig.conPos = 1;
+        wordViewConfig.refPos = 2;
+
+        wordViewConfig.guardWidth = false;
+
+        wordViewConfig.refItalic = false;
+
+        wordViewConfig.startLineInto = true;
+        wordViewConfig.refAddLine = true;
+
+        wordViewConfig.toTraditional = false;
+
+        return wordViewConfig;
+    }
+
 }

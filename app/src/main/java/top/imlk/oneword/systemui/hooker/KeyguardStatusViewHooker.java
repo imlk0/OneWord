@@ -21,6 +21,7 @@ import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import top.imlk.oneword.bean.WordBean;
 import top.imlk.oneword.bean.WordViewConfig;
+import top.imlk.oneword.systemui.injecter.AppInjecter;
 import top.imlk.oneword.systemui.uifixer.BaseUIFixer;
 import top.imlk.oneword.util.BroadcastSender;
 import top.imlk.oneword.util.BugUtil;
@@ -64,12 +65,12 @@ public class KeyguardStatusViewHooker extends BaseHooker {
 //            throw new Throwable();
 
         } catch (Throwable e) {
-            XposedBridge.log("------KeyguardStatusViewHooker.initClass()发生异常------");
+            XposedBridge.log("------KeyguardStatusViewHooker.initClass()发生异常["+ AppInjecter.HostPackageName +"]------");
             XposedBridge.log(e);
             XposedBridge.log("-------------------------------------------------------");
             return false;
         }
-        XposedBridge.log("------KeyguardStatusViewHooker.initClass()顺利------");
+        XposedBridge.log("------KeyguardStatusViewHooker.initClass()顺利["+ AppInjecter.HostPackageName +"]------");
         return true;
     }
 

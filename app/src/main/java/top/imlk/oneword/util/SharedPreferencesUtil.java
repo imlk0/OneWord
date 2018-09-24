@@ -1,12 +1,11 @@
 package top.imlk.oneword.util;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
-
+import android.util.Log;
 
 import top.imlk.oneword.BuildConfig;
-import top.imlk.oneword.bean.WordBean;
-import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
 import top.imlk.oneword.application.client.service.OneWordAutoRefreshService;
 
 
@@ -222,13 +221,18 @@ public class SharedPreferencesUtil {
             }
         }
 
-        if ((!hasBeenShowDonate(context)) && isAutoRefreshOpened(context)) {
+        if ((!hasBeenShowDonate(context)) && isAutoRefreshOpened(context) && AppStatus.getModuleVersionCode() == BuildConfig.VERSION_CODE) {
             ShowDialogUtil.showDonateDialog(context);
             setHasBeenShowDonate(context, true);
         }
 
         if (!AppStatus.hasBeenHooked()) {
             ShowDialogUtil.showModuleNotStartUpDialog(context);
+        } else {
+            Log.e("getModuleVersionCode()", String.valueOf(AppStatus.getModuleVersionCode()));
+            if (AppStatus.getModuleVersionCode() != BuildConfig.VERSION_CODE) {
+                ShowDialogUtil.showNeedReBootDialog(context);
+            }
         }
 
 

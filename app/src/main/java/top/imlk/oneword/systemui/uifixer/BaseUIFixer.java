@@ -5,12 +5,22 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.transition.ChangeBounds;
+import android.transition.Fade;
+import android.transition.Scene;
+import android.transition.TransitionManager;
+import android.transition.TransitionSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.InvocationTargetException;
+
 import de.robv.android.xposed.XposedBridge;
+import de.robv.android.xposed.XposedHelpers;
+import top.imlk.oneword.BuildConfig;
 import top.imlk.oneword.bean.WordBean;
 import top.imlk.oneword.bean.WordViewConfig;
 import top.imlk.oneword.systemui.view.OneWordView;
@@ -24,10 +34,10 @@ import top.imlk.oneword.util.OneWordFileStation;
  */
 public class BaseUIFixer implements View.OnClickListener, View.OnAttachStateChangeListener {
 
+    private OwnerInfoTextViewProxy ownerInfoTextViewProxy;
     private OneWordView oneWordView;
     private TextView mOwnerInfo;
 
-    private OwnerInfoTextViewProxy ownerInfoTextViewProxy;
 
     public BaseUIFixer(TextView mOwnerInfo) {
 
@@ -39,7 +49,7 @@ public class BaseUIFixer implements View.OnClickListener, View.OnAttachStateChan
 
         ownerInfoTextViewProxy = new OwnerInfoTextViewProxy(mOwnerInfo.getContext());
 
-        XposedBridge.log("oneWordView.setOnClickListener");
+//        XposedBridge.log("oneWordView.setOnClickListener");
     }
 
     public OwnerInfoTextViewProxy getOwnerInfoTextViewProxy() {
@@ -63,10 +73,30 @@ public class BaseUIFixer implements View.OnClickListener, View.OnAttachStateChan
 //        XposedBridge.log("parent.addView(oneWordView, layoutParams);");
 
         layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+
+
+//        try {
+//            ViewGroup.LayoutParams layoutParams_0 = (ViewGroup.LayoutParams) XposedHelpers.findMethodBestMatch(parent.getClass(), "generateDefaultLayoutParams").invoke(parent);
+//            if (layoutParams_0 != null) {
+//                layoutParams = layoutParams_0;
+//            }
+//        } catch (IllegalAccessException | InvocationTargetException e) {
+//            XposedBridge.log("反射调用时发生异常generateDefaultLayoutParams()");
+//            XposedBridge.log(e);
+//        }
+
 
         parent.addView(oneWordView, index + 1, layoutParams);
 
-        syncLayout();
+        ownerInfoTextViewProxy.setVisibility(View.GONE);
+        parent.addView(ownerInfoTextViewProxy, index + 2);
+
+        ownerInfoTextViewProxy.setId(onerInfoTextView.getId());
+        onerInfoTextView.setId(View.NO_ID);
+
+
+        ownerInfoTextViewProxy.syncLayout();
     }
 
 //    public void onSetTextSize(int unit, float size) {
@@ -80,15 +110,21 @@ public class BaseUIFixer implements View.OnClickListener, View.OnAttachStateChan
 
     public void setOneWord(WordBean word) {
         if (oneWordView != null) {
+
+            oneWordView.setVisibility(View.GONE);
+            TransitionManager.beginDelayedTransition((ViewGroup) oneWordView.getParent(), new TransitionSet().addTransition(new Fade(Fade.IN)));
             oneWordView.setOneWord(word);
-            syncLayout();
+            oneWordView.setVisibility(View.VISIBLE);
+
+            ownerInfoTextViewProxy.syncLayout();
         }
     }
 
     public void applyWordViewConfig(WordViewConfig config) {
         if (oneWordView != null) {
             oneWordView.applyWordViewConfig(config);
-            syncLayout();
+
+            ownerInfoTextViewProxy.syncLayout();
         }
     }
 
@@ -138,22 +174,38 @@ public class BaseUIFixer implements View.OnClickListener, View.OnAttachStateChan
         intentFilter.addAction(BroadcastSender.CMD_BROADCAST_RELOAD_WORDVIEWCONFIG);
         systemUICmdBroadcastReceiver = new SystemUICmdBroadcastReceiver();
         context.registerReceiver(systemUICmdBroadcastReceiver, intentFilter);
-        XposedBridge.log("create SystemUICmdBroadcastReceiver");
+        XposedBridge.log("SystemUICmdBroadcastReceiver registered");
 
     }
 
     private void unregisterBroadcastReceiver(Context context) {
         context.unregisterReceiver(systemUICmdBroadcastReceiver);
         systemUICmdBroadcastReceiver = null;
+        XposedBridge.log("SystemUICmdBroadcastReceiver unregistered");
     }
 
     class SystemUICmdBroadcastReceiver extends BroadcastReceiver {
-
 
         @Override
         public void onReceive(Context context, Intent intent) {//此处context具体类型与注册时的context有关
 
             XposedBridge.log("SystemUICmdBroadcastReceiver -> onReceive" + intent.getAction());
+
+            if (intent.getAction() == null) {
+
+                XposedBridge.log("action is null!!!");
+                return;
+            }
+
+            int senderVersionCode = intent.getIntExtra(BroadcastSender.APPLICATION_PORT_VERSION_CODE, 0);
+            if (senderVersionCode != BuildConfig.VERSION_CODE) {
+                XposedBridge.log("版本号不匹配，MODULE_PORT_VERSION_CODE：" + BuildConfig.VERSION_CODE + "\nAPPLICATION_PORT_VERSION_CODE：" + senderVersionCode);
+                Toast.makeText(context, "模块版本号不匹配，您可能需要重启手机", Toast.LENGTH_SHORT).show();
+                if (!BuildConfig.DEBUG) {
+                    return;
+                }
+            }
+
 
             try {
                 switch (intent.getAction()) {
@@ -163,9 +215,13 @@ public class BaseUIFixer implements View.OnClickListener, View.OnAttachStateChan
 
                         WordBean wordBean = intent.getParcelableExtra(BroadcastSender.THE_NEW_WORDBEAN);
 
-
                         XposedBridge.log("wordbean received");
-                        XposedBridge.log(wordBean.toString());
+                        XposedBridge.log(String.valueOf(wordBean));
+
+                        if (wordBean == null) {
+                            XposedBridge.log("bad wordbean");
+                            break;
+                        }
 
 //                        XposedBridge.log("resolved");
 
@@ -173,6 +229,9 @@ public class BaseUIFixer implements View.OnClickListener, View.OnAttachStateChan
 
 //                        Toast.makeText(context, "一言已收到", Toast.LENGTH_SHORT).show();
 
+                        if (intent.getBooleanExtra(BroadcastSender.SEND_BY_SUER, false)) {
+                            Toast.makeText(context, "一言更新完成", Toast.LENGTH_SHORT).show();
+                        }
                         XposedBridge.log("wordbean updated");
 
                         break;
@@ -192,13 +251,21 @@ public class BaseUIFixer implements View.OnClickListener, View.OnAttachStateChan
 
 
                         XposedBridge.log("wordviewconfig received");
-                        XposedBridge.log(config.toString());
+                        XposedBridge.log(String.valueOf(config));
+
+                        if (config == null) {
+                            XposedBridge.log("bad wordviewconfig");
+                            break;
+                        }
 
 //                        XposedBridge.log("resolved");
 
                         applyWordViewConfig(config);
 
 
+                        if (intent.getBooleanExtra(BroadcastSender.SEND_BY_SUER, false)) {
+                            Toast.makeText(context, "布局配置应用完成", Toast.LENGTH_SHORT).show();
+                        }
                         XposedBridge.log("wordviewconfig updated");
 
                         break;
@@ -229,7 +296,7 @@ public class BaseUIFixer implements View.OnClickListener, View.OnAttachStateChan
     }
 
     @SuppressLint("AppCompatCustomView")
-    class OwnerInfoTextViewProxy extends TextView {
+    public class OwnerInfoTextViewProxy extends TextView {
 
         public OwnerInfoTextViewProxy(Context context) {
             super(context);
@@ -256,6 +323,11 @@ public class BaseUIFixer implements View.OnClickListener, View.OnAttachStateChan
         }
 
         @Override
+        public void setVisibility(int visibility) {
+
+        }
+
+        @Override
         public ViewGroup.LayoutParams getLayoutParams() {
             return oneWordView.getLayoutParams();
         }
@@ -268,18 +340,19 @@ public class BaseUIFixer implements View.OnClickListener, View.OnAttachStateChan
             mBottom = pixels;
         }
 
-    }
 
-    public void syncLayout() {
-        oneWordView.post(new Runnable() {
-            @Override
-            public void run() {
+        public void syncLayout() {
+            oneWordView.post(new Runnable() {
+                @Override
+                public void run() {
 
-                ownerInfoTextViewProxy.setFakeHeight(oneWordView.getHeight());
-                ownerInfoTextViewProxy.setFakeWith(oneWordView.getWidth());
+                    ownerInfoTextViewProxy.setFakeHeight(oneWordView.getHeight());
+                    ownerInfoTextViewProxy.setFakeWith(oneWordView.getWidth());
 
-            }
-        });
+                }
+            });
+        }
+
     }
 
 }

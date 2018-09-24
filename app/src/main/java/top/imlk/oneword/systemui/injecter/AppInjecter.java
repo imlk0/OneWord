@@ -1,15 +1,15 @@
 package top.imlk.oneword.systemui.injecter;
 
 
-import android.app.ActivityThread;
+import android.app.Application;
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.util.Log;
 
 import com.zqc.opencc.android.lib.ChineseConverter;
 import com.zqc.opencc.android.lib.ConversionType;
 
-import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 
 import dalvik.system.PathClassLoader;
 import de.robv.android.xposed.IXposedHookLoadPackage;
@@ -19,9 +19,9 @@ import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import top.imlk.oneword.BuildConfig;
-import top.imlk.oneword.application.client.activity.BaseActivity;
 import top.imlk.oneword.systemui.hooker.KeyguardStatusViewHooker;
 import top.imlk.oneword.systemui.hooker.MiuiKeyguardBaseClockHook;
+import top.imlk.oneword.systemui.hooker.SamsungKeyguardCarrierViewHooker;
 import top.imlk.oneword.util.AppStatus;
 
 /**
@@ -39,7 +39,7 @@ public class AppInjecter implements IXposedHookLoadPackage, IXposedHookZygoteIni
 
 
     @Override
-    public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
+    public void handleLoadPackage(final XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
 //        XposedBridge.log("AppInjecter"+lpparam.packageName);
 
 //        if (BuildConfig.DEBUG) {
@@ -72,79 +72,116 @@ public class AppInjecter implements IXposedHookLoadPackage, IXposedHookZygoteIni
 //            handleLoadPackage_Out(lpparam, MODULE_PATH);
 //        }
 
+        if (lpparam.packageName == null) {
+            return;
+        }
 
-        String[] packages = getRegistedPackage();
-
-        for (String pack : packages) {
-            if (pack.equals(lpparam.packageName)) {
+        switch (lpparam.packageName) {
 
 
-                if (BuildConfig.DEBUG) {
+            case "com.android.systemui":
+            case "com.android.keyguard":
 
-                    String path = "/data/app/top.imlk.oneword-%d/base.apk";
-
-                    File file = null;
-                    for (int i = 1; i <= 2; i++) {
-                        file = new File(String.format(path, i));
-                        if (file.exists()) {
-                            MODULE_PATH = file.getAbsolutePath();
-                            break;
-                        }
+                XposedHelpers.findAndHookMethod(Application.class, "onCreate", new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        loadAtApplicationOnCreate(((Application) param.thisObject), lpparam);
                     }
+                });
+
+                XposedBridge.log("注入");
+                break;
+            case BuildConfig.APPLICATION_ID:
+
+                if (BuildConfig.APPLICATION_ID.equals(lpparam.packageName)) {
+                    XposedHelpers.findAndHookMethod(AppStatus.class.getName(), lpparam.classLoader, "hasBeenHooked", new XC_MethodHook() {
+                        @Override
+                        protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                            param.setResult(true);
+                        }
+                    });
+
+                    XposedHelpers.findAndHookMethod(AppStatus.class.getName(), lpparam.classLoader, "getModuleVersionCode", new XC_MethodHook() {
+                        @Override
+                        protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                            param.setResult(BuildConfig.VERSION_CODE);
+                        }
+                    });
                 }
 
-                PathClassLoader pathClassLoader = new XposedModuleSoFileClassLoader(MODULE_PATH, MODULE_PATH, ClassLoader.getSystemClassLoader());
-
-                Class aimClass = pathClassLoader.loadClass(AppInjecter.class.getName());
-                aimClass.getDeclaredMethod("handleLoadPackage_Out", XC_LoadPackage.LoadPackageParam.class)
-                        .invoke(aimClass.newInstance(), lpparam);
-
-                return;
-            }
+                break;
         }
 
     }
 
+    public void loadAtApplicationOnCreate(Application application, XC_LoadPackage.LoadPackageParam lpparam) {
+
+        try {
+            MODULE_PATH = application.getPackageManager().getApplicationInfo(BuildConfig.APPLICATION_ID, 0).sourceDir;
+
+            PathClassLoader pathClassLoader = new XposedModuleSoFileClassLoader(MODULE_PATH, MODULE_PATH, ClassLoader.getSystemClassLoader());
+
+            Class aimClass = pathClassLoader.loadClass(AppInjecter.class.getName());
+            aimClass.getDeclaredMethod("handleLoadPackage_Out", XC_LoadPackage.LoadPackageParam.class)
+                    .invoke(aimClass.newInstance(), lpparam);
+
+
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public static String HostPackageName;
+
+    // 可免重启部分
     public void handleLoadPackage_Out(final XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
+
+        XposedBridge.log("动态加载入口处，在" + lpparam.packageName);
 
 
         if (false) {
 
-        } else if ("com.android.systemui".equals(lpparam.packageName)) {
+        } else {
+            HostPackageName = lpparam.packageName;
+
+
+            switch (lpparam.packageName) {
+
+                case "com.android.systemui":
 //            Debug.waitForDebugger();
 
-            XposedBridge.log(lpparam.packageName);
-            hookChineseConverterConvertParam();
+                    hookChineseConverterConvertParam();
 
-            new KeyguardStatusViewHooker().doHook(lpparam.classLoader);
-            new MiuiKeyguardBaseClockHook().doHook(lpparam.classLoader);
+                    new KeyguardStatusViewHooker().doHook(lpparam.classLoader);
 
+                    if (RomHelper.isMIUI()) {
+                        new MiuiKeyguardBaseClockHook().doHook(lpparam.classLoader);
+                    }
 
-        } else if ("com.android.keyguard".equals(lpparam.packageName)) {
+                    new SamsungKeyguardCarrierViewHooker().doHook(lpparam.classLoader);
 
-            XposedBridge.log(lpparam.packageName);
-            hookChineseConverterConvertParam();
+                    break;
+                case "com.android.keyguard":
 
-            new MiuiKeyguardBaseClockHook().doHook(lpparam.classLoader);
+                    hookChineseConverterConvertParam();
 
-
-        } else if (BuildConfig.APPLICATION_ID.equals(lpparam.packageName)) {
-            XposedHelpers.findAndHookMethod(AppStatus.class.getName(), lpparam.classLoader, "hasBeenHooked", new XC_MethodHook() {
-                @Override
-                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                    param.setResult(true);
-                }
-            });
-
+                    if (RomHelper.isMIUI()) {
+                        new MiuiKeyguardBaseClockHook().doHook(lpparam.classLoader);
+                    }
+                    break;
+            }
         }
-
-    }
-
-    public static String[] getRegistedPackage() {
-        return new String[]{
-                "com.android.systemui",
-                BuildConfig.APPLICATION_ID
-        };
     }
 
 
@@ -157,4 +194,6 @@ public class AppInjecter implements IXposedHookLoadPackage, IXposedHookZygoteIni
             }
         });
     }
+
+
 }

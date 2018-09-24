@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
+import de.robv.android.xposed.XposedHelpers;
 import top.imlk.oneword.bean.WordBean;
 import top.imlk.oneword.bean.WordViewConfig;
 import top.imlk.oneword.systemui.uifixer.BaseUIFixer;
@@ -66,8 +67,14 @@ public abstract class BaseHooker {
                 try {
                     baseUIFixer = performUIFixAfterHookedMethod(param);
 
-                    baseUIFixer.getAndSetOneWord();
-                    baseUIFixer.getAndApplyWordViewConfig();
+                    if (baseUIFixer == null) {
+                        XposedBridge.log(this.getClass().getName() + ".performUIFixAfterHookedMethod()结果为null！！wtf！！！");
+                        XposedBridge.log(new Throwable());
+                    } else {
+                        baseUIFixer.getAndSetOneWord();
+                        baseUIFixer.getAndApplyWordViewConfig();
+                        XposedBridge.log("BaseUIFixer 注入成功");
+                    }
 
                 } catch (Throwable e) {
 //                    XposedBridge.log(e);

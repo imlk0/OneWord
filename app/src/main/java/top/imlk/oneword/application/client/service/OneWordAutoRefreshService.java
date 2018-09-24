@@ -12,8 +12,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.io.Serializable;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import top.imlk.oneword.application.client.helper.NotificationHelper;
 import top.imlk.oneword.bean.ApiBean;
@@ -54,16 +52,17 @@ public class OneWordAutoRefreshService extends Service implements WordRequestObs
     }
 
     private Mode currentMode;
-    private long spaceTime = 0;
+    private long spaceTimeLimit = 0;
+    private long lastTaskTime = 0;
 
     private int lockTimesLimit = 0;
     private int lockTimesCount = 0;
 
     private boolean refreshByLockTimes;
-    private boolean canUpdate = true;// 合理控制更新周期
+//    private boolean canUpdate = true;// 合理控制更新周期
 
     private RefreshSignReceiver mRefreshSignReceiver;
-    private Timer mTimer;
+//    private Timer mTimer;
 
     private boolean isAutoRefreshOn = false;
     private boolean isShowNotificationOnewordOn = false;
@@ -103,20 +102,16 @@ public class OneWordAutoRefreshService extends Service implements WordRequestObs
                     isAutoRefreshOn = true;
                     updateNotification();
 
+                    // 获取刷新方式
                     Serializable serializable = intent.getSerializableExtra(BroadcastSender.THE_REFRESH_MODE);
-
                     if (serializable != null && serializable instanceof Mode) {
                         currentMode = ((Mode) serializable);
                     } else {
                         currentMode = Mode.defaultMode();
                     }
 
-                    canUpdate = true;
-                    lockTimesCount = 0;
-
                     parseMode();
                     scheduleAutoRefresh();
-
 
                     Log.i(TAG, "start auto refresh");
                     break;
@@ -129,6 +124,7 @@ public class OneWordAutoRefreshService extends Service implements WordRequestObs
                     break;
                 case BroadcastSender.CMD_SERVICES_PAUSE_AUTO_REFRESH:
                     isAutoRefreshOn = true;
+
                     updateNotification();
                     stopAutoRefreshTask();
 
@@ -201,27 +197,27 @@ public class OneWordAutoRefreshService extends Service implements WordRequestObs
 
 
                 case ONE_HOUR:
-                    spaceTime = 1 * 60 * 60 * 1000;
+                    spaceTimeLimit = 1 * 60 * 60 * 1000;
                     refreshByLockTimes = false;
                     break;
                 case TWO_HOUR:
-                    spaceTime = 2 * 60 * 60 * 1000;
+                    spaceTimeLimit = 2 * 60 * 60 * 1000;
                     refreshByLockTimes = false;
                     break;
                 case FIVE_MINUTE:
-                    spaceTime = 5 * 60 * 1000;
+                    spaceTimeLimit = 5 * 60 * 1000;
                     refreshByLockTimes = false;
                     break;
                 case TEN_MINUTE:
-                    spaceTime = 10 * 60 * 1000;
+                    spaceTimeLimit = 10 * 60 * 1000;
                     refreshByLockTimes = false;
                     break;
                 case THIRTY_MINUTE:
-                    spaceTime = 30 * 60 * 1000;
+                    spaceTimeLimit = 30 * 60 * 1000;
                     refreshByLockTimes = false;
                     break;
                 case TWENTY_MINUTE:
-                    spaceTime = 20 * 60 * 1000;
+                    spaceTimeLimit = 20 * 60 * 1000;
                     refreshByLockTimes = false;
                     break;
                 default:
@@ -238,27 +234,14 @@ public class OneWordAutoRefreshService extends Service implements WordRequestObs
 
         clearScheduleAutoRefresh();
 
-        IntentFilter intentFilter = new IntentFilter();
+        lastTaskTime = System.currentTimeMillis();
+
         mRefreshSignReceiver = new RefreshSignReceiver();
-
-        if (refreshByLockTimes) {
-            intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
-
-        } else {
-            mTimer = new Timer();
-            mTimer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-
-                    doOnClockEvent();
-
-                }
-            }, spaceTime, spaceTime);
-            intentFilter.addAction(Intent.ACTION_SCREEN_ON);
-        }
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_SCREEN_ON);
+        intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
 
         this.registerReceiver(mRefreshSignReceiver, intentFilter);
-
     }
 
     class RefreshSignReceiver extends BroadcastReceiver {
@@ -266,27 +249,32 @@ public class OneWordAutoRefreshService extends Service implements WordRequestObs
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            switch (intent.getAction()) {
-                case Intent.ACTION_SCREEN_OFF:
+            if (refreshByLockTimes) {
 
-                    if (refreshByLockTimes) {// 若根据锁屏次数来刷新
+                switch (intent.getAction()) {
+                    case Intent.ACTION_SCREEN_OFF:
 
                         lockTimesCount++;
 
                         if ((lockTimesCount %= lockTimesLimit) == 0) {
-
-                            canUpdate = true;
+                            lockTimesCount = 0;
                             doOnClockEvent();
                         }
-                    }
+                        break;
+                }
 
-                    updateNotification();
-                    break;
-                case Intent.ACTION_SCREEN_ON:
-                    if (!refreshByLockTimes) {//根据时间间隔刷新
-                        canUpdate = true;
-                    }
-                    break;
+            } else {
+
+                switch (intent.getAction()) {
+                    case Intent.ACTION_SCREEN_OFF:
+                    case Intent.ACTION_SCREEN_ON:
+                        if (System.currentTimeMillis() - lastTaskTime > spaceTimeLimit) {
+                            lastTaskTime = System.currentTimeMillis();
+
+                            doOnClockEvent();
+                        }
+                        break;
+                }
             }
 
         }
@@ -318,50 +306,43 @@ public class OneWordAutoRefreshService extends Service implements WordRequestObs
     private void doOnClockEvent() {
         Log.i(TAG, "锁屏一言自动更新服务 执行");
 
-        Log.i(TAG, "can update:" + canUpdate);
 
-        if (canUpdate) {
+        checkIfEnoughAsyn();
 
-            checkIfEnoughAsyn();
+        WordBean bean = OneWordSQLiteOpenHelper.getInstance().queryOneWordFromToShowByASC();
 
-
-            WordBean bean = OneWordSQLiteOpenHelper.getInstance().queryOneWordFromToShowByASC();
-
-            if (bean != null) {
-                OneWordSQLiteOpenHelper.getInstance().removeFromToShow(bean.id);
-            }
-
-
-            if (bean == null) {
-                bean = OneWordSQLiteOpenHelper.getInstance().queryOneWordFromHistoryByRandom();
-            }
-            if (bean == null) {
-                bean = OneWordSQLiteOpenHelper.getInstance().queryOneWordFromFavorByRandom();
-            }
-
-
-            if (bean == null) {
-                Toast.makeText(this, "网络不行呀，\n没有新的一言可以更新", Toast.LENGTH_LONG).show();
-                return;
-            }
-
-            checkIfEnoughAsyn();
-
-//        if (bean.like || OneWordSQLiteOpenHelper.getInstance().query_one_item_exist(TABLE_LIKE, bean)) {
-//            bean.like = true;
-//        }
-
-            if (bean != null) {
-
-                OneWordSQLiteOpenHelper.getInstance().insertToHistory(bean);
-                OneWordFileStation.saveOneWordToJSON(bean);
-                BroadcastSender.sendUseNewOneWordBroadcast(this, bean);
-
-                currentWord = bean;
-                canUpdate = false;
-                Log.i(TAG, String.valueOf(currentWord));
-            }
+        if (bean != null) {
+            OneWordSQLiteOpenHelper.getInstance().removeFromToShow(bean.id);
         }
+
+
+        if (bean == null) {
+            bean = OneWordSQLiteOpenHelper.getInstance().queryOneWordFromHistoryByRandom();
+        }
+        if (bean == null) {
+            bean = OneWordSQLiteOpenHelper.getInstance().queryOneWordFromFavorByRandom();
+        }
+
+
+        if (bean == null) {
+            Toast.makeText(this, "网络不行呀，\n没有新的一言可以更新", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        checkIfEnoughAsyn();
+
+
+        if (bean != null) {
+
+            OneWordSQLiteOpenHelper.getInstance().insertToHistory(bean);
+            OneWordFileStation.saveOneWordToJSON(bean);
+            BroadcastSender.sendUseNewOneWordBroadcast(this, bean);
+
+            currentWord = bean;
+            Log.i(TAG, String.valueOf(currentWord));
+
+        }
+
 
         Log.i(TAG, "锁屏一言自动更新服务 执行完毕");
     }
@@ -382,10 +363,8 @@ public class OneWordAutoRefreshService extends Service implements WordRequestObs
 
     private void clearScheduleAutoRefresh() {
 
-        if (mTimer != null) {
-            mTimer.cancel();
-            mTimer = null;
-        }
+        lockTimesCount = 0;
+        lastTaskTime = 0;
 
         if (mRefreshSignReceiver != null) {
             this.unregisterReceiver(mRefreshSignReceiver);

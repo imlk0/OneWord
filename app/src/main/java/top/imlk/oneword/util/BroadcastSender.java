@@ -15,35 +15,39 @@ import top.imlk.oneword.bean.WordViewConfig;
  */
 public class BroadcastSender {
 
-    public static final String CMD_BROADCAST_SET_NEW_WORDBEAN = "top.imlk.oneword.set_new_word_bean";
-    public static final String THE_NEW_WORDBEAN = "top.imlk.oneword.the_new_word_bean";
-    //    public static final String THE_NEW_LOCK_SCREEN_INFO_FROM = "top.imlk.oneword.the_new_lock_screen_info_from";
-//    public static final String THE_NEW_LOCK_SCREEN_INFO_MSG = "top.imlk.oneword.the_new_lock_screen_info_msg";
+    public static final String CMD_BROADCAST_SET_NEW_WORDBEAN = BuildConfig.APPLICATION_ID + ".CMD_BROADCAST_SET_NEW_WORDBEAN";
+    public static final String THE_NEW_WORDBEAN = BuildConfig.APPLICATION_ID + ".THE_NEW_WORDBEAN";
+    //    public static final String THE_NEW_LOCK_SCREEN_INFO_FROM = BuildConfig.APPLICATION_ID+".THE_NEW_LOCK_SCREEN_INFO_FROM";
+//    public static final String THE_NEW_LOCK_SCREEN_INFO_MSG = BuildConfig.APPLICATION_ID+".THE_NEW_LOCK_SCREEN_INFO_MSG";
 
-    public static final String CMD_BROADCAST_RELOAD_WORDBEAN = "top.imlk.oneword.reload_word_bean";
-
-
-    public static final String CMD_BROADCAST_SET_NEW_WORDVIEWCONFIG = "top.imlk.oneword.set_new_word_view_config";
-    public static final String THE_NEW_WORDVIEWCONFIG = "top.imlk.oneword.the_new_word_view_config";
-    //    public static final String THE_NEW_LOCK_SCREEN_INFO_FROM = "top.imlk.oneword.the_new_lock_screen_info_from";
-//    public static final String THE_NEW_LOCK_SCREEN_INFO_MSG = "top.imlk.oneword.the_new_lock_screen_info_msg";
-
-    public static final String CMD_BROADCAST_RELOAD_WORDVIEWCONFIG = "top.imlk.oneword.reload_word_view_config";
+    public static final String CMD_BROADCAST_RELOAD_WORDBEAN = BuildConfig.APPLICATION_ID + ".CMD_BROADCAST_RELOAD_WORDBEAN";
 
 
-    public static final String CMD_SERVICES_START_AUTO_REFRESH = "top.imlk.oneword.start_auto_refresh";
-    public static final String CMD_SERVICES_PAUSE_AUTO_REFRESH = "top.imlk.oneword.pause_auto_refresh";
-    public static final String CMD_SERVICES_STOP_AUTO_REFRESH = "top.imlk.oneword.stop_auto_refresh";
-    public static final String THE_REFRESH_MODE = "top.imlk.oneword.the_refresh_mode";
+    public static final String CMD_BROADCAST_SET_NEW_WORDVIEWCONFIG = BuildConfig.APPLICATION_ID + ".CMD_BROADCAST_SET_NEW_WORDVIEWCONFIG";
+    public static final String THE_NEW_WORDVIEWCONFIG = BuildConfig.APPLICATION_ID + ".THE_NEW_WORDVIEWCONFIG";
+    //    public static final String THE_NEW_LOCK_SCREEN_INFO_FROM = BuildConfig.APPLICATION_ID+".THE_NEW_LOCK_SCREEN_INFO_FROM";
+//    public static final String THE_NEW_LOCK_SCREEN_INFO_MSG = BuildConfig.APPLICATION_ID+".THE_NEW_LOCK_SCREEN_INFO_MSG";
+
+    public static final String CMD_BROADCAST_RELOAD_WORDVIEWCONFIG = BuildConfig.APPLICATION_ID + ".CMD_BROADCAST_RELOAD_WORDVIEWCONFIG";
 
 
-    public static final String CMD_SERVICES_START_SHOW_NOTIFICATION_ONEWORD = "top.imlk.oneword.start_show_notification_oneword";
-    public static final String CMD_SERVICES_STOP_SHOW_NOTIFICATION_ONEWORD = "top.imlk.oneword.stop_show_notification_oneword";
-    public static final String THE_INIT_WORDBEAN = "top.imlk.oneword.the_init_word_bean";
+    public static final String CMD_SERVICES_START_AUTO_REFRESH = BuildConfig.APPLICATION_ID + ".CMD_SERVICES_START_AUTO_REFRESH";
+    public static final String CMD_SERVICES_PAUSE_AUTO_REFRESH = BuildConfig.APPLICATION_ID + ".CMD_SERVICES_PAUSE_AUTO_REFRESH";
+    public static final String CMD_SERVICES_STOP_AUTO_REFRESH = BuildConfig.APPLICATION_ID + ".CMD_SERVICES_STOP_AUTO_REFRESH";
+    public static final String THE_REFRESH_MODE = BuildConfig.APPLICATION_ID + ".THE_REFRESH_MODE";
 
 
-    //    public static final String CMD_INTENT_START_MAIN_ACTICITY_WHEN_CLICKED = "top.imlk.oneword.start_main_activity_when_clicked";
-    public static final String THE_CLICKED_WORDBEAN = "top.imlk.oneword.the_clicked_word_bean";
+    public static final String CMD_SERVICES_START_SHOW_NOTIFICATION_ONEWORD = BuildConfig.APPLICATION_ID + ".CMD_SERVICES_START_SHOW_NOTIFICATION_ONEWORD";
+    public static final String CMD_SERVICES_STOP_SHOW_NOTIFICATION_ONEWORD = BuildConfig.APPLICATION_ID + ".CMD_SERVICES_STOP_SHOW_NOTIFICATION_ONEWORD";
+    public static final String THE_INIT_WORDBEAN = BuildConfig.APPLICATION_ID + ".THE_INIT_WORDBEAN";
+
+
+    //    public static final String CMD_INTENT_START_MAIN_ACTICITY_WHEN_CLICKED = BuildConfig.APPLICATION_ID+".CMD_INTENT_START_MAIN_ACTICITY_WHEN_CLICKED";
+    public static final String THE_CLICKED_WORDBEAN = BuildConfig.APPLICATION_ID + ".THE_CLICKED_WORDBEAN";
+
+
+    public static final String APPLICATION_PORT_VERSION_CODE = BuildConfig.APPLICATION_ID + ".APPLICATION_PORT_VERSION_CODE";
+    public static final String SEND_BY_SUER = BuildConfig.APPLICATION_ID + ".SEND_BY_SUER";
 
 
     private BroadcastSender() {
@@ -58,7 +62,7 @@ public class BroadcastSender {
 
             intent.putExtra(THE_NEW_WORDBEAN, wordBean);
 
-            context.sendBroadcast(intent);
+            sendBroadCastAspect(context, intent);
         }
     }
 
@@ -66,7 +70,8 @@ public class BroadcastSender {
     public static void sendReloadOneWordBySelfBroadcast(Context context) {
         Intent intent = new Intent();
         intent.setAction(CMD_BROADCAST_RELOAD_WORDBEAN);
-        context.sendBroadcast(intent);
+
+        sendBroadCastAspect(context, intent);
     }
 
 
@@ -78,14 +83,15 @@ public class BroadcastSender {
 
             intent.putExtra(THE_NEW_WORDVIEWCONFIG, config);
 
-            context.sendBroadcast(intent);
+            sendBroadCastAspect(context, intent);
         }
     }
 
     public static void sendReloadWordViewConfigBySelfBroadcast(Context context) {
         Intent intent = new Intent();
         intent.setAction(CMD_BROADCAST_RELOAD_WORDVIEWCONFIG);
-        context.sendBroadcast(intent);
+
+        sendBroadCastAspect(context, intent);
     }
 
 
@@ -99,6 +105,12 @@ public class BroadcastSender {
         } else {
             context.startService(intent);
         }
+    }
+
+    public static void sendBroadCastAspect(Context context, Intent intent) {
+        intent.putExtra(APPLICATION_PORT_VERSION_CODE, BuildConfig.VERSION_CODE);
+        intent.putExtra(SEND_BY_SUER, AppStatus.isMianProcess());
+        context.sendBroadcast(intent);
     }
 
     public static void stopAutoRefresh(Context context) {

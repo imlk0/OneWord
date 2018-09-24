@@ -27,6 +27,13 @@ public class OneWordApplication extends Application {
 
         CrashReport.initCrashReport(this, "03e888691d", BuildConfig.DEBUG, strategy);
 
-
+        application = this;
     }
+
+    public static Application getOneWordApplication() {
+        return application;
+    }
+
+    private static Application application;
+
 }

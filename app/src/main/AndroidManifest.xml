@@ -26,6 +26,7 @@
         android:theme="@style/GreenTheme">
         <activity
             android:name=".application.client.activity.MainActivity"
+            android:autoRemoveFromRecents="true"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,15 +36,19 @@
         </activity>
         <activity
             android:name=".application.client.activity.AllApiActivity"
+            android:exported="false"
             android:launchMode="singleTop" />
         <activity
             android:name=".application.client.activity.ApiEditActivity"
+            android:exported="false"
             android:launchMode="singleTop" />
         <activity
             android:name=".application.client.activity.AdjustStyleActivity"
+            android:exported="false"
             android:launchMode="singleTop" />
         <activity
             android:name=".application.client.activity.CustomWordActivity"
+            android:exported="false"
             android:launchMode="singleTop" />
 
         <service

@@ -18,6 +18,7 @@ import com.yarolegovich.lovelydialog.LovelyInfoDialog;
 import com.yarolegovich.lovelydialog.ViewConfigurator;
 
 import java.util.ArrayList;
+import java.util.function.Function;
 
 import top.imlk.oneword.R;
 import top.imlk.oneword.application.adapter.ItemArrayAdapter;
@@ -109,6 +110,16 @@ public class ShowDialogUtil {
                 .setMessage("模块似乎并未被启用，这种情况下，将无法在锁屏上嵌入一言，请前往XposedInstaller模块列表勾选启用锁屏一言模块。\n\n\n你也可以开启通知栏的一言，那也会是挺不错的体验，适用于没有安装Xposed框架或者不起作用的设备")
                 .show();
 
+    }
+
+    public static void showNeedReBootDialog(Context context) {
+
+        new LovelyInfoDialog(context)
+                .setTopColor(AppStyleHelper.getColorByAttributeId(context, R.attr.color_primary))
+                .setIcon(R.drawable.ic_extension_black_48dp)
+                .setTitle("注入的Xposed模块版本不一致，需要重启手机")
+                .setMessage("您可能近期更新了锁屏一言，但是并未重启，这可能会导致运行时不稳定，请尽快重启手机。\n这是Xposed的原因，并且大多数Xposed模块在更新后都是需要重启手机的。")
+                .show();
 
     }
 
@@ -178,6 +189,11 @@ public class ShowDialogUtil {
     }
 
 
+    public static void showEditValueDialog(Context context, int defVal, int curVal, int minVal, int maxVal, Function function) {
+
+    }
+
+
     public static void showOpenSourceProjectDialog(final Context context) {
 
         ArrayList<TitleAndSummary> titleAndSummaries = new ArrayList<>();
@@ -227,4 +243,6 @@ public class ShowDialogUtil {
             this.summary = summary;
         }
     }
+
+
 }

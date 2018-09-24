@@ -2,6 +2,8 @@ package top.imlk.oneword.systemui.view;
 
 import android.annotation.NonNull;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Canvas;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.text.BoringLayout;
@@ -11,6 +13,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -46,7 +49,7 @@ public class OneWordView extends LinearLayout {
         this.setOrientation(LinearLayout.VERTICAL);
 
         // 正文View的样式
-        tvContent = new TextView(context);
+        tvContent = new CustomTextView(context);
         tvContent.setGravity(Gravity.LEFT);
 
         LinearLayout.LayoutParams contentLP = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -107,7 +110,6 @@ public class OneWordView extends LinearLayout {
             tvReference.setLetterSpacing(0.05f);
         }
 
-
     }
 
 
@@ -138,7 +140,46 @@ public class OneWordView extends LinearLayout {
 
 //            Log.e("Boring imlk", metrics == null ? "no" : ("yes w:" + metrics.width));
 
-            if (metrics != null && metrics.width >= llContent.getWidth()) {
+            ViewGroup stableParent = llContent;
+
+            int widthSpace = llContent.getPaddingLeft() + llContent.getPaddingRight();
+
+            while (true) {
+
+
+                // 当前所在View的LP
+                ViewGroup.LayoutParams layoutParams = stableParent.getLayoutParams();
+
+                ViewParent nextParent = stableParent.getParent();
+
+                if (layoutParams.width != ViewGroup.LayoutParams.WRAP_CONTENT && stableParent != llContent) {// 如果当前view宽度已经固定
+                    break;
+                }
+
+
+                if (nextParent instanceof ViewGroup && ((ViewGroup) nextParent).getWidth() > 0) {//判断是否需要往上走
+
+
+                    stableParent = ((ViewGroup) nextParent);
+
+
+                    if (layoutParams instanceof MarginLayoutParams) {//把前一个view的margin加上
+                        widthSpace += ((MarginLayoutParams) layoutParams).leftMargin;
+                        widthSpace += ((MarginLayoutParams) layoutParams).rightMargin;
+                    }
+
+                    //加上下一个的padding
+                    widthSpace += stableParent.getPaddingLeft();
+                    widthSpace += stableParent.getPaddingRight();
+
+                } else {
+
+                    break;
+                }
+            }
+
+
+            if (metrics != null && metrics.width >= stableParent.getWidth() - widthSpace) {
 
                 setContentInternal("\u3000\u3000" + wordBean.content);
             } else {
@@ -195,9 +236,9 @@ public class OneWordView extends LinearLayout {
 
             //边距
             this.setPadding(config.disL, config.disT, config.disR, config.disB);
-            LinearLayout.LayoutParams layoutParams = (LayoutParams) llReference.getLayoutParams();
-            layoutParams.topMargin = config.disC;
-            llReference.setLayoutParams(layoutParams);
+            LinearLayout.LayoutParams llReferenceLP = (LayoutParams) llReference.getLayoutParams();
+            llReferenceLP.topMargin = config.disC;
+            llReference.setLayoutParams(llReferenceLP);
 
             //文本位置
             switch (config.conPos) {
@@ -215,25 +256,47 @@ public class OneWordView extends LinearLayout {
             switch (config.refPos) {
                 case 0:
                     llReference.setGravity(Gravity.LEFT);
+                    tvReference.setGravity(Gravity.LEFT);
                     break;
                 case 1:
                     llReference.setGravity(Gravity.CENTER_HORIZONTAL);
+                    tvReference.setGravity(Gravity.CENTER_HORIZONTAL);
                     break;
                 default:
                 case 2:
                     llReference.setGravity(Gravity.RIGHT);
+                    tvReference.setGravity(Gravity.RIGHT);
                     break;
             }
 
-            // Reference倾斜
+            // 保守宽度
+            ViewGroup.LayoutParams oneWordViewLP = this.getLayoutParams();
+            if (oneWordViewLP != null) {
+                if (config.guardWidth) {
+                    oneWordViewLP.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+                    oneWordViewLP.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                } else {
+                    oneWordViewLP.width = ViewGroup.LayoutParams.MATCH_PARENT;
+                    oneWordViewLP.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                }
+                this.setLayoutParams(oneWordViewLP);
+            }
 
+
+            // Reference倾斜
             if (config.refItalic) {
                 tvReference.setTypeface(Typeface.DEFAULT, Typeface.ITALIC);
             } else {
                 tvReference.setTypeface(Typeface.DEFAULT, Typeface.NORMAL);
             }
 
-            setOneWord(this.wordBean);
+            post(new Runnable() {//推迟配置
+                @Override
+                public void run() {
+                    setOneWord(OneWordView.this.wordBean);
+                }
+            });
+
         } else {
             defaultApplyWordViewConfig();
         }
@@ -270,5 +333,6 @@ public class OneWordView extends LinearLayout {
 //        v.getContext().startActivity(intent);
 //
 //    }
+
 
 }

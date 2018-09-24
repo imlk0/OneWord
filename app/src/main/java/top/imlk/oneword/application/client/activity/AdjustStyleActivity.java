@@ -3,6 +3,7 @@ package top.imlk.oneword.application.client.activity;
 import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
@@ -45,7 +46,13 @@ public class AdjustStyleActivity extends BaseOnewordEditActivity implements Colo
         oneWordView = new OneWordView(this);
         llOnewordviewContainer.addView(oneWordView);
 
-        initWordBeam();
+
+        wordBean = getIntent().getParcelableExtra(ADJUST_SAMPLE_ONEWORD);
+        if (wordBean == null) {
+            wordBean = new WordBean("星星只有在夜里才璀璨夺目啊。", "四月是你的谎言");
+        }
+
+
         initConfig();
 
         notifyWordBeanChanged();
@@ -55,7 +62,10 @@ public class AdjustStyleActivity extends BaseOnewordEditActivity implements Colo
         initTextSizeModule();
         initTextColorModule();
         initDisModule();
+//        initTransModule();
         initAlignModule();
+
+        initGuardWidthModule();
         initItalicModule();
         initStartLineIntoModule();
         initRefAddLineModule();
@@ -116,13 +126,18 @@ public class AdjustStyleActivity extends BaseOnewordEditActivity implements Colo
         sbDisC.setProgress(config.disC + 50);
 
         cpTextColor.setColor(config.textColor);
-        tvTextColor.setText("#" + (Integer.toHexString(config.textColor).toUpperCase()));
+        tvTextColor.setText(Integer.toHexString(config.textColor).toUpperCase());
 
 //        tvTextSize.setText(String.valueOf(config.textSize));
         sbTextSize.setProgress(config.textSize);
 
+//        sbTransX.setProgress(config.transX + 400);
+//        sbTransY.setProgress(config.transY + 400);
+
         sbConPos.setProgress(config.conPos);
         sbRefPos.setProgress(config.refPos);
+
+        cbGuardWidth.setChecked(config.guardWidth);
 
         cbItalicRef.setChecked(config.refItalic);
 
@@ -135,6 +150,88 @@ public class AdjustStyleActivity extends BaseOnewordEditActivity implements Colo
         etContent.setText(wordBean.content);
         etReference.setText(wordBean.reference);
     }
+
+
+    /**
+     * 保守宽度
+     */
+
+    CheckBox cbGuardWidth;
+    LinearLayout llGuardWidth;
+
+    private void initGuardWidthModule() {
+        cbGuardWidth = findViewById(R.id.cb_guard_width);
+        llGuardWidth = findViewById(R.id.ll_guard_width);
+
+        llGuardWidth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cbGuardWidth.setChecked(!cbGuardWidth.isChecked());
+            }
+        });
+
+        cbGuardWidth.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                config.guardWidth = isChecked;
+                notifyWordViewConfigChanged();
+            }
+        });
+    }
+
+
+    /**
+     * 整体平移
+     */
+//
+//    private SeekBar sbTransX;
+//    private SeekBar sbTransY;
+//
+//    private TextView tvTransX;
+//    private TextView tvTransY;
+//
+//    private void initTransModule() {
+//        sbTransX = findViewById(R.id.sb_trans_x);
+//        tvTransX = findViewById(R.id.tv_trans_x);
+//
+//        sbTransY = findViewById(R.id.sb_trans_y);
+//        tvTransY = findViewById(R.id.tv_trans_y);
+//
+//        sbTransX.setMax(800);
+//        sbTransY.setMax(800);
+//
+//        SeekBar.OnSeekBarChangeListener listener = new SeekBar.OnSeekBarChangeListener() {
+//            @Override
+//            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+//
+//                switch (seekBar.getId()) {
+//                    case R.id.sb_trans_x:
+//                        config.transX = progress - 400;
+//                        tvTransX.setText(String.valueOf(config.transX));
+//                        break;
+//                    case R.id.sb_trans_y:
+//                        config.transY = progress - 400;
+//                        tvTransY.setText(String.valueOf(config.transY));
+//                        break;
+//                }
+//                notifyWordViewConfigChanged();
+//            }
+//
+//            @Override
+//            public void onStartTrackingTouch(SeekBar seekBar) {
+//
+//            }
+//
+//            @Override
+//            public void onStopTrackingTouch(SeekBar seekBar) {
+//
+//            }
+//        };
+//
+//        sbTransX.setOnSeekBarChangeListener(listener);
+//        sbTransY.setOnSeekBarChangeListener(listener);
+//
+//    }
 
 
     /**
@@ -166,7 +263,7 @@ public class AdjustStyleActivity extends BaseOnewordEditActivity implements Colo
 
 
     /**
-     * 首行缩进
+     * 来源前加破折号
      */
 
     CheckBox cbRefAddLine;
@@ -359,27 +456,30 @@ public class AdjustStyleActivity extends BaseOnewordEditActivity implements Colo
         SeekBar.OnSeekBarChangeListener listener = new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (seekBar == sbDisL) {
-                    config.disL = progress;
-                    tvDisL.setText(String.valueOf(config.disL));
-                    notifyWordViewConfigChanged();
-                } else if (seekBar == sbDisT) {
-                    config.disT = progress;
-                    tvDisT.setText(String.valueOf(config.disT));
-                    notifyWordViewConfigChanged();
-                } else if (seekBar == sbDisR) {
-                    config.disR = progress;
-                    tvDisR.setText(String.valueOf(config.disR));
-                    notifyWordViewConfigChanged();
-                } else if (seekBar == sbDisB) {
-                    config.disB = progress;
-                    tvDisB.setText(String.valueOf(config.disB));
-                    notifyWordViewConfigChanged();
-                } else if (seekBar == sbDisC) {
-                    config.disC = progress - 50;
-                    tvDisC.setText(String.valueOf(config.disC));
-                    notifyWordViewConfigChanged();
+                switch (seekBar.getId()) {
+                    case R.id.sb_dis_left:
+                        config.disL = progress;
+                        tvDisL.setText(String.valueOf(config.disL));
+                        break;
+                    case R.id.sb_dis_top:
+                        config.disT = progress;
+                        tvDisT.setText(String.valueOf(config.disT));
+                        break;
+                    case R.id.sb_dis_right:
+                        config.disR = progress;
+                        tvDisR.setText(String.valueOf(config.disR));
+                        break;
+                    case R.id.sb_dis_bottom:
+                        config.disB = progress;
+                        tvDisB.setText(String.valueOf(config.disB));
+                        break;
+                    case R.id.sb_dis_center:
+                        config.disC = progress - 50;
+                        tvDisC.setText(String.valueOf(config.disC));
+                        break;
                 }
+
+                notifyWordViewConfigChanged();
             }
 
             @Override
@@ -428,7 +528,7 @@ public class AdjustStyleActivity extends BaseOnewordEditActivity implements Colo
     @Override
     public void onColorSelected(int dialogId, int color) {
         cpTextColor.setColor(color);
-        tvTextColor.setText("#" + (Integer.toHexString(color).toUpperCase()));
+        tvTextColor.setText(Integer.toHexString(color).toUpperCase());
         config.textColor = color;
         notifyWordViewConfigChanged();
     }
@@ -476,11 +576,4 @@ public class AdjustStyleActivity extends BaseOnewordEditActivity implements Colo
         alertDoesNotSave();
     }
 
-    protected void initWordBeam() {
-        wordBean = getIntent().getParcelableExtra(ADJUST_SAMPLE_ONEWORD);
-        if (wordBean == null) {
-            wordBean = new WordBean("星星只有在夜里才璀璨夺目啊。", "四月是你的谎言");
-        }
-
-    }
 }

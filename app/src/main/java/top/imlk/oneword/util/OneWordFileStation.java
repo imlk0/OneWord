@@ -72,20 +72,20 @@ public class OneWordFileStation {
     }
 
 
-    public static void saveOneWordToJSON(WordBean wordBean) {
+    public synchronized static void saveOneWordToJSON(WordBean wordBean) {
         saveObjJsonAtBasePath(ONEWORD_FILE_NAME, wordBean, WordBean.class);
     }
 
-    public static WordBean readOneWordToJSON() {
+    public synchronized static WordBean readOneWordToJSON() {
         return readObjJsonAtBasePath(ONEWORD_FILE_NAME, WordBean.class);
     }
 
 
-    public static void saveWordViewConfigToJSON(WordViewConfig wordViewConfig) {
+    public synchronized static void saveWordViewConfigToJSON(WordViewConfig wordViewConfig) {
         saveObjJsonAtBasePath(WORDVIEW_CONFIG_FILE_NAME, wordViewConfig, WordViewConfig.class);
     }
 
-    public static WordViewConfig readWordViewConfigToJSON() {
+    public synchronized static WordViewConfig readWordViewConfigToJSON() {
         return readObjJsonAtBasePath(WORDVIEW_CONFIG_FILE_NAME, WordViewConfig.class);
     }
 
