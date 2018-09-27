@@ -12,8 +12,7 @@ import android.widget.Toolbar;
 
 import top.imlk.oneword.R;
 import top.imlk.oneword.application.adapter.AllApisRVAdapter;
-import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
-import top.imlk.oneword.util.AppStyleHelper;
+import top.imlk.oneword.dao.OneWordDBHelper;
 
 public class AllApiActivity extends BaseToolBarActivity implements Toolbar.OnMenuItemClickListener {
 
@@ -69,8 +68,8 @@ public class AllApiActivity extends BaseToolBarActivity implements Toolbar.OnMen
         new AlertDialog.Builder(this).setTitle("恢复所有自带API").setMessage("这种操作会把所有api清除（包括自己添加的api），然后再导入所有自带api\n\n确定要这样操作吗？").setPositiveButton("是的，操作", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                OneWordSQLiteOpenHelper.getInstance().clearAllApi();
-                OneWordSQLiteOpenHelper.getInstance().insertInternalApi();
+                OneWordDBHelper.clearAllApi();
+                OneWordDBHelper.insertInternalApi();
                 allApisRVAdapter.updataData();
             }
         }).setNegativeButton("这可不行", new DialogInterface.OnClickListener() {

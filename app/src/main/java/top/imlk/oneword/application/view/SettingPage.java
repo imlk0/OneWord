@@ -182,7 +182,7 @@ public class SettingPage extends android.support.v4.widget.NestedScrollView impl
             case R.id.sw_open_auto_refresh:
                 SharedPreferencesUtil.setAutoRefreshOpened(mainActivity, isChecked);
                 if (isChecked) {
-                    BroadcastSender.pauseAutoRefresh(mainActivity);
+                    BroadcastSender.startAutoRefresh(mainActivity);
                     Toast.makeText(mainActivity, "请在 黑阈/绿守 中放过我的应用\n通知用于保活，可在通知栏长按通知来隐藏通知", Toast.LENGTH_LONG).show();
                 } else {
                     BroadcastSender.stopAutoRefresh(mainActivity);

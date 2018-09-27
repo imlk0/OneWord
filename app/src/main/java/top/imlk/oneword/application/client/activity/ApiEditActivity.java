@@ -14,8 +14,8 @@ import android.widget.Toolbar;
 import top.imlk.oneword.R;
 import top.imlk.oneword.bean.ApiBean;
 import top.imlk.oneword.bean.WordBean;
+import top.imlk.oneword.dao.OneWordDBHelper;
 import top.imlk.oneword.net.WordRequestObserver;
-import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
 import top.imlk.oneword.net.OneWordApi;
 import top.imlk.oneword.util.ShareUtil;
 
@@ -88,7 +88,7 @@ public class ApiEditActivity extends BaseEditActivity implements Toolbar.OnMenuI
             }
 
         } else {
-            apiBean = OneWordSQLiteOpenHelper.getInstance().queryApiById(id);
+            apiBean = OneWordDBHelper.queryApiById(id);
             toolbar.setTitle("编辑 " + apiBean.name);
         }
 
@@ -183,7 +183,7 @@ public class ApiEditActivity extends BaseEditActivity implements Toolbar.OnMenuI
         new AlertDialog.Builder(this).setTitle("删除？？").setMessage("您确定要删除吗？这是不可逆的操作，如果你只是想禁用此api，可以在api列表中取消勾选").setPositiveButton("删除", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                OneWordSQLiteOpenHelper.getInstance().removeApiById(apiBean.id);
+                OneWordDBHelper.removeApiById(apiBean.id);
                 finish();
             }
         }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -210,7 +210,7 @@ public class ApiEditActivity extends BaseEditActivity implements Toolbar.OnMenuI
                 apiBean.req_args_json = etReqArgJson.getText().toString();
                 apiBean.resp_form = etRespFormJson.getText().toString();
 
-                OneWordSQLiteOpenHelper.getInstance().inserAApi(apiBean);
+                OneWordDBHelper.inserAApi(apiBean);
                 finish();
                 return true;
             case R.id.iv_share:

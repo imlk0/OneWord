@@ -21,7 +21,7 @@ import co.dift.ui.SwipeToAction;
 import top.imlk.oneword.bean.WordBean;
 import top.imlk.oneword.R;
 import top.imlk.oneword.application.client.activity.MainActivity;
-import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
+import top.imlk.oneword.dao.OneWordDBHelper;
 import top.imlk.oneword.util.ShareUtil;
 
 
@@ -132,7 +132,7 @@ public class OneWordRecyclerViewAdapter extends RecyclerView.Adapter implements 
 
 
         if (pageType == PageType.HISTORY_PAGE) {
-            oneWordItemHolder.updateFavorStateImage(OneWordSQLiteOpenHelper.getInstance().checkIfInFavor(oneWordItemHolder.data.id));
+            oneWordItemHolder.updateFavorStateImage(OneWordDBHelper.checkIfInFavor(oneWordItemHolder.data.id));
         }
 
     }
@@ -188,12 +188,12 @@ public class OneWordRecyclerViewAdapter extends RecyclerView.Adapter implements 
                         break;
                     } else {
 
-                        boolean favor = OneWordSQLiteOpenHelper.getInstance().checkIfInFavor(this.data.id);
+                        boolean favor = OneWordDBHelper.checkIfInFavor(this.data.id);
 
                         if (favor) {
-                            OneWordSQLiteOpenHelper.getInstance().removeFromFavor(this.data.id);
+                            OneWordDBHelper.removeFromFavor(this.data.id);
                         } else {
-                            OneWordSQLiteOpenHelper.getInstance().insertToFavor(this.data);
+                            OneWordDBHelper.insertToFavor(this.data);
                         }
 
                         mainActivity.checkIfCurBeanFavorStateChanged(this.data);
@@ -209,10 +209,10 @@ public class OneWordRecyclerViewAdapter extends RecyclerView.Adapter implements 
 
                     if (pageType == PageType.FAVOR_PAGE) {
 
-                        OneWordSQLiteOpenHelper.getInstance().removeFromFavor(this.data.id);
+                        OneWordDBHelper.removeFromFavor(this.data.id);
                         mainActivity.checkIfCurBeanFavorStateChanged(this.data);
                     } else {
-                        OneWordSQLiteOpenHelper.getInstance().removeFromHistory(this.data.id);
+                        OneWordDBHelper.removeFromHistory(this.data.id);
                         mainActivity.checkIfCurBeanRemoved(this.data);
                     }
 
@@ -245,9 +245,9 @@ public class OneWordRecyclerViewAdapter extends RecyclerView.Adapter implements 
         int oldLen = wordBeans.size();
 
         if (pageType == PageType.HISTORY_PAGE) {
-            wordBeans.addAll(OneWordSQLiteOpenHelper.getInstance().querySomeOneWordFromHistory(oldLen, ITEM_NUM_INCREASE_STEP));
+            wordBeans.addAll(OneWordDBHelper.querySomeOneWordFromHistory(oldLen, ITEM_NUM_INCREASE_STEP));
         } else {
-            wordBeans.addAll(OneWordSQLiteOpenHelper.getInstance().querySomeOneWordFromFavor(oldLen, ITEM_NUM_INCREASE_STEP));
+            wordBeans.addAll(OneWordDBHelper.querySomeOneWordFromFavor(oldLen, ITEM_NUM_INCREASE_STEP));
         }
 
 

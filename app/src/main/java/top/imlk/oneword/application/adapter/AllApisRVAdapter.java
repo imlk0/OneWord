@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import top.imlk.oneword.R;
 import top.imlk.oneword.application.client.activity.ApiEditActivity;
 import top.imlk.oneword.bean.ApiBean;
-import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
+import top.imlk.oneword.dao.OneWordDBHelper;
 import top.imlk.oneword.util.ShareUtil;
 
 /**
@@ -82,7 +82,7 @@ public class AllApisRVAdapter extends RecyclerView.Adapter<AllApisRVAdapter.ApiI
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             apiBean.enabled = isChecked;
-            OneWordSQLiteOpenHelper.getInstance().inserAApi(apiBean);
+            OneWordDBHelper.inserAApi(apiBean);
         }
 
         @Override
@@ -123,7 +123,7 @@ public class AllApisRVAdapter extends RecyclerView.Adapter<AllApisRVAdapter.ApiI
             new android.support.v7.app.AlertDialog.Builder(context).setTitle("删除API").setMessage("您确定要删除吗？如果不小心删除了自带api可以在右上角重置").setPositiveButton("删除", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    OneWordSQLiteOpenHelper.getInstance().removeApiById(apiBean.id);
+                    OneWordDBHelper.removeApiById(apiBean.id);
                     removeItemOnUI(apiBean);
                 }
             }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -146,7 +146,7 @@ public class AllApisRVAdapter extends RecyclerView.Adapter<AllApisRVAdapter.ApiI
 
     public void updataData() {
         data.clear();
-        data.addAll(OneWordSQLiteOpenHelper.getInstance().queryAllApi());
+        data.addAll(OneWordDBHelper.queryAllApi());
         notifyDataSetChanged();
     }
 

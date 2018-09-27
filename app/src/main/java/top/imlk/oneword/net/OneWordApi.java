@@ -27,7 +27,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import top.imlk.oneword.bean.ApiBean;
 import top.imlk.oneword.bean.WordBean;
-import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
+import top.imlk.oneword.dao.OneWordDBHelper;
 import top.imlk.oneword.util.BugUtil;
 
 /**
@@ -51,7 +51,8 @@ public class OneWordApi {
 
     public static void requestOneWord(final WordRequestObserver callback) {
 
-        ApiBean apiBean = OneWordSQLiteOpenHelper.getInstance().queryAEnabledApiRandom();
+
+        ApiBean apiBean = OneWordDBHelper.queryAEnabledApiRandom();
 
         requestOneWordByAPI(callback, apiBean);
 

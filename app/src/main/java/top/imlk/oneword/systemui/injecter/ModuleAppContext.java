@@ -1,7 +1,6 @@
 package top.imlk.oneword.systemui.injecter;
 
 import android.annotation.SuppressLint;
-import android.app.ActivityThread;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentResolver;
@@ -39,6 +38,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import top.imlk.oneword.BuildConfig;
+import top.imlk.oneword.util.AppStatus;
 
 /**
  * Created by imlk on 2018/8/24.
@@ -64,7 +64,7 @@ public class ModuleAppContext extends Context {
 
     private ModuleAppContext() {
         try {
-            this.proxyedContext = ActivityThread.currentApplication().createPackageContext(BuildConfig.APPLICATION_ID, CONTEXT_IGNORE_SECURITY);
+            this.proxyedContext = AppStatus.getRunningApplication().createPackageContext(BuildConfig.APPLICATION_ID, CONTEXT_IGNORE_SECURITY);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }

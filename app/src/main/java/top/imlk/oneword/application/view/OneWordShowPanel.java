@@ -11,14 +11,13 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import top.imlk.oneword.application.client.activity.MainActivity;
 import top.imlk.oneword.bean.WordBean;
 import top.imlk.oneword.R;
-import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
+import top.imlk.oneword.dao.OneWordDBHelper;
 import top.imlk.oneword.util.ShareUtil;
 
 /**
@@ -86,7 +85,7 @@ public class OneWordShowPanel extends LinearLayout implements View.OnClickListen
 
     public void loadAndShowCurneWord() {
 
-        WordBean wordBean = OneWordSQLiteOpenHelper.getInstance().queryOneWordFromHistoryByDESC();
+        WordBean wordBean = OneWordDBHelper.queryOneWordFromHistoryByDESC();
 
         if (wordBean != null) {
             updateCurWordBeanOnUI(wordBean);
@@ -128,7 +127,7 @@ public class OneWordShowPanel extends LinearLayout implements View.OnClickListen
     public void updateCurWordBeanOnUI(WordBean wordBean) {
 
         this.curWordBean = wordBean;
-        this.updateLike(OneWordSQLiteOpenHelper.getInstance().checkIfInFavor(wordBean.id));
+        this.updateLike(OneWordDBHelper.checkIfInFavor(wordBean.id));
         this.updateContent(wordBean.content);
         this.updateReference(wordBean.reference);
         this.updateTarget(wordBean.target_text);
@@ -149,12 +148,12 @@ public class OneWordShowPanel extends LinearLayout implements View.OnClickListen
             case R.id.iv_msg_favor:
                 if (this.curWordBean != null && this.curWordBean.id > 0) {
 
-                    boolean favor = OneWordSQLiteOpenHelper.getInstance().checkIfInFavor(this.curWordBean.id);
+                    boolean favor = OneWordDBHelper.checkIfInFavor(this.curWordBean.id);
 
                     if (favor) {
-                        OneWordSQLiteOpenHelper.getInstance().removeFromFavor(this.curWordBean.id);
+                        OneWordDBHelper.removeFromFavor(this.curWordBean.id);
                     } else {
-                        OneWordSQLiteOpenHelper.getInstance().insertToFavor(this.curWordBean);
+                        OneWordDBHelper.insertToFavor(this.curWordBean);
                     }
 
                     this.updateLike(!favor);
