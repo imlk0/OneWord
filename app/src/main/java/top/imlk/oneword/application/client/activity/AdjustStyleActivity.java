@@ -1,5 +1,7 @@
 package top.imlk.oneword.application.client.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
 import android.view.View;
@@ -67,9 +69,11 @@ public class AdjustStyleActivity extends BaseOnewordEditActivity implements Colo
 
         initGuardWidthModule();
         initItalicModule();
+        initLongClickEventModule();
         initStartLineIntoModule();
         initRefAddLineModule();
         initToTraditionalModule();
+
 
         initFAB();
 
@@ -141,6 +145,8 @@ public class AdjustStyleActivity extends BaseOnewordEditActivity implements Colo
 
         cbItalicRef.setChecked(config.refItalic);
 
+        tvLongClickEvent.setText(config.keyguardLongClick.msg);
+
         cbStartLineInto.setChecked(config.startLineInto);
 
         cbRefAddLine.setChecked(config.refAddLine);
@@ -149,6 +155,41 @@ public class AdjustStyleActivity extends BaseOnewordEditActivity implements Colo
 
         etContent.setText(wordBean.content);
         etReference.setText(wordBean.reference);
+    }
+
+
+    /**
+     * 长按事件
+     */
+
+    TextView tvLongClickEvent;
+    LinearLayout llLongClickEvent;
+
+    private void initLongClickEventModule() {
+        tvLongClickEvent = findViewById(R.id.tv_keyguard_long_click);
+        llLongClickEvent = findViewById(R.id.ll_keyguard_long_click);
+
+        View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(AdjustStyleActivity.this)
+                        .setTitle("选择长按锁屏一言后的操作")
+                        .setItems(WordViewConfig.LongClickEvent.msgs(), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                tvLongClickEvent.setText(WordViewConfig.LongClickEvent.values()[which].msg);
+                                config.keyguardLongClick = WordViewConfig.LongClickEvent.values()[which];
+
+                                notifyWordViewConfigChanged();
+
+                            }
+                        })
+                        .setCancelable(true)
+                        .show();
+            }
+        };
+
+        llLongClickEvent.setOnClickListener(listener);
     }
 
 

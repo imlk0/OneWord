@@ -323,6 +323,10 @@ public class OneWordView extends LinearLayout {
         return wordBean;
     }
 
+    public WordViewConfig getCurWordViewConfig() {
+        return config;
+    }
+
 //    @Override
 //    public void onClick(View v) {
 //

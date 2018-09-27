@@ -7,6 +7,7 @@ import android.os.Parcelable;
  * Created by imlk on 2018/8/8.
  */
 public class WordViewConfig implements Parcelable {
+
     public int textSize;//SP defaut 14
     public int textColor;//defaut 0xB3FFFFFF
 
@@ -26,6 +27,7 @@ public class WordViewConfig implements Parcelable {
 
     public boolean guardWidth;
 
+
     public boolean refItalic;
 
     public boolean startLineInto;
@@ -34,11 +36,7 @@ public class WordViewConfig implements Parcelable {
 
     public boolean toTraditional;
 
-
-    public WordViewConfig() {
-
-    }
-
+    public LongClickEvent keyguardLongClick = LongClickEvent.NONE;
 
     protected WordViewConfig(Parcel in) {
         textSize = in.readInt();
@@ -55,6 +53,7 @@ public class WordViewConfig implements Parcelable {
         startLineInto = in.readByte() != 0;
         refAddLine = in.readByte() != 0;
         toTraditional = in.readByte() != 0;
+        keyguardLongClick = in.readParcelable(LongClickEvent.class.getClassLoader());
     }
 
     public static final Creator<WordViewConfig> CREATOR = new Creator<WordViewConfig>() {
@@ -90,27 +89,67 @@ public class WordViewConfig implements Parcelable {
         dest.writeByte((byte) (startLineInto ? 1 : 0));
         dest.writeByte((byte) (refAddLine ? 1 : 0));
         dest.writeByte((byte) (toTraditional ? 1 : 0));
+        dest.writeParcelable(keyguardLongClick, 0);
     }
 
-    @Override
-    public String toString() {
-        return "WordViewConfig{" +
-                "textSize=" + textSize +
-                ", textColor=" + textColor +
-                ", disL=" + disL +
-                ", disT=" + disT +
-                ", disR=" + disR +
-                ", disB=" + disB +
-                ", disC=" + disC +
-                ", conPos=" + conPos +
-                ", refPos=" + refPos +
-                ", guardWidth=" + guardWidth +
-                ", refItalic=" + refItalic +
-                ", startLineInto=" + startLineInto +
-                ", refAddLine=" + refAddLine +
-                ", toTraditional=" + toTraditional +
-                '}';
+
+    public enum LongClickEvent implements Parcelable {
+        NONE("无操作"),
+        NEXT("换一句句子"),
+        APP("进入APP"),;
+
+
+        //        public int id;
+        public String msg;
+
+
+        private LongClickEvent(String msg) {
+            this.msg = msg;
+        }
+
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(this.ordinal());
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        private static String[] mmsgs;
+
+        static {
+            LongClickEvent[] events = LongClickEvent.values();
+            mmsgs = new String[events.length];
+            for (int i = 0; i < mmsgs.length; ++i) {
+                mmsgs[i] = events[i].msg;
+            }
+        }
+
+        public static String[] msgs() {
+            return mmsgs;
+        }
+
+
+        public static final Creator<LongClickEvent> CREATOR = new Creator<LongClickEvent>() {
+            @Override
+            public LongClickEvent createFromParcel(Parcel in) {
+                return LongClickEvent.values()[in.readInt()];
+            }
+
+            @Override
+            public LongClickEvent[] newArray(int size) {
+                return new LongClickEvent[size];
+            }
+        };
     }
+
+    public WordViewConfig() {
+
+    }
+
 
     public static WordViewConfig generateDefaultBean() {
         WordViewConfig wordViewConfig = new WordViewConfig();
@@ -130,6 +169,8 @@ public class WordViewConfig implements Parcelable {
 
         wordViewConfig.guardWidth = false;
 
+        wordViewConfig.keyguardLongClick = LongClickEvent.NONE;
+
         wordViewConfig.refItalic = false;
 
         wordViewConfig.startLineInto = true;
@@ -139,5 +180,4 @@ public class WordViewConfig implements Parcelable {
 
         return wordViewConfig;
     }
-
 }

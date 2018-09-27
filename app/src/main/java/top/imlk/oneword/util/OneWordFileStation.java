@@ -1,22 +1,16 @@
 package top.imlk.oneword.util;
 
-import android.app.ActivityThread;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.google.gson.Gson;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 
-import de.robv.android.xposed.XposedBridge;
 import top.imlk.oneword.BuildConfig;
 import top.imlk.oneword.bean.WordBean;
 import top.imlk.oneword.bean.WordViewConfig;
@@ -56,7 +50,7 @@ public class OneWordFileStation {
 
             File file = null;
             try {
-                file = ActivityThread.currentApplication().createPackageContext(BuildConfig.APPLICATION_ID, Context.CONTEXT_IGNORE_SECURITY).getExternalFilesDir(null);
+                file = AppStatus.getRunningApplication().createPackageContext(BuildConfig.APPLICATION_ID, Context.CONTEXT_IGNORE_SECURITY).getExternalFilesDir(null);
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }

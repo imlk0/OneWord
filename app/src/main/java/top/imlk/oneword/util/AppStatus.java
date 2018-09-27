@@ -1,12 +1,11 @@
 package top.imlk.oneword.util;
 
 import android.app.ActivityManager;
+import android.app.Application;
 import android.content.Context;
 
 import top.imlk.oneword.BuildConfig;
 import top.imlk.oneword.application.client.application.OneWordApplication;
-
-import static top.imlk.oneword.application.client.application.OneWordApplication.getOneWordApplication;
 
 
 /**
@@ -35,7 +34,7 @@ public class AppStatus {
     private static String getCurrentProcessName() {
         int pid = android.os.Process.myPid();
         String processName = "";
-        ActivityManager manager = (ActivityManager) OneWordApplication.getOneWordApplication().getSystemService(Context.ACTIVITY_SERVICE);
+        ActivityManager manager = (ActivityManager) getRunningApplication().getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningAppProcessInfo process : manager.getRunningAppProcesses()) {
             if (process.pid == pid) {
                 processName = process.processName;
@@ -43,6 +42,17 @@ public class AppStatus {
             }
         }
         return processName;
+    }
+
+
+    private static Application runningApplication;
+
+    public static Application getRunningApplication() {
+        return runningApplication;
+    }
+
+    public static void setRunningApplication(Application application) {
+        runningApplication = application;
     }
 
 

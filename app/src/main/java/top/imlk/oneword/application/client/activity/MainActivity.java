@@ -18,8 +18,8 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import top.imlk.oneword.bean.ApiBean;
 import top.imlk.oneword.bean.WordBean;
 import top.imlk.oneword.R;
+import top.imlk.oneword.dao.OneWordDBHelper;
 import top.imlk.oneword.net.WordRequestObserver;
-import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
 import top.imlk.oneword.net.OneWordApi;
 import top.imlk.oneword.util.BroadcastSender;
 import top.imlk.oneword.util.OneWordFileStation;
@@ -28,7 +28,6 @@ import top.imlk.oneword.util.AppStyleHelper;
 import top.imlk.oneword.application.view.MainOneWordView;
 import top.imlk.oneword.application.view.OneWordShowPanel;
 import top.imlk.oneword.application.view.PastedNestedScrollView;
-import top.imlk.oneword.util.ShowDialogUtil;
 
 
 public class MainActivity extends BaseActivity implements WordRequestObserver, OnRefreshListener, PastedNestedScrollView.OnPasteListener {
@@ -47,7 +46,7 @@ public class MainActivity extends BaseActivity implements WordRequestObserver, O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        fixServiceWhenStartUp();
+//        fixServiceWhenStartUp();
 
 //        setTheme(R.style.GreenTheme);
 
@@ -131,7 +130,7 @@ public class MainActivity extends BaseActivity implements WordRequestObserver, O
 
             oneWordShowPanel.updateCurWordBeanOnUI(wordBean);
             pastedNestedScrollView.scrollToTop();
-            OneWordSQLiteOpenHelper.getInstance().insertToHistory(wordBean);
+            OneWordDBHelper.insertToHistory(wordBean);
         }
     }
 
@@ -154,9 +153,9 @@ public class MainActivity extends BaseActivity implements WordRequestObserver, O
     @Override
     public void onAcquire(ApiBean apiBean, WordBean wordBean) {
 
-        int id = OneWordSQLiteOpenHelper.getInstance().queryIdOfOneWordInAllOneWord(wordBean);
+        int id = OneWordDBHelper.queryIdOfOneWordInAllOneWord(wordBean);
         if (id <= 0) {
-            id = OneWordSQLiteOpenHelper.getInstance().insertOneWordWithoutCheck(wordBean);
+            id = OneWordDBHelper.insertOneWordWithoutCheck(wordBean);
         }
 
         wordBean.id = id;
@@ -179,18 +178,18 @@ public class MainActivity extends BaseActivity implements WordRequestObserver, O
 
     @Override
     protected void onDestroy() {
-        OneWordSQLiteOpenHelper.closeDataBase();
+        OneWordDBHelper.closeDataBase();
 
-        if (!isOnConfigurationChanged) {
-            if (SharedPreferencesUtil.isAutoRefreshOpened(this)) {
-                BroadcastSender.startAutoRefresh(this);
-            }
-
-            if (SharedPreferencesUtil.isShowNotificationOneWordOpened(this)) {
-                BroadcastSender.startShowNitificationOneword(this);
-            }
-
-        }
+//        if (!isOnConfigurationChanged) {
+//            if (SharedPreferencesUtil.isAutoRefreshOpened(this)) {
+//                BroadcastSender.startAutoRefresh(this);
+//            }
+//
+//            if (SharedPreferencesUtil.isShowNotificationOneWordOpened(this)) {
+//                BroadcastSender.startShowNitificationOneword(this);
+//            }
+//
+//        }
         super.onDestroy();
 //        System.exit(0);
     }
@@ -210,19 +209,19 @@ public class MainActivity extends BaseActivity implements WordRequestObserver, O
     }
 
 
-    public void fixServiceWhenStartUp() {
-
-        if (SharedPreferencesUtil.isAutoRefreshOpened(this)) {
-            BroadcastSender.pauseAutoRefresh(this);
-        }
-        if (SharedPreferencesUtil.isShowNotificationOneWordOpened(this)) {
-            BroadcastSender.startShowNitificationOneword(this);
-        }
-
-//        Intent intent = new Intent(this, OneWordAutoRefreshService.class);
-//        this.stopService(intent);
-
-    }
+//    public void fixServiceWhenStartUp() {
+//
+//        if (SharedPreferencesUtil.isAutoRefreshOpened(this)) {
+//            BroadcastSender.pauseAutoRefresh(this);
+//        }
+//        if (SharedPreferencesUtil.isShowNotificationOneWordOpened(this)) {
+//            BroadcastSender.startShowNitificationOneword(this);
+//        }
+//
+////        Intent intent = new Intent(this, OneWordAutoRefreshService.class);
+////        this.stopService(intent);
+//
+//    }
 
 
     public void performRefresh() {

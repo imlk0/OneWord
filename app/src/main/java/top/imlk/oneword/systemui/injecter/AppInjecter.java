@@ -121,9 +121,13 @@ public class AppInjecter implements IXposedHookLoadPackage, IXposedHookZygoteIni
 
             PathClassLoader pathClassLoader = new XposedModuleSoFileClassLoader(MODULE_PATH, MODULE_PATH, ClassLoader.getSystemClassLoader());
 
-            Class aimClass = pathClassLoader.loadClass(AppInjecter.class.getName());
-            aimClass.getDeclaredMethod("handleLoadPackage_Out", XC_LoadPackage.LoadPackageParam.class)
-                    .invoke(aimClass.newInstance(), lpparam);
+            Class appStatusClass = pathClassLoader.loadClass(AppStatus.class.getName());
+            appStatusClass.getDeclaredMethod("setRunningApplication", Application.class)
+                    .invoke(null, application);
+
+            Class appInjecterClass = pathClassLoader.loadClass(AppInjecter.class.getName());
+            appInjecterClass.getDeclaredMethod("handleLoadPackage_Out", XC_LoadPackage.LoadPackageParam.class)
+                    .invoke(appInjecterClass.newInstance(), lpparam);
 
 
         } catch (PackageManager.NameNotFoundException e) {
@@ -147,7 +151,7 @@ public class AppInjecter implements IXposedHookLoadPackage, IXposedHookZygoteIni
     // 可免重启部分
     public void handleLoadPackage_Out(final XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
 
-        XposedBridge.log("动态加载入口处，在" + lpparam.packageName);
+        XposedBridge.log("动态加载开始处，在" + lpparam.packageName);
 
 
         if (false) {

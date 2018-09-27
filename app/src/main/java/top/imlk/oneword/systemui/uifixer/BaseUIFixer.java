@@ -5,21 +5,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.transition.ChangeBounds;
 import android.transition.Fade;
-import android.transition.Scene;
 import android.transition.TransitionManager;
 import android.transition.TransitionSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.lang.reflect.InvocationTargetException;
-
 import de.robv.android.xposed.XposedBridge;
-import de.robv.android.xposed.XposedHelpers;
 import top.imlk.oneword.BuildConfig;
 import top.imlk.oneword.bean.WordBean;
 import top.imlk.oneword.bean.WordViewConfig;
@@ -44,7 +38,6 @@ public class BaseUIFixer implements View.OnClickListener, View.OnAttachStateChan
         this.mOwnerInfo = mOwnerInfo;
 
         oneWordView = new OneWordView(mOwnerInfo.getContext());
-        oneWordView.setOnClickListener(this);
         oneWordView.addOnAttachStateChangeListener(this);
 
         ownerInfoTextViewProxy = new OwnerInfoTextViewProxy(mOwnerInfo.getContext());
@@ -122,6 +115,17 @@ public class BaseUIFixer implements View.OnClickListener, View.OnAttachStateChan
 
     public void applyWordViewConfig(WordViewConfig config) {
         if (oneWordView != null) {
+            if (config == null) {
+                config = WordViewConfig.generateDefaultBean();
+            }
+
+            if (config.keyguardLongClick != null && config.keyguardLongClick != WordViewConfig.LongClickEvent.NONE) {
+                oneWordView.setOnClickListener(this);
+            } else {
+                oneWordView.setOnClickListener(null);
+            }
+
+
             oneWordView.applyWordViewConfig(config);
 
             ownerInfoTextViewProxy.syncLayout();
@@ -130,10 +134,30 @@ public class BaseUIFixer implements View.OnClickListener, View.OnAttachStateChan
 
     @Override
     public void onClick(View v) {
-        WordBean wordBean = oneWordView.getCurWordBean();
-        if (wordBean != null) {
-            BroadcastSender.startMainActivityWhenClicked(v.getContext(), wordBean);
+
+        WordViewConfig config = oneWordView.getCurWordViewConfig();
+
+        if (config != null && config.keyguardLongClick != null) {
+
+            switch (config.keyguardLongClick) {
+                case APP:
+
+                    WordBean wordBean = oneWordView.getCurWordBean();
+                    if (wordBean != null) {
+                        BroadcastSender.startMainActivityWhenClicked(v.getContext(), wordBean);
+                    }
+                    break;
+                case NEXT:
+
+
+
+                    break;
+
+            }
+
+
         }
+
 
     }
 

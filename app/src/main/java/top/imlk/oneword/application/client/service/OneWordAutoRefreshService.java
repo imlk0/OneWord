@@ -17,9 +17,9 @@ import top.imlk.oneword.application.client.helper.NotificationHelper;
 import top.imlk.oneword.bean.ApiBean;
 import top.imlk.oneword.bean.WordBean;
 import top.imlk.oneword.bean.WordViewConfig;
-import top.imlk.oneword.net.WordRequestObserver;
-import top.imlk.oneword.dao.OneWordSQLiteOpenHelper;
+import top.imlk.oneword.dao.OneWordDBHelper;
 import top.imlk.oneword.net.OneWordApi;
+import top.imlk.oneword.net.WordRequestObserver;
 import top.imlk.oneword.util.BroadcastSender;
 import top.imlk.oneword.util.OneWordFileStation;
 
@@ -99,6 +99,7 @@ public class OneWordAutoRefreshService extends Service implements WordRequestObs
         if (intent != null && !TextUtils.isEmpty(intent.getAction())) {
             switch (intent.getAction()) {
                 case BroadcastSender.CMD_SERVICES_START_AUTO_REFRESH:
+
                     isAutoRefreshOn = true;
                     updateNotification();
 
@@ -122,14 +123,14 @@ public class OneWordAutoRefreshService extends Service implements WordRequestObs
 
                     Log.i(TAG, "stop auto refresh");
                     break;
-                case BroadcastSender.CMD_SERVICES_PAUSE_AUTO_REFRESH:
-                    isAutoRefreshOn = true;
-
-                    updateNotification();
-                    stopAutoRefreshTask();
-
-                    Log.i(TAG, "pause auto refresh");
-                    break;
+//                case BroadcastSender.CMD_SERVICES_PAUSE_AUTO_REFRESH:
+//                    isAutoRefreshOn = true;
+//
+//                    updateNotification();
+//                    stopAutoRefreshTask();
+//
+//                    Log.i(TAG, "pause auto refresh");
+//                    break;
                 case BroadcastSender.CMD_SERVICES_START_SHOW_NOTIFICATION_ONEWORD:
                     isShowNotificationOnewordOn = true;
 
@@ -285,15 +286,13 @@ public class OneWordAutoRefreshService extends Service implements WordRequestObs
 
         clearScheduleAutoRefresh();
 
-        OneWordSQLiteOpenHelper.closeDataBase();
     }
 
     private void checkIfEnoughAsyn() {
-        if (OneWordSQLiteOpenHelper.getInstance().countToShow() < 5) {
+        if (OneWordDBHelper.countToShow() < 5) {
             getSomeOneWord(20);
         }
     }
-
 
     private void getSomeOneWord(int count) {
 
@@ -309,18 +308,28 @@ public class OneWordAutoRefreshService extends Service implements WordRequestObs
 
         checkIfEnoughAsyn();
 
-        WordBean bean = OneWordSQLiteOpenHelper.getInstance().queryOneWordFromToShowByASC();
+        double rand = Math.random();
 
-        if (bean != null) {
-            OneWordSQLiteOpenHelper.getInstance().removeFromToShow(bean.id);
+        WordBean bean = null;
+
+        if (rand < 0.1) {
+            bean = OneWordDBHelper.queryOneWordFromFavorByRandom();
         }
 
+        if (!(rand < 0.1) || bean == null) {
 
-        if (bean == null) {
-            bean = OneWordSQLiteOpenHelper.getInstance().queryOneWordFromHistoryByRandom();
-        }
-        if (bean == null) {
-            bean = OneWordSQLiteOpenHelper.getInstance().queryOneWordFromFavorByRandom();
+            bean = OneWordDBHelper.queryOneWordFromToShowByASC();
+
+            if (bean != null) {
+                OneWordDBHelper.removeFromToShow(bean.id);
+            }
+
+            if (bean == null) {
+                bean = OneWordDBHelper.queryOneWordFromHistoryByRandom();
+            }
+            if (bean == null) {
+                bean = OneWordDBHelper.queryOneWordFromFavorByRandom();
+            }
         }
 
 
@@ -334,7 +343,7 @@ public class OneWordAutoRefreshService extends Service implements WordRequestObs
 
         if (bean != null) {
 
-            OneWordSQLiteOpenHelper.getInstance().insertToHistory(bean);
+            OneWordDBHelper.insertToHistory(bean);
             OneWordFileStation.saveOneWordToJSON(bean);
             BroadcastSender.sendUseNewOneWordBroadcast(this, bean);
 
@@ -385,7 +394,7 @@ public class OneWordAutoRefreshService extends Service implements WordRequestObs
 
         Log.i(TAG, "成功获取到一言");
 
-        OneWordSQLiteOpenHelper.getInstance().insertToToShow(wordBean);
+        OneWordDBHelper.insertToToShow(wordBean);
 
     }
 
@@ -428,6 +437,10 @@ public class OneWordAutoRefreshService extends Service implements WordRequestObs
     }
 
     private void scheduleReSetNotificationWord() {
+
+        clearScheduleReSetNotificationWord();
+
+
         if (this.reSetNotificationWordSignReceiver == null) {
             IntentFilter intentFilter = new IntentFilter();
 //            intentFilter.addAction(Intent.ACTION_SCREEN_OFF);

@@ -6,6 +6,7 @@ import android.view.View;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import top.imlk.oneword.BuildConfig;
+import top.imlk.oneword.util.AppStatus;
 
 /**
  * Created by imlk on 2018/8/12.
@@ -15,6 +16,8 @@ public class OneWordApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        AppStatus.setRunningApplication(this);
 
         CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(this);
 
@@ -27,13 +30,6 @@ public class OneWordApplication extends Application {
 
         CrashReport.initCrashReport(this, "03e888691d", BuildConfig.DEBUG, strategy);
 
-        application = this;
     }
-
-    public static Application getOneWordApplication() {
-        return application;
-    }
-
-    private static Application application;
 
 }

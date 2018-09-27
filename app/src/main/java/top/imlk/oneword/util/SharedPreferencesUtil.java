@@ -64,7 +64,7 @@ public class SharedPreferencesUtil {
 //        int id = sharedPreferences.getInt(SHARED_PER_KEY_CURRENT_ONEWORD_ID, -1);
 //
 //        if (id > 0) {
-//            return OneWordSQLiteOpenHelper.getInstance().queryOneWordInAllOneWordById(id);
+//            return OneWordDBHelper.getInstance().queryOneWordInAllOneWordById(id);
 //        }
 //
 //        return null;

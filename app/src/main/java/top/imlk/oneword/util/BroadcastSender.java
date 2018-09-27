@@ -121,13 +121,13 @@ public class BroadcastSender {
         context.startService(intent);
     }
 
-    public static void pauseAutoRefresh(Context context) {
-
-        Intent intent = new Intent(context, OneWordAutoRefreshService.class);
-        intent.setAction(BroadcastSender.CMD_SERVICES_PAUSE_AUTO_REFRESH);
-
-        context.startService(intent);
-    }
+//    public static void pauseAutoRefresh(Context context) {
+//
+//        Intent intent = new Intent(context, OneWordAutoRefreshService.class);
+//        intent.setAction(BroadcastSender.CMD_SERVICES_PAUSE_AUTO_REFRESH);
+//
+//        context.startService(intent);
+//    }
 
 
     public static void startShowNitificationOneword(Context context) {
