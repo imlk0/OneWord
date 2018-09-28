@@ -39,6 +39,7 @@ public class AllApisRVAdapter extends RecyclerView.Adapter<AllApisRVAdapter.ApiI
         protected ImageView iv_icon;
         protected TextView tv_title;
         protected TextView tv_summary;
+        protected LinearLayout ll_enabled;
         protected CheckBox cb_enabled;
 
         protected PopupMenu popupMenu;
@@ -50,8 +51,10 @@ public class AllApisRVAdapter extends RecyclerView.Adapter<AllApisRVAdapter.ApiI
             iv_icon = itemView.findViewById(R.id.iv_icon);
             tv_title = itemView.findViewById(R.id.tv_title);
             tv_summary = itemView.findViewById(R.id.tv_summary);
+            ll_enabled = itemView.findViewById(R.id.ll_enabled);
             cb_enabled = itemView.findViewById(R.id.cb_enabled);
             itemView.setOnClickListener(this);
+            ll_enabled.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
             cb_enabled.setOnCheckedChangeListener(this);
         }
@@ -59,8 +62,13 @@ public class AllApisRVAdapter extends RecyclerView.Adapter<AllApisRVAdapter.ApiI
 
         @Override
         public void onClick(View v) {
-            Intent intent;
 
+            if (v.getId() == R.id.ll_enabled) {
+                cb_enabled.setChecked(!cb_enabled.isChecked());
+                return;
+            }
+
+            Intent intent;
             switch (getItemViewType()) {
                 case 0:
                     intent = new Intent(context, ApiEditActivity.class);
@@ -173,7 +181,7 @@ public class AllApisRVAdapter extends RecyclerView.Adapter<AllApisRVAdapter.ApiI
 
                 apiItemHolder = new ApiItemHolder(linearLayout);
 
-                apiItemHolder.iv_icon.setImageResource(R.drawable.ic_book_black_24dp);
+                apiItemHolder.iv_icon.setImageResource(R.drawable.ic_bookmark_border_black_24dp);
 
                 break;
             case 1:

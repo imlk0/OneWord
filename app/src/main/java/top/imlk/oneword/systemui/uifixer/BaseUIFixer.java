@@ -26,7 +26,7 @@ import top.imlk.oneword.util.OneWordFileStation;
 /**
  * Created by imlk on 2018/7/30.
  */
-public class BaseUIFixer implements View.OnClickListener, View.OnAttachStateChangeListener {
+public class BaseUIFixer implements View.OnLongClickListener, View.OnAttachStateChangeListener {
 
     private OwnerInfoTextViewProxy ownerInfoTextViewProxy;
     private OneWordView oneWordView;
@@ -120,9 +120,9 @@ public class BaseUIFixer implements View.OnClickListener, View.OnAttachStateChan
             }
 
             if (config.keyguardLongClick != null && config.keyguardLongClick != WordViewConfig.LongClickEvent.NONE) {
-                oneWordView.setOnClickListener(this);
+                oneWordView.setOnLongClickListener(this);
             } else {
-                oneWordView.setOnClickListener(null);
+                oneWordView.setOnLongClickListener(null);
             }
 
 
@@ -133,7 +133,7 @@ public class BaseUIFixer implements View.OnClickListener, View.OnAttachStateChan
     }
 
     @Override
-    public void onClick(View v) {
+    public boolean onLongClick(View v) {
 
         WordViewConfig config = oneWordView.getCurWordViewConfig();
 
@@ -146,19 +146,17 @@ public class BaseUIFixer implements View.OnClickListener, View.OnAttachStateChan
                     if (wordBean != null) {
                         BroadcastSender.startMainActivityWhenClicked(v.getContext(), wordBean);
                     }
-                    break;
+                    return true;
                 case NEXT:
 
+                    BroadcastSender.switchToNextOnewordManually(v.getContext());
 
-
-                    break;
-
+                    return true;
             }
-
-
         }
 
 
+        return false;
     }
 
     // OneWordView是否attach到了界面上（在状态改变时取消广播接收器，防止内存泄漏）
@@ -221,9 +219,9 @@ public class BaseUIFixer implements View.OnClickListener, View.OnAttachStateChan
                 return;
             }
 
-            int senderVersionCode = intent.getIntExtra(BroadcastSender.APPLICATION_PORT_VERSION_CODE, 0);
+            int senderVersionCode = intent.getIntExtra(BroadcastSender.ONEWORD_APP_VERSION_CODE, 0);
             if (senderVersionCode != BuildConfig.VERSION_CODE) {
-                XposedBridge.log("版本号不匹配，MODULE_PORT_VERSION_CODE：" + BuildConfig.VERSION_CODE + "\nAPPLICATION_PORT_VERSION_CODE：" + senderVersionCode);
+                XposedBridge.log("版本号不匹配，MODULE_PORT_VERSION_CODE：" + BuildConfig.VERSION_CODE + "\nONEWORD_APP_VERSION_CODE：" + senderVersionCode);
                 Toast.makeText(context, "模块版本号不匹配，您可能需要重启手机", Toast.LENGTH_SHORT).show();
                 if (!BuildConfig.DEBUG) {
                     return;
@@ -253,7 +251,7 @@ public class BaseUIFixer implements View.OnClickListener, View.OnAttachStateChan
 
 //                        Toast.makeText(context, "一言已收到", Toast.LENGTH_SHORT).show();
 
-                        if (intent.getBooleanExtra(BroadcastSender.SEND_BY_SUER, false)) {
+                        if (intent.getBooleanExtra(BroadcastSender.IS_IN_MAIN_PROCESS, false)) {
                             Toast.makeText(context, "一言更新完成", Toast.LENGTH_SHORT).show();
                         }
                         XposedBridge.log("wordbean updated");
@@ -287,7 +285,7 @@ public class BaseUIFixer implements View.OnClickListener, View.OnAttachStateChan
                         applyWordViewConfig(config);
 
 
-                        if (intent.getBooleanExtra(BroadcastSender.SEND_BY_SUER, false)) {
+                        if (intent.getBooleanExtra(BroadcastSender.IS_IN_MAIN_PROCESS, false)) {
                             Toast.makeText(context, "布局配置应用完成", Toast.LENGTH_SHORT).show();
                         }
                         XposedBridge.log("wordviewconfig updated");

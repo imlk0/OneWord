@@ -95,7 +95,7 @@ public class WordViewConfig implements Parcelable {
 
     public enum LongClickEvent implements Parcelable {
         NONE("无操作"),
-        NEXT("换一句句子"),
+        NEXT("换个句子（开启自动刷新后有效）"),
         APP("进入APP"),;
 
 

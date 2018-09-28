@@ -79,16 +79,16 @@ public class MainOneWordView extends LinearLayout {
         bottomMagicIndicator.setNavigator(commonNavigator);
         bottomMagicIndicator.onPageSelected(-1);
 
-        llMsgBottom.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                if (llMsgBottom.getHeight() != 0) {
-                    llMsgBottom.getViewTreeObserver().removeOnPreDrawListener(this);
-                    MainOneWordView.this.mainActivity.upDateLP();//更新ui
-                }
-                return true;
-            }
-        });
+//        llMsgBottom.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+//            @Override
+//            public boolean onPreDraw() {
+//                if (llMsgBottom.getHeight() != 0) {
+//                    llMsgBottom.getViewTreeObserver().removeOnPreDrawListener(this);
+//                    MainOneWordView.this.mainActivity.upDateLP();//更新ui
+//                }
+//                return true;
+//            }
+//        });
 
 
         viewPager = findViewById(R.id.vp_page_extend);

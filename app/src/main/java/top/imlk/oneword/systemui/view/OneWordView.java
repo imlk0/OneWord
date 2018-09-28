@@ -49,7 +49,7 @@ public class OneWordView extends LinearLayout {
         this.setOrientation(LinearLayout.VERTICAL);
 
         // 正文View的样式
-        tvContent = new CustomTextView(context);
+        tvContent = new TextView(context);
         tvContent.setGravity(Gravity.LEFT);
 
         LinearLayout.LayoutParams contentLP = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);

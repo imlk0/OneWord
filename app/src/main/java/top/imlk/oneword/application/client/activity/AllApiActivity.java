@@ -65,19 +65,23 @@ public class AllApiActivity extends BaseToolBarActivity implements Toolbar.OnMen
 
     private void alertRecoverAllApi() {
 
-        new AlertDialog.Builder(this).setTitle("恢复所有自带API").setMessage("这种操作会把所有api清除（包括自己添加的api），然后再导入所有自带api\n\n确定要这样操作吗？").setPositiveButton("是的，操作", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                OneWordDBHelper.clearAllApi();
-                OneWordDBHelper.insertInternalApi();
-                allApisRVAdapter.updataData();
-            }
-        }).setNegativeButton("这可不行", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        }).setCancelable(true).show();
+        new AlertDialog.Builder(this).setTitle("恢复所有自带API").setMessage("这种操作会把所有api清除（包括自己添加的api），然后再导入所有自带api\n\n确定要这样操作吗？")
+                .setPositiveButton("是的，操作", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        OneWordDBHelper.clearAllApi();
+                        OneWordDBHelper.insertInternalApi();
+                        allApisRVAdapter.updataData();
+                    }
+                })
+                .setNegativeButton("这可不行", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setCancelable(true)
+                .show();
     }
 
 }

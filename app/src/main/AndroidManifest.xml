@@ -53,7 +53,7 @@
         <service
             android:name=".application.client.service.OneWordAutoRefreshService"
             android:enabled="true"
-            android:exported="false"
+            android:exported="true"
             android:isolatedProcess="false"
             android:label="@string/service_name"
             android:priority="1000"

@@ -131,6 +131,12 @@ public class OneWordAutoRefreshService extends Service implements WordRequestObs
 //
 //                    Log.i(TAG, "pause auto refresh");
 //                    break;
+
+                case BroadcastSender.CMD_SERVICES_SWITCH_TO_NEXT_ONEWORD:
+
+                    doOnClockEvent();
+
+                    break;
                 case BroadcastSender.CMD_SERVICES_START_SHOW_NOTIFICATION_ONEWORD:
                     isShowNotificationOnewordOn = true;
 
@@ -312,11 +318,11 @@ public class OneWordAutoRefreshService extends Service implements WordRequestObs
 
         WordBean bean = null;
 
-        if (rand < 0.1) {
+        if (rand < 0.02) {
             bean = OneWordDBHelper.queryOneWordFromFavorByRandom();
         }
 
-        if (!(rand < 0.1) || bean == null) {
+        if (bean == null) {
 
             bean = OneWordDBHelper.queryOneWordFromToShowByASC();
 

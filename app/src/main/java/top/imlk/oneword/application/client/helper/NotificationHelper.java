@@ -113,6 +113,7 @@ public class NotificationHelper {
 
         }
 
+
         //文本位置
         switch (curViewConfig.conPos) {
             case 0:
@@ -138,6 +139,7 @@ public class NotificationHelper {
                 showingCurOnewordRemoteViews.setInt(R.id.ll_reference, "setGravity", Gravity.RIGHT);
                 break;
         }
+
 
         // content
         if (curViewConfig.toTraditional) {

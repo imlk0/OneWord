@@ -7,13 +7,18 @@ import android.graphics.Rect;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
+import java.util.Arrays;
+import java.util.Observable;
 
 import top.imlk.oneword.bean.ApiBean;
 import top.imlk.oneword.bean.WordBean;
@@ -33,27 +38,35 @@ import top.imlk.oneword.application.view.PastedNestedScrollView;
 public class MainActivity extends BaseActivity implements WordRequestObserver, OnRefreshListener, PastedNestedScrollView.OnPasteListener {
 
 
-    private PastedNestedScrollView pastedNestedScrollView;
-
     private RefreshLayout refreshLayout;
+
+    private PastedNestedScrollView pastedNestedScrollView;
 
     private MainOneWordView mainOneWordView;
 
     private OneWordShowPanel oneWordShowPanel;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        fixServiceWhenStartUp();
+        fixServiceWhenStartUp();
 
-//        setTheme(R.style.GreenTheme);
 
         setContentView(R.layout.activity_main);
 
         this.pastedNestedScrollView = findViewById(R.id.pasted_scroll_view);
         this.pastedNestedScrollView.setOnPasteListener(this);
+
+        this.pastedNestedScrollView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                if (left != oldLeft || top != oldTop || right != oldRight || bottom != oldBottom) {
+                    Log.d("onLayoutChange", Arrays.toString(new Object[]{v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom}));
+                    MainActivity.this.upDateLP();
+                }
+            }
+        });
 
         this.mainOneWordView = findViewById(R.id.ll_main_oneword);
         this.mainOneWordView.init(this);
@@ -209,19 +222,19 @@ public class MainActivity extends BaseActivity implements WordRequestObserver, O
     }
 
 
-//    public void fixServiceWhenStartUp() {
-//
-//        if (SharedPreferencesUtil.isAutoRefreshOpened(this)) {
-//            BroadcastSender.pauseAutoRefresh(this);
-//        }
-//        if (SharedPreferencesUtil.isShowNotificationOneWordOpened(this)) {
-//            BroadcastSender.startShowNitificationOneword(this);
-//        }
-//
-////        Intent intent = new Intent(this, OneWordAutoRefreshService.class);
-////        this.stopService(intent);
-//
-//    }
+    public void fixServiceWhenStartUp() {
+
+        if (SharedPreferencesUtil.isAutoRefreshOpened(this)) {
+            BroadcastSender.startAutoRefresh(this);
+        }
+        if (SharedPreferencesUtil.isShowNotificationOneWordOpened(this)) {
+            BroadcastSender.startShowNitificationOneword(this);
+        }
+
+//        Intent intent = new Intent(this, OneWordAutoRefreshService.class);
+//        this.stopService(intent);
+
+    }
 
 
     public void performRefresh() {
@@ -258,6 +271,7 @@ public class MainActivity extends BaseActivity implements WordRequestObserver, O
 
     public void upDateLP() {
         if (this.mainOneWordView != null) {
+            Log.d("MainActivity", " updateLP");
             mainOneWordView.upDateLP(getAreaView());
         }
     }
@@ -278,7 +292,7 @@ public class MainActivity extends BaseActivity implements WordRequestObserver, O
 
         if (hasFocus && !lpResolved) {
             lpResolved = true;
-            upDateLP();
+//            upDateLP();
         }
 
     }
