@@ -8,35 +8,38 @@ import android.os.Parcelable;
  */
 public class WordViewConfig implements Parcelable {
 
-    public int textSize;//SP defaut 14
-    public int textColor;//defaut 0xB3FFFFFF
+    public int textSize = 14;//SP
+    public int textColor = 0xB3FFFFFF;//defaut 0xB3FFFFFF
 
-    public int disL;
-    public int disT;
-    public int disR;
-    public int disB;
-    public int disC;
+    public int disL = 20;
+    public int disT = 10;
+    public int disR = 20;
+    public int disB = 10;
+    public int disC = 0;
 
 
     //     0:Gravity.LEFT;
     //     1:Gravity.CENTER_HORIZONTAL;
     //     2:Gravity.RIGHT;
-    public int conPos;
-    public int refPos;
+    public int conPos = 1;
+    public int refPos = 2;
 
 
-    public boolean guardWidth;
+    public boolean guardWidth = false;
 
 
-    public boolean refItalic;
+    public boolean refItalic = false;
 
-    public boolean startLineInto;
+    public boolean startLineInto = true;
 
-    public boolean refAddLine;
+    public boolean refAddLine = true;
 
-    public boolean toTraditional;
+    public boolean toTraditional = false;
 
-    public LongClickEvent keyguardLongClick = LongClickEvent.NONE;
+    public LongClickEvent keyguardLongClick = LongClickEvent.NEXT;
+
+    public int maxHeight = 280;
+
 
     protected WordViewConfig(Parcel in) {
         textSize = in.readInt();
@@ -54,6 +57,7 @@ public class WordViewConfig implements Parcelable {
         refAddLine = in.readByte() != 0;
         toTraditional = in.readByte() != 0;
         keyguardLongClick = in.readParcelable(LongClickEvent.class.getClassLoader());
+        maxHeight = in.readInt();
     }
 
     public static final Creator<WordViewConfig> CREATOR = new Creator<WordViewConfig>() {
@@ -90,12 +94,13 @@ public class WordViewConfig implements Parcelable {
         dest.writeByte((byte) (refAddLine ? 1 : 0));
         dest.writeByte((byte) (toTraditional ? 1 : 0));
         dest.writeParcelable(keyguardLongClick, 0);
+        dest.writeInt(maxHeight);
     }
 
 
     public enum LongClickEvent implements Parcelable {
         NONE("无操作"),
-        NEXT("换个句子（开启自动刷新后有效）"),
+        NEXT("换个句子"),
         APP("进入APP"),;
 
 
@@ -154,30 +159,28 @@ public class WordViewConfig implements Parcelable {
     public static WordViewConfig generateDefaultBean() {
         WordViewConfig wordViewConfig = new WordViewConfig();
 
-        wordViewConfig.textSize = 14;
-        wordViewConfig.textColor = 0xB3FFFFFF;
-
-
-        wordViewConfig.disL = 20;
-        wordViewConfig.disT = 10;
-        wordViewConfig.disR = 20;
-        wordViewConfig.disB = 10;
-        wordViewConfig.disC = 0;
-
-        wordViewConfig.conPos = 1;
-        wordViewConfig.refPos = 2;
-
-        wordViewConfig.guardWidth = false;
-
-        wordViewConfig.keyguardLongClick = LongClickEvent.NONE;
-
-        wordViewConfig.refItalic = false;
-
-        wordViewConfig.startLineInto = true;
-        wordViewConfig.refAddLine = true;
-
-        wordViewConfig.toTraditional = false;
-
         return wordViewConfig;
+    }
+
+    @Override
+    public String toString() {
+        return "WordViewConfig{" +
+                "textSize=" + textSize +
+                ", textColor=" + textColor +
+                ", disL=" + disL +
+                ", disT=" + disT +
+                ", disR=" + disR +
+                ", disB=" + disB +
+                ", disC=" + disC +
+                ", conPos=" + conPos +
+                ", refPos=" + refPos +
+                ", guardWidth=" + guardWidth +
+                ", refItalic=" + refItalic +
+                ", startLineInto=" + startLineInto +
+                ", refAddLine=" + refAddLine +
+                ", toTraditional=" + toTraditional +
+                ", keyguardLongClick=" + keyguardLongClick +
+                ", maxHeight=" + maxHeight +
+                '}';
     }
 }

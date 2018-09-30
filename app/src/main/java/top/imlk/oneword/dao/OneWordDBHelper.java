@@ -11,14 +11,14 @@ import android.text.TextUtils;
 import java.util.ArrayList;
 
 import top.imlk.oneword.BuildConfig;
-import top.imlk.oneword.application.client.provider.OneWordDBProvider;
+import top.imlk.oneword.app.provider.OneWordDBProvider;
 import top.imlk.oneword.bean.ApiBean;
 import top.imlk.oneword.bean.WordBean;
 import top.imlk.oneword.util.AppStatus;
 
 import static android.database.sqlite.SQLiteDatabase.CONFLICT_IGNORE;
 import static android.database.sqlite.SQLiteDatabase.CONFLICT_REPLACE;
-import static top.imlk.oneword.application.client.provider.OneWordDBProvider.URI_ALL_ONEWORD;
+import static top.imlk.oneword.app.provider.OneWordDBProvider.URI_ALL_ONEWORD;
 
 /**
  * Created by imlk on 2018/5/26.

@@ -16,7 +16,7 @@
     <!-- android:sharedUserId="android.uid.systemui" -->
     <!-- android:process="com.android.systemui" -->
     <application
-        android:name=".application.client.application.OneWordApplication"
+        android:name=".app.application.OneWordApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -24,7 +24,7 @@
         android:supportsRtl="true"
         android:theme="@style/GreenTheme">
         <activity
-            android:name=".application.client.activity.MainActivity"
+            android:name=".app.activity.MainActivity"
             android:autoRemoveFromRecents="true"
             android:launchMode="singleTop">
             <intent-filter>
@@ -34,24 +34,24 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".application.client.activity.AllApiActivity"
+            android:name=".app.activity.AllApiActivity"
             android:exported="false"
             android:launchMode="singleTop" />
         <activity
-            android:name=".application.client.activity.ApiEditActivity"
+            android:name=".app.activity.ApiEditActivity"
             android:exported="false"
             android:launchMode="singleTop" />
         <activity
-            android:name=".application.client.activity.AdjustStyleActivity"
+            android:name=".app.activity.AdjustStyleActivity"
             android:exported="false"
             android:launchMode="singleTop" />
         <activity
-            android:name=".application.client.activity.CustomWordActivity"
+            android:name=".app.activity.CustomWordActivity"
             android:exported="false"
             android:launchMode="singleTop" />
 
         <service
-            android:name=".application.client.service.OneWordAutoRefreshService"
+            android:name=".app.service.OneWordAutoRefreshService"
             android:enabled="true"
             android:exported="true"
             android:isolatedProcess="false"
@@ -98,7 +98,7 @@
         <!-- android:multiprocess="true" -->
         <!-- tools:replace="android:multiprocess" -->
         <provider
-            android:name=".application.client.provider.OneWordDBProvider"
+            android:name=".app.provider.OneWordDBProvider"
             android:authorities="top.imlk.oneword.OneWordDBProvider"
             android:enabled="true"
             android:exported="false"

@@ -22,13 +22,11 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Looper;
 import android.os.UserHandle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.view.Display;
-import android.view.DisplayAdjustments;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -121,16 +119,6 @@ public class ModuleAppContext extends Context {
     }
 
     @Override
-    public String getBasePackageName() {
-        return null;
-    }
-
-    @Override
-    public String getOpPackageName() {
-        return null;
-    }
-
-    @Override
     public ApplicationInfo getApplicationInfo() {
         return null;
     }
@@ -151,11 +139,6 @@ public class ModuleAppContext extends Context {
     }
 
     @Override
-    public SharedPreferences getSharedPreferences(File file, int mode) {
-        return null;
-    }
-
-    @Override
     public boolean moveSharedPreferencesFrom(Context sourceContext, String name) {
         return false;
     }
@@ -163,11 +146,6 @@ public class ModuleAppContext extends Context {
     @Override
     public boolean deleteSharedPreferences(String name) {
         return false;
-    }
-
-    @Override
-    public void reloadSharedPreferences() {
-
     }
 
     @Override
@@ -187,11 +165,6 @@ public class ModuleAppContext extends Context {
 
     @Override
     public File getFileStreamPath(String name) {
-        return null;
-    }
-
-    @Override
-    public File getSharedPreferencesPath(String name) {
         return null;
     }
 
@@ -244,11 +217,6 @@ public class ModuleAppContext extends Context {
     @Nullable
     @Override
     public File getExternalCacheDir() {
-        return null;
-    }
-
-    @Override
-    public File getPreloadsFileCache() {
         return null;
     }
 
@@ -378,37 +346,12 @@ public class ModuleAppContext extends Context {
     }
 
     @Override
-    public void sendBroadcastMultiplePermissions(Intent intent, String[] receiverPermissions) {
-
-    }
-
-    @Override
-    public void sendBroadcast(Intent intent, String receiverPermission, Bundle options) {
-
-    }
-
-    @Override
-    public void sendBroadcast(Intent intent, String receiverPermission, int appOp) {
-
-    }
-
-    @Override
     public void sendOrderedBroadcast(Intent intent, @Nullable String receiverPermission) {
 
     }
 
     @Override
     public void sendOrderedBroadcast(@NonNull Intent intent, @Nullable String receiverPermission, @Nullable BroadcastReceiver resultReceiver, @Nullable Handler scheduler, int initialCode, @Nullable String initialData, @Nullable Bundle initialExtras) {
-
-    }
-
-    @Override
-    public void sendOrderedBroadcast(Intent intent, String receiverPermission, Bundle options, BroadcastReceiver resultReceiver, Handler scheduler, int initialCode, String initialData, Bundle initialExtras) {
-
-    }
-
-    @Override
-    public void sendOrderedBroadcast(Intent intent, String receiverPermission, int appOp, BroadcastReceiver resultReceiver, Handler scheduler, int initialCode, String initialData, Bundle initialExtras) {
 
     }
 
@@ -423,27 +366,7 @@ public class ModuleAppContext extends Context {
     }
 
     @Override
-    public void sendBroadcastAsUser(Intent intent, UserHandle user, String receiverPermission, Bundle options) {
-
-    }
-
-    @Override
-    public void sendBroadcastAsUser(Intent intent, UserHandle user, String receiverPermission, int appOp) {
-
-    }
-
-    @Override
     public void sendOrderedBroadcastAsUser(Intent intent, UserHandle user, @Nullable String receiverPermission, BroadcastReceiver resultReceiver, @Nullable Handler scheduler, int initialCode, @Nullable String initialData, @Nullable Bundle initialExtras) {
-
-    }
-
-    @Override
-    public void sendOrderedBroadcastAsUser(Intent intent, UserHandle user, String receiverPermission, int appOp, BroadcastReceiver resultReceiver, Handler scheduler, int initialCode, String initialData, Bundle initialExtras) {
-
-    }
-
-    @Override
-    public void sendOrderedBroadcastAsUser(Intent intent, UserHandle user, String receiverPermission, int appOp, Bundle options, BroadcastReceiver resultReceiver, Handler scheduler, int initialCode, String initialData, Bundle initialExtras) {
 
     }
 
@@ -464,11 +387,6 @@ public class ModuleAppContext extends Context {
 
     @Override
     public void sendStickyBroadcastAsUser(Intent intent, UserHandle user) {
-
-    }
-
-    @Override
-    public void sendStickyBroadcastAsUser(Intent intent, UserHandle user, Bundle options) {
 
     }
 
@@ -507,11 +425,6 @@ public class ModuleAppContext extends Context {
     }
 
     @Override
-    public Intent registerReceiverAsUser(BroadcastReceiver receiver, UserHandle user, IntentFilter filter, String broadcastPermission, Handler scheduler) {
-        return null;
-    }
-
-    @Override
     public void unregisterReceiver(BroadcastReceiver receiver) {
 
     }
@@ -529,22 +442,7 @@ public class ModuleAppContext extends Context {
     }
 
     @Override
-    public ComponentName startForegroundServiceAsUser(Intent service, UserHandle user) {
-        return null;
-    }
-
-    @Override
     public boolean stopService(Intent service) {
-        return false;
-    }
-
-    @Override
-    public ComponentName startServiceAsUser(Intent service, UserHandle user) {
-        return null;
-    }
-
-    @Override
-    public boolean stopServiceAsUser(Intent service, UserHandle user) {
         return false;
     }
 
@@ -578,11 +476,6 @@ public class ModuleAppContext extends Context {
     @SuppressLint("WrongConstant")
     @Override
     public int checkPermission(@NonNull String permission, int pid, int uid) {
-        return 0;
-    }
-
-    @Override
-    public int checkPermission(String permission, int pid, int uid, IBinder callerToken) {
         return 0;
     }
 
@@ -640,11 +533,6 @@ public class ModuleAppContext extends Context {
         return 0;
     }
 
-    @Override
-    public int checkUriPermission(Uri uri, int pid, int uid, int modeFlags, IBinder callerToken) {
-        return 0;
-    }
-
     @SuppressLint("WrongConstant")
     @Override
     public int checkCallingUriPermission(Uri uri, int modeFlags) {
@@ -689,23 +577,8 @@ public class ModuleAppContext extends Context {
     }
 
     @Override
-    public Context createPackageContextAsUser(String packageName, int flags, UserHandle user) throws PackageManager.NameNotFoundException {
-        return null;
-    }
-
-    @Override
-    public Context createApplicationContext(ApplicationInfo application, int flags) throws PackageManager.NameNotFoundException {
-        return null;
-    }
-
-    @Override
     public Context createContextForSplit(String splitName) throws PackageManager.NameNotFoundException {
         return null;
-    }
-
-    @Override
-    public int getUserId() {
-        return 0;
     }
 
     @Override
@@ -724,39 +597,8 @@ public class ModuleAppContext extends Context {
     }
 
     @Override
-    public Context createCredentialProtectedStorageContext() {
-        return null;
-    }
-
-    @Override
-    public DisplayAdjustments getDisplayAdjustments(int displayId) {
-        return null;
-    }
-
-    @Override
-    public Display getDisplay() {
-        return null;
-    }
-
-    @Override
-    public void updateDisplay(int displayId) {
-
-    }
-
-    @Override
     public boolean isDeviceProtectedStorage() {
         return false;
     }
-
-    @Override
-    public boolean isCredentialProtectedStorage() {
-        return false;
-    }
-
-    @Override
-    public boolean canLoadUnsafeResources() {
-        return false;
-    }
-
 
 }

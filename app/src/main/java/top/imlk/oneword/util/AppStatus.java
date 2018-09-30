@@ -5,7 +5,7 @@ import android.app.Application;
 import android.content.Context;
 
 import top.imlk.oneword.BuildConfig;
-import top.imlk.oneword.application.client.application.OneWordApplication;
+import top.imlk.oneword.app.application.OneWordApplication;
 
 
 /**

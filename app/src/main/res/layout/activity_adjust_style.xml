@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    tools:context=".application.client.activity.AdjustStyleActivity">
+    tools:context=".app.activity.AdjustStyleActivity">
 
 
     <Toolbar
@@ -29,10 +29,10 @@
         android:gravity="center"
         android:minHeight="140dp"
         android:orientation="vertical"
-        android:paddingBottom="18dp"
         android:paddingLeft="24dp"
-        android:paddingRight="24dp"
         android:paddingTop="18dp"
+        android:paddingRight="24dp"
+        android:paddingBottom="18dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
@@ -153,8 +153,8 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
                         android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
                         android:text="文字大小"
                         android:textColor="?attr/color_primary_text"
                         android:textSize="@dimen/item_setting_title_ts" />
@@ -228,8 +228,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="horizontal"
-                    android:paddingBottom="16dp"
-                    android:paddingTop="16dp">
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -277,6 +277,115 @@
 
             </LinearLayout>
 
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?attr/color_divider" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/preference_item_padding_l"
+                android:paddingRight="@dimen/preference_item_padding_r">
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:layout_marginRight="24dp"
+                        android:layout_weight="1"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_format_align_center_black_24dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:text="文字位置"
+                        android:textColor="?attr/color_primary_text"
+                        android:textSize="@dimen/item_setting_title_ts" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:orientation="horizontal">
+
+                        <SeekBar
+                            android:id="@+id/sb_con_pos"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="正文位置："
+                            android:textColor="?attr/color_secondary_text" />
+
+                        <TextView
+                            android:id="@+id/tv_con_pos"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="靠左"
+                            android:textColor="?attr/color_secondary_text" />
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:orientation="horizontal">
+
+                        <SeekBar
+                            android:id="@+id/sb_ref_pos"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="出处位置："
+                            android:textColor="?attr/color_secondary_text" />
+
+                        <TextView
+                            android:id="@+id/tv_ref_pos"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="靠左"
+                            android:textColor="?attr/color_secondary_text" />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -316,8 +425,8 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
                         android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
                         android:text="四周内边距"
                         android:textColor="?attr/color_primary_text"
                         android:textSize="@dimen/item_setting_title_ts" />
@@ -654,7 +763,8 @@
                         android:layout_marginRight="24dp"
                         android:layout_weight="1"
                         android:scaleType="fitCenter"
-                        android:src="@drawable/ic_format_align_center_black_24dp" />
+                        android:src="@drawable/ic_vertical_max_height_black_48dp"
+                        android:tint="#757575" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -663,43 +773,15 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
                         android:layout_marginTop="8dp"
-                        android:text="文字位置"
+                        android:layout_marginBottom="8dp"
+                        android:text="最大高度"
                         android:textColor="?attr/color_primary_text"
                         android:textSize="@dimen/item_setting_title_ts" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:orientation="horizontal">
-
-                        <SeekBar
-                            android:id="@+id/sb_con_pos"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="正文位置："
-                            android:textColor="?attr/color_secondary_text" />
-
-                        <TextView
-                            android:id="@+id/tv_con_pos"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="靠左"
-                            android:textColor="?attr/color_secondary_text" />
-
-                    </LinearLayout>
-
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -708,31 +790,30 @@
                         android:orientation="horizontal">
 
                         <SeekBar
-                            android:id="@+id/sb_ref_pos"
+                            android:id="@+id/sb_max_height"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1" />
 
                         <TextView
+                            android:id="@+id/tv_max_height"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="出处位置："
+                            android:text="0"
                             android:textColor="?attr/color_secondary_text" />
 
                         <TextView
-                            android:id="@+id/tv_ref_pos"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="靠左"
+                            android:text="px"
                             android:textColor="?attr/color_secondary_text" />
-
                     </LinearLayout>
-
 
                 </LinearLayout>
 
 
             </LinearLayout>
+
 
             <View
                 android:layout_width="match_parent"
@@ -771,13 +852,13 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:paddingBottom="16dp"
-                    android:paddingTop="16dp">
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="保守宽度(宽度受限时用)"
+                        android:text="保守宽度(适用于时钟不居中的锁屏)"
                         android:textColor="?attr/color_primary_text"
                         android:textSize="@dimen/item_setting_title_ts" />
 
@@ -835,8 +916,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:paddingBottom="16dp"
-                    android:paddingTop="16dp">
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -899,8 +980,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:paddingBottom="16dp"
-                    android:paddingTop="16dp">
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -964,8 +1045,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:paddingBottom="16dp"
-                    android:paddingTop="16dp">
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -1027,8 +1108,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:paddingBottom="16dp"
-                    android:paddingTop="16dp">
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -1091,8 +1172,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:paddingBottom="16dp"
-                    android:paddingTop="16dp">
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -1185,7 +1266,7 @@
         </LinearLayout>
     </ScrollView>
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_default_config"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -1197,12 +1278,12 @@
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/ic_refresh_white_24dp" />
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_save_config"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="36dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="36dp"
         android:clickable="true"
         app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
@@ -1210,4 +1291,4 @@
         app:layout_constraintVertical_bias="0.583"
         app:srcCompat="@drawable/ic_done_white_48dp" />
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

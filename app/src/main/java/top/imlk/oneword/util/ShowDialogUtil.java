@@ -21,8 +21,8 @@ import java.util.ArrayList;
 import java.util.function.Function;
 
 import top.imlk.oneword.R;
-import top.imlk.oneword.application.adapter.ItemArrayAdapter;
-import top.imlk.oneword.application.client.service.OneWordAutoRefreshService;
+import top.imlk.oneword.app.adapter.ItemArrayAdapter;
+import top.imlk.oneword.app.service.OneWordAutoRefreshService;
 
 /**
  * Created by imlk on 2018/6/3.
@@ -41,7 +41,6 @@ public class ShowDialogUtil {
                 .setItems(arrayAdapter, new LovelyChoiceDialog.OnItemSelectedListener<String>() {
                     @Override
                     public void onItemSelected(int position, String item) {
-                        Log.e("SettingPage", "position -> " + position);
                         SharedPreferencesUtil.setRefreshMode(context, OneWordAutoRefreshService.Mode.values()[position]);
                     }
 

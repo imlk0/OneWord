@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".app.fragments.WordViewFragment">
+
+
+    <LinearLayout
+        android:id="@+id/one_word_show_panel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/iv_msg_operator_size">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+
+            <!--<ImageView-->
+            <!--android:layout_width="@dimen/iv_msg_quote_icon_size"-->
+            <!--android:layout_height="@dimen/iv_msg_quote_icon_size"-->
+            <!--android:layout_alignTop="@id/tv_msg_main"-->
+            <!--android:layout_marginLeft="-6dp"-->
+            <!--android:layout_marginRight="-100dp"-->
+            <!--android:layout_marginTop="-12dp"-->
+            <!--android:layout_toLeftOf="@id/tv_msg_main"-->
+            <!--android:rotation="180"-->
+            <!--android:src="@drawable/ic_format_quote_white_48dp"-->
+            <!--android:tint="?attr/color_primary_light"-->
+            <!--android:visibility="gone" />-->
+
+            <com.lb.auto_fit_textview.AutoResizeTextView
+                android:id="@+id/tv_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginRight="@dimen/tv_msg_content_mg_side"
+                android:gravity="left"
+                android:maxHeight="280dp"
+                android:text="当前一言"
+                android:textColor="@android:color/white"
+                android:textIsSelectable="true"
+                android:textSize="@dimen/tv_msg_textsize"
+                android:textStyle="bold" />
+
+
+            <com.lb.auto_fit_textview.AutoResizeTextView
+                android:id="@+id/tv_reference"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_content"
+                android:layout_marginLeft="@dimen/tv_msg_refer_mg_side"
+                android:layout_marginRight="@dimen/tv_msg_refer_mg_side"
+                android:layout_marginTop="@dimen/tv_msg_refer_mg_top"
+                android:gravity="right"
+                android:maxLines="1"
+                android:text="——出处 "
+                android:textColor="@android:color/white"
+                android:textIsSelectable="true"
+                android:textSize="@dimen/tv_msg_reference_textsize"
+                android:textStyle="italic"
+                app:autofit_minTextSize="7sp" />
+
+            <include
+                layout="@layout/tag_oneword_target"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/tv_reference"
+                android:layout_marginEnd="@dimen/tv_msg_refer_mg_side"
+                android:layout_marginStart="@dimen/tv_msg_refer_mg_side" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iv_favor"
+                android:layout_width="@dimen/iv_msg_operator_size"
+                android:layout_height="@dimen/iv_msg_operator_size"
+                android:layout_alignParentLeft="true"
+                android:layout_marginBottom="@dimen/iv_msg_operator_mg"
+                android:layout_marginLeft="@dimen/iv_msg_operator_mg"
+                android:background="@drawable/bg_circle_botton"
+                android:src="@drawable/ic_favorite_white_48dp" />
+
+            <ImageView
+                android:id="@+id/iv_set"
+                android:layout_width="@dimen/iv_msg_operator_size"
+                android:layout_height="@dimen/iv_msg_operator_size"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="@dimen/iv_msg_operator_mg"
+                android:layout_marginRight="@dimen/iv_msg_operator_mg"
+                android:background="@drawable/bg_circle_botton"
+                android:src="@drawable/ic_done_white_48dp" />
+
+        </RelativeLayout>
+    </LinearLayout>
+
+
+</FrameLayout>

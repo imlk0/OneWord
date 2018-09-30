@@ -6,7 +6,7 @@ import android.os.Parcelable;
 /**
  * Created by imlk on 2018/6/3.
  */
-public class WordBean implements Parcelable {
+public class WordBean implements Parcelable, Cloneable {
 
     public static final String FIELD_CONTENT = "[content]";
     public static final String FIELD_REFERENCE = "[reference]";
@@ -92,5 +92,15 @@ public class WordBean implements Parcelable {
 
     public static WordBean generateDefaultBean() {
         return new WordBean("这是一个默认句子，\n喵喵喵喵喵喵喵喵", "来源");
+    }
+
+    @Override
+    public WordBean clone() {
+        try {
+            return (WordBean) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

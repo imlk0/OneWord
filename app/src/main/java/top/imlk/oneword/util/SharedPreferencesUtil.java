@@ -1,12 +1,12 @@
 package top.imlk.oneword.util;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import androidx.lifecycle.MutableLiveData;
 import top.imlk.oneword.BuildConfig;
-import top.imlk.oneword.application.client.service.OneWordAutoRefreshService;
+import top.imlk.oneword.app.service.OneWordAutoRefreshService;
 
 
 /**
@@ -42,79 +42,14 @@ public class SharedPreferencesUtil {
     public static final String SHARED_PER_KEY_HAS_BEEN_SHOWEN_DONATE = "has_been_show_donate";
 
 
-//    public static final String SHARED_PER_USER_CONFIG = "SHARED_PER_USER_CONFIG";
-//    public static final String SHARED_PER_KEY_SELECTED_THEME_NAME = "selected_theme_name";
+    public static void registerChangeListener(Context context, String perferenceName, SharedPreferences.OnSharedPreferenceChangeListener listener) {
+        context.getSharedPreferences(perferenceName, Context.MODE_PRIVATE).registerOnSharedPreferenceChangeListener(listener);
+    }
 
+    public static void unregisterChangeListener(Context context, String perferenceName, SharedPreferences.OnSharedPreferenceChangeListener listener) {
+        context.getSharedPreferences(perferenceName, Context.MODE_PRIVATE).unregisterOnSharedPreferenceChangeListener(listener);
+    }
 
-//    public static final String SHARED_PER_ONEWORD_TYPE_SELECT_STATE = "SHARED_PER_ONEWORD_TYPE_SELECT_STATE";
-
-//    public static final String SHARED_PER_KEY_ONEWORD_TYPE_ANIME = "Anime";
-//    public static final String SHARED_PER_KEY_ONEWORD_TYPE_COMIC = "Comic";
-//    public static final String SHARED_PER_KEY_ONEWORD_TYPE_GAME = "Game";
-//    public static final String SHARED_PER_KEY_ONEWORD_TYPE_NOVEL = "Novel";
-//    public static final String SHARED_PER_KEY_ONEWORD_TYPE_MYSELF = "Myself";
-//    public static final String SHARED_PER_KEY_ONEWORD_TYPE_INTERNET = "Internet";
-//    public static final String SHARED_PER_KEY_ONEWORD_TYPE_OTHER = "Other";
-
-
-//    public static WordBean readSavedOneWord(Context context) {
-//
-//        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PER_CURRENT_STATE, Context.MODE_PRIVATE);
-//
-//        int id = sharedPreferences.getInt(SHARED_PER_KEY_CURRENT_ONEWORD_ID, -1);
-//
-//        if (id > 0) {
-//            return OneWordDBHelper.getInstance().queryOneWordInAllOneWordById(id);
-//        }
-//
-//        return null;
-//    }
-
-
-//    public static void saveCurOneWordId(Context context, int id) {
-//
-//        if (id > 0) {
-//
-//            SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PER_CURRENT_STATE, Context.MODE_PRIVATE);
-//
-//            SharedPreferences.Editor editor = sharedPreferences.edit();
-//
-//            editor.putInt(SHARED_PER_KEY_CURRENT_ONEWORD_ID, id);
-//
-//            editor.commit();
-//        }
-//    }
-
-
-//    public static boolean[] readOneWordTypes(Context context) {
-//        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PER_ONEWORD_TYPE_SELECT_STATE, Context.MODE_PRIVATE);
-//        boolean a = sharedPreferences.getBoolean(SHARED_PER_KEY_ONEWORD_TYPE_ANIME, true);
-//        boolean b = sharedPreferences.getBoolean(SHARED_PER_KEY_ONEWORD_TYPE_COMIC, true);
-//        boolean c = sharedPreferences.getBoolean(SHARED_PER_KEY_ONEWORD_TYPE_GAME, true);
-//        boolean d = sharedPreferences.getBoolean(SHARED_PER_KEY_ONEWORD_TYPE_NOVEL, true);
-//        boolean e = sharedPreferences.getBoolean(SHARED_PER_KEY_ONEWORD_TYPE_MYSELF, true);
-//        boolean f = sharedPreferences.getBoolean(SHARED_PER_KEY_ONEWORD_TYPE_INTERNET, true);
-//        boolean g = sharedPreferences.getBoolean(SHARED_PER_KEY_ONEWORD_TYPE_OTHER, true);
-//
-//        return new boolean[]{a, b, c, d, e, f, g,};
-//
-//    }
-
-//    public static void saveOneWordTypes(Context context, boolean selectState[]) {
-//
-//        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PER_ONEWORD_TYPE_SELECT_STATE, Context.MODE_PRIVATE);
-//        SharedPreferences.Editor editor = sharedPreferences.edit();
-//
-//        editor.putBoolean(SHARED_PER_KEY_ONEWORD_TYPE_ANIME, selectState[0]);
-//        editor.putBoolean(SHARED_PER_KEY_ONEWORD_TYPE_COMIC, selectState[1]);
-//        editor.putBoolean(SHARED_PER_KEY_ONEWORD_TYPE_GAME, selectState[2]);
-//        editor.putBoolean(SHARED_PER_KEY_ONEWORD_TYPE_NOVEL, selectState[3]);
-//        editor.putBoolean(SHARED_PER_KEY_ONEWORD_TYPE_MYSELF, selectState[4]);
-//        editor.putBoolean(SHARED_PER_KEY_ONEWORD_TYPE_INTERNET, selectState[5]);
-//        editor.putBoolean(SHARED_PER_KEY_ONEWORD_TYPE_OTHER, selectState[6]);
-//
-//        editor.commit();
-//    }
 
     public static boolean isAutoRefreshOpened(Context context) {
 
@@ -221,7 +156,7 @@ public class SharedPreferencesUtil {
             }
         }
 
-        if ((!hasBeenShowDonate(context)) && isAutoRefreshOpened(context) && AppStatus.getModuleVersionCode() == BuildConfig.VERSION_CODE) {
+        if ((!hasBeenShowDonate(context)) && (AppStatus.getModuleVersionCode() == BuildConfig.VERSION_CODE || (isShowNotificationOneWordOpened(context) && AppStatus.getModuleVersionCode() == 0))) {
             ShowDialogUtil.showDonateDialog(context);
             setHasBeenShowDonate(context, true);
         }

@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import de.robv.android.xposed.XposedBridge;
+import de.robv.android.xposed.XposedHelpers;
 import top.imlk.oneword.BuildConfig;
 import top.imlk.oneword.bean.WordBean;
 import top.imlk.oneword.bean.WordViewConfig;
@@ -355,11 +356,25 @@ public class BaseUIFixer implements View.OnLongClickListener, View.OnAttachState
         }
 
         public void setFakeHeight(int pixels) {
-            mBottom = pixels;
+
+            try {
+                XposedHelpers.findField(TextView.class, "mBottom")
+                        .set(this, pixels);
+
+            } catch (NoSuchFieldError e) {
+            } catch (IllegalAccessException e) {
+            }
         }
 
         public void setFakeWith(int pixels) {
-            mBottom = pixels;
+
+            try {
+                XposedHelpers.findField(TextView.class, "mRight")
+                        .set(this, pixels);
+
+            } catch (NoSuchFieldError e) {
+            } catch (IllegalAccessException e) {
+            }
         }
 
 

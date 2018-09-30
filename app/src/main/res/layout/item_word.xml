@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/item_oneword_height">
+    android:layout_height="wrap_content">
 
     <!-- this view reveals when swipe right -->
     <RelativeLayout
@@ -71,10 +70,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?attr/color_primary"
-        android:paddingBottom="20dp"
         android:paddingLeft="8dp"
-        android:paddingRight="20dp"
         android:paddingTop="8dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="20dp"
 
         android:tag="front">
 
@@ -84,8 +83,8 @@
             android:layout_height="32sp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:minHeight="32sp"
             android:minWidth="32sp"
+            android:minHeight="32sp"
             android:rotation="180"
             android:src="@drawable/ic_format_quote_white_48dp"
             android:tint="?attr/color_primary_light" />
@@ -94,8 +93,8 @@
             android:id="@+id/tv_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="20dp"
+            android:layout_marginRight="10dp"
             android:layout_toRightOf="@id/iv_quote"
             android:singleLine="false"
             android:textColor="@android:color/white"
@@ -117,8 +116,8 @@
             layout="@layout/tag_oneword_target"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignRight="@id/tv_reference"
-            android:layout_below="@id/tv_reference" />
+            android:layout_below="@id/tv_reference"
+            android:layout_alignRight="@id/tv_reference" />
     </RelativeLayout>
 
 

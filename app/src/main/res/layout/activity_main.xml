@@ -6,161 +6,47 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <top.imlk.oneword.application.view.PastedNestedScrollView
-        android:id="@+id/pasted_scroll_view"
+
+    <LinearLayout
+        android:id="@+id/ll_main_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="?attr/color_primary"
         android:orientation="vertical">
 
-        <top.imlk.oneword.application.view.MainOneWordView
-            android:id="@+id/ll_main_oneword"
+
+        <LinearLayout
+            android:id="@+id/ll_fg_top"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/color_primary"
-            android:descendantFocusability="blocksDescendants"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/ll_page_main"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
 
-                <top.imlk.oneword.application.view.OneWordShowPanel
-                    android:id="@+id/one_word_show_panel"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:orientation="vertical"
-                    android:paddingTop="@dimen/iv_msg_operator_size">
+        </LinearLayout>
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1">
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bnv_main"
+            android:layout_width="match_parent"
+            android:layout_height="77dp"
+            app:itemIconSize="35dp"
+            android:background="?attr/color_primary_dark"
+            app:itemIconTint="@color/color_bnv_item"
+            app:itemTextColor="@color/color_bnv_item"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:menu="@menu/menu_main_navigation" />
 
+        <LinearLayout
+            android:id="@+id/ll_fg_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:visibility="gone">
 
-                        <!--<ImageView-->
-                        <!--android:layout_width="@dimen/iv_msg_quote_icon_size"-->
-                        <!--android:layout_height="@dimen/iv_msg_quote_icon_size"-->
-                        <!--android:layout_alignTop="@id/tv_msg_main"-->
-                        <!--android:layout_marginLeft="-6dp"-->
-                        <!--android:layout_marginRight="-100dp"-->
-                        <!--android:layout_marginTop="-12dp"-->
-                        <!--android:layout_toLeftOf="@id/tv_msg_main"-->
-                        <!--android:rotation="180"-->
-                        <!--android:src="@drawable/ic_format_quote_white_48dp"-->
-                        <!--android:tint="?attr/color_primary_light"-->
-                        <!--android:visibility="gone" />-->
-
-                        <com.lb.auto_fit_textview.AutoResizeTextView
-                            android:id="@+id/tv_content"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:layout_marginRight="@dimen/tv_msg_content_mg_side"
-                            android:gravity="left"
-                            android:maxHeight="280dp"
-                            android:text="当前一言"
-                            android:textColor="@android:color/white"
-                            android:textIsSelectable="true"
-                            android:textSize="@dimen/tv_msg_textsize"
-                            android:textStyle="bold" />
+        </LinearLayout>
 
 
-                        <com.lb.auto_fit_textview.AutoResizeTextView
-                            android:id="@+id/tv_reference"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/tv_content"
-                            android:layout_marginLeft="@dimen/tv_msg_refer_mg_side"
-                            android:layout_marginRight="@dimen/tv_msg_refer_mg_side"
-                            android:layout_marginTop="@dimen/tv_msg_refer_mg_top"
-                            android:gravity="right"
-                            android:maxLines="1"
-                            android:text="——出处 "
-                            android:textColor="@android:color/white"
-                            android:textIsSelectable="true"
-                            android:textSize="@dimen/tv_msg_reference_textsize"
-                            android:textStyle="italic"
-                            app:autofit_minTextSize="7sp" />
-
-                        <include
-                            layout="@layout/tag_oneword_target"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_below="@id/tv_reference"
-                            android:layout_marginEnd="@dimen/tv_msg_refer_mg_side"
-                            android:layout_marginStart="@dimen/tv_msg_refer_mg_side" />
-
-
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <ImageView
-                            android:id="@+id/iv_msg_favor"
-                            android:layout_width="@dimen/iv_msg_operator_size"
-                            android:layout_height="@dimen/iv_msg_operator_size"
-                            android:layout_alignParentLeft="true"
-                            android:layout_marginBottom="@dimen/iv_msg_operator_mg"
-                            android:layout_marginLeft="@dimen/iv_msg_operator_mg"
-                            android:background="@drawable/bg_circle_botton"
-                            android:src="@drawable/ic_favorite_white_48dp" />
-
-                        <ImageView
-                            android:id="@+id/iv_msg_set"
-                            android:layout_width="@dimen/iv_msg_operator_size"
-                            android:layout_height="@dimen/iv_msg_operator_size"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginBottom="@dimen/iv_msg_operator_mg"
-                            android:layout_marginRight="@dimen/iv_msg_operator_mg"
-                            android:background="@drawable/bg_circle_botton"
-                            android:src="@drawable/ic_done_white_48dp" />
-
-                    </RelativeLayout>
-                </top.imlk.oneword.application.view.OneWordShowPanel>
-
-
-                <LinearLayout
-                    android:id="@+id/ll_msg_bottom"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-
-                    <net.lucode.hackware.magicindicator.MagicIndicator
-                        android:id="@+id/magi_bottom"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="?attr/color_primary_dark" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ll_page_extend"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/white">
-
-                <top.imlk.oneword.application.view.UnScrollableViewPaper
-                    android:id="@+id/vp_page_extend"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                </top.imlk.oneword.application.view.UnScrollableViewPaper>
-
-            </LinearLayout>
-
-        </top.imlk.oneword.application.view.MainOneWordView>
-
-
-    </top.imlk.oneword.application.view.PastedNestedScrollView>
+    </LinearLayout>
 </com.scwang.smartrefresh.layout.SmartRefreshLayout>

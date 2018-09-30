@@ -1,15 +1,14 @@
 apply plugin: 'com.android.application'
-//apply plugin: 'com.jakewharton.butterknife'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
     defaultConfig {
         applicationId "top.imlk.oneword"
         minSdkVersion 21
-        targetSdkVersion 27
-        versionCode 12
-        versionName "1.1.6"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        targetSdkVersion 28
+        versionCode 13
+        versionName "1.1.7"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -33,23 +32,24 @@ android {
         targetCompatibility 1.8
         sourceCompatibility 1.8
     }
+
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
 //    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     implementation 'io.reactivex.rxjava2:rxjava:2.1.14-RC1'
 //    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
 //    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
-    implementation 'com.android.support:support-v4:27.1.1'
-    implementation 'com.android.support:recyclerview-v7:27.1.1'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
     //    implementation 'co.dift.ui.swipetoaction:library:1.1'
     implementation 'com.github.hackware1993:MagicIndicator:1.5.0'
     implementation 'com.yarolegovich:lovely-dialog:1.1.0'
@@ -60,25 +60,23 @@ dependencies {
     implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.5'
 
     implementation 'com.tencent.bugly:crashreport:latest.release'
-    implementation 'com.android.support:design:27.1.1'
+    implementation 'com.google.android.material:material:1.0.0'
     implementation 'com.jaredrummler:colorpicker:1.0.2'
 
     implementation project(':AutoFitTextViewLibrary_fork')
 
-//    implementation 'com.android.support:appcompat-v7:27.1.1'
-
     implementation 'com.zqc.opencc.android.lib:lib-opencc-android:0.8.0@aar'
 
-    // https://mvnrepository.com/artifact/com.jakewharton/butterknife
 //    implementation group: 'com.jakewharton', name: 'butterknife', version: '8.8.1'
-
-// https://mvnrepository.com/artifact/com.jakewharton/butterknife-compiler
+//    api 'com.jakewharton:butterknife:8.8.1'
 //    annotationProcessor group: 'com.jakewharton', name: 'butterknife-compiler', version: '8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0-SNAPSHOT'
+    api 'com.jakewharton:butterknife:9.0.0-SNAPSHOT'
+    implementation 'com.jakewharton:butterknife:9.0.0-SNAPSHOT'
 
 
     implementation 'org.jetbrains:annotations-java5:15.0'
+    implementation group: 'androidx.lifecycle', name: 'lifecycle-extensions', version: '2.0.0'
 
-    // https://mvnrepository.com/artifact/android.arch.lifecycle/viewmodel
-    implementation group: 'android.arch.lifecycle', name: 'viewmodel', version: '1.1.1'
-
+//    implementation 'com.github.ittianyu:BottomNavigationViewEx:2.0.2'
 }

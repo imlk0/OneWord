@@ -1,7 +1,6 @@
 package top.imlk.oneword.systemui.injecter;
 
 import android.os.Environment;
-import android.os.SystemProperties;
 
 import java.io.File;
 import java.io.FileInputStream;

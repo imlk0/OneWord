@@ -2,11 +2,9 @@ package top.imlk.oneword.util;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.support.annotation.AttrRes;
-import android.text.TextUtils;
-import android.util.TypedValue;
+import androidx.annotation.AttrRes;
 
-import top.imlk.oneword.R;
+import android.util.TypedValue;
 
 /**
  * Created by imlk on 2018/6/2.

@@ -1,19 +1,18 @@
 package top.imlk.oneword.systemui.view;
 
-import android.annotation.NonNull;
+import androidx.annotation.NonNull;
+
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Canvas;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.text.BoringLayout;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -36,9 +35,9 @@ public class OneWordView extends LinearLayout {
 
     private TextView tvReference;
 
-    private WordBean wordBean;
+    private WordBean wordBean = WordBean.generateDefaultBean();
 
-    private WordViewConfig config;
+    private WordViewConfig config = WordViewConfig.generateDefaultBean();
 
     //<TextView android:textSize="@r$dimen/widget_label_font_size" android:textColor="@color/clock_gray" android:ellipsize="marquee" android:layout_gravity="center_horizontal" android:id="@r$id/owner_info" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="16dp" android:layout_marginTop="@dimen/date_owner_info_margin" android:layout_marginRight="16dp" android:singleLine="true" android:letterSpacing="0.05"/>
 //    14sp
@@ -110,6 +109,21 @@ public class OneWordView extends LinearLayout {
             tvReference.setLetterSpacing(0.05f);
         }
 
+        this.tvContent.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+
+            @Override
+            public boolean onPreDraw() {
+
+                if (config == null || config.maxHeight == 0 || OneWordView.this.getHeight() <= config.maxHeight || OneWordView.this.tvContent.getTextSize() == 0) {
+
+                    return true;
+                }
+
+                setTextSize(TypedValue.COMPLEX_UNIT_PX, OneWordView.this.tvContent.getTextSize() - 3);
+
+                return false;
+            }
+        });
     }
 
 
@@ -117,8 +131,13 @@ public class OneWordView extends LinearLayout {
         if (wordBean != null && wordBean.content != null) {
             this.wordBean = wordBean;
 
+            if (config != null) {
+                setTextSize(TypedValue.COMPLEX_UNIT_SP, config.textSize);
+            }
+
             setContent();
             setReference();
+
 
         } else {
             defaultSetOneWord();
@@ -308,6 +327,9 @@ public class OneWordView extends LinearLayout {
     }
 
     private void setTextSize(int unit, float size) {
+        if (size < 0) {
+            size = 0;
+        }
         tvContent.setTextSize(unit, size);
         tvReference.setTextSize(unit, size);
 
@@ -332,7 +354,7 @@ public class OneWordView extends LinearLayout {
 //
 //        Intent intent = new Intent(Intent.ACTION_MAIN);
 //        intent.addCategory(Intent.CATEGORY_LAUNCHER);
-//        ComponentName cn = new ComponentName("top.imlk.oneword", "top.imlk.oneword.application.client.activity.MainActivity");
+//        ComponentName cn = new ComponentName("top.imlk.oneword", "top.imlk.oneword.application.activity.MainActivity");
 //        intent.setComponent(cn);
 //        v.getContext().startActivity(intent);
 //

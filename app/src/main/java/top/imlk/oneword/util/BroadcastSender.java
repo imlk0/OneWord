@@ -8,8 +8,8 @@ import android.os.Build;
 import android.os.Parcel;
 
 import top.imlk.oneword.BuildConfig;
-import top.imlk.oneword.application.client.application.OneWordApplication;
-import top.imlk.oneword.application.client.service.OneWordAutoRefreshService;
+import top.imlk.oneword.app.application.OneWordApplication;
+import top.imlk.oneword.app.service.OneWordAutoRefreshService;
 import top.imlk.oneword.bean.WordBean;
 import top.imlk.oneword.bean.WordViewConfig;
 
@@ -185,6 +185,7 @@ public class BroadcastSender {
         } else {
             context.startService(intent);
         }
+
     }
 
 
@@ -226,9 +227,6 @@ public class BroadcastSender {
             injectExtra();
         }
 
-        protected MyIntent(Parcel in) {
-            super(in);
-        }
     }
 
 }

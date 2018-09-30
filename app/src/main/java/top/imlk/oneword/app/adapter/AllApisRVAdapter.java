@@ -1,11 +1,11 @@
-package top.imlk.oneword.application.adapter;
+package top.imlk.oneword.app.adapter;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -22,7 +22,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import top.imlk.oneword.R;
-import top.imlk.oneword.application.client.activity.ApiEditActivity;
+import top.imlk.oneword.app.activity.ApiEditActivity;
 import top.imlk.oneword.bean.ApiBean;
 import top.imlk.oneword.dao.OneWordDBHelper;
 import top.imlk.oneword.util.ShareUtil;
@@ -128,7 +128,7 @@ public class AllApisRVAdapter extends RecyclerView.Adapter<AllApisRVAdapter.ApiI
 
         public void deleteApiDialog() {
 
-            new android.support.v7.app.AlertDialog.Builder(context).setTitle("删除API").setMessage("您确定要删除吗？如果不小心删除了自带api可以在右上角重置").setPositiveButton("删除", new DialogInterface.OnClickListener() {
+            new androidx.appcompat.app.AlertDialog.Builder(context).setTitle("删除API").setMessage("您确定要删除吗？如果不小心删除了自带api可以在右上角重置").setPositiveButton("删除", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     OneWordDBHelper.removeApiById(apiBean.id);

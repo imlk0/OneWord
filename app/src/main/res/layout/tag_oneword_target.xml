@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/ll_target_tag"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_cycle_corners_botton"
     android:clickable="true"
+    android:focusable="true"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingBottom="1dp"
     android:paddingLeft="5dp"
+    android:paddingTop="1dp"
     android:paddingRight="7dp"
-    android:paddingTop="1dp">
+    android:paddingBottom="1dp">
 
     <ImageView
         android:layout_width="16sp"
