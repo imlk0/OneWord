@@ -3,23 +3,19 @@
 
     <item
         android:id="@+id/item_history"
-        android:checked="false"
         android:icon="@drawable/ic_view_list_white_48dp"
-        android:title="历史"/>
+        android:title="历史" />
     <item
         android:id="@+id/item_favor"
-        android:checked="false"
         android:icon="@drawable/ic_favorite_border_white_48dp"
-        android:title="喜欢"/>
+        android:title="喜欢" />
     <item
         android:id="@+id/item_next"
-        android:checked="false"
         android:icon="@drawable/ic_refresh_white_48dp"
-        android:title="再来一条"/>
+        android:title="再来一条" />
     <item
         android:id="@+id/item_setting"
-        android:checked="false"
         android:icon="@drawable/ic_info_outline_white_48dp"
-        android:title="设置"/>
+        android:title="设置" />
 
 </menu>

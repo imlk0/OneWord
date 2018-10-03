@@ -62,7 +62,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="启动一个服务在后台定期刷新锁屏一言，在应用“正常退出后”会通知其开始自动刷新操作（不要直接在最近任务界面划掉哇，不然服务会不知道什么时候才应该刷新的），请勿黑阈"
+                            android:text="启动一个服务在后台定期刷新锁屏一言，此服务仅在熄屏和亮屏时刻活跃。\n✔在黑阈中排除锁屏一言\n✔MIUI“自启动管理”中允许锁屏一言"
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/item_setting_summary_ts" />
                     </LinearLayout>

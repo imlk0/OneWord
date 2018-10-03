@@ -65,12 +65,12 @@ public class KeyguardStatusViewHooker extends BaseHooker {
 //            throw new Throwable();
 
         } catch (Throwable e) {
-            XposedBridge.log("------KeyguardStatusViewHooker.initClass()发生异常["+ AppInjecter.HostPackageName +"]------");
+            XposedBridge.log("------KeyguardStatusViewHooker.initClass()发生异常[" + AppInjecter.HostPackageName + "]------");
             XposedBridge.log(e);
             XposedBridge.log("-------------------------------------------------------");
             return false;
         }
-        XposedBridge.log("------KeyguardStatusViewHooker.initClass()顺利["+ AppInjecter.HostPackageName +"]------");
+        XposedBridge.log("------KeyguardStatusViewHooker.initClass()顺利[" + AppInjecter.HostPackageName + "]------");
         return true;
     }
 

@@ -150,7 +150,7 @@ public class ShowDialogUtil {
                                         .setView(R.layout.item_donate)
                                         .setTopColor(AppStyleHelper.getColorByAttributeId(context, R.attr.color_primary))
                                         .setTitle("感谢您使用微信来捐赠")
-                                        .setMessage("这是我的支付二维码，请截图扫码捐赠，谢谢\n建议五元起捐，不设上限(￣y▽,￣)╭")
+                                        .setMessage("这是我的支付二维码，请截图扫码捐赠，谢谢\n(￣y▽,￣)╭")
                                         .setIcon(R.drawable.ic_local_atm_white_48dp)
                                         .configureView(new ViewConfigurator<View>() {
                                             @Override
@@ -167,7 +167,7 @@ public class ShowDialogUtil {
                                         .setView(R.layout.item_donate)
                                         .setTopColor(AppStyleHelper.getColorByAttributeId(context, R.attr.color_primary))
                                         .setTitle("感谢您使用QQ来捐赠")
-                                        .setMessage("这是我的支付二维码，请截图扫码捐赠，谢谢\n建议五元起捐，不设上限(￣y▽,￣)╭")
+                                        .setMessage("这是我的支付二维码，请截图扫码捐赠，谢谢\n(￣y▽,￣)╭")
                                         .setIcon(R.drawable.ic_local_atm_white_48dp)
                                         .configureView(new ViewConfigurator<View>() {
                                             @Override
@@ -203,7 +203,7 @@ public class ShowDialogUtil {
         titleAndSummaries.add(new TitleAndSummary("RxAndroid", "https://github.com/ReactiveX/RxAndroid"));
         titleAndSummaries.add(new TitleAndSummary("RxJava", "https://github.com/ReactiveX/RxJava"));
         titleAndSummaries.add(new TitleAndSummary("Gson", "https://github.com/google/gson"));
-        titleAndSummaries.add(new TitleAndSummary("MagicIndicator", "https://github.com/hackware1993/MagicIndicator"));
+//        titleAndSummaries.add(new TitleAndSummary("MagicIndicator", "https://github.com/hackware1993/MagicIndicator"));
         titleAndSummaries.add(new TitleAndSummary("LovelyDialog", "https://github.com/yarolegovich/LovelyDialog"));
         titleAndSummaries.add(new TitleAndSummary("SmartRefreshLayout", "https://github.com/scwang90/SmartRefreshLayout"));
         titleAndSummaries.add(new TitleAndSummary("SwipeToAction(fork)", "https://github.com/vcalvello/SwipeToAction"));
@@ -212,6 +212,7 @@ public class ShowDialogUtil {
         titleAndSummaries.add(new TitleAndSummary("ColorPicker", "https://github.com/jaredrummler/ColorPicker"));
         titleAndSummaries.add(new TitleAndSummary("AutoFitTextView(fork)", "https://github.com/AndroidDeveloperLB/AutoFitTextView"));
         titleAndSummaries.add(new TitleAndSummary("android-opencc", "https://github.com/qichuan/android-opencc"));
+        titleAndSummaries.add(new TitleAndSummary("butterknife", "https://github.com/JakeWharton/butterknife"));
 
 
         ItemArrayAdapter itemArrayAdapter = new ItemArrayAdapter(context, titleAndSummaries);

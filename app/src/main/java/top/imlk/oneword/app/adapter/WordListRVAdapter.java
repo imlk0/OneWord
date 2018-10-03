@@ -31,7 +31,7 @@ import top.imlk.oneword.util.ShareUtil;
 /**
  * Created by imlk on 2018/5/21.
  */
-public class WordListRVAdapter extends RecyclerView.Adapter  {
+public class WordListRVAdapter extends RecyclerView.Adapter {
 
 
     private RecyclerView recyclerView;
@@ -177,7 +177,7 @@ public class WordListRVAdapter extends RecyclerView.Adapter  {
 
                         boolean favor = this.data.reverseFavorStatusAndDoSave();
 
-                        Toast.makeText(AppStatus.getRunningApplication(), favor ? "取消喜欢" : "喜欢", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AppStatus.getRunningApplication(), favor ? "喜欢" : "取消喜欢", Toast.LENGTH_SHORT).show();
                     }
 
                     break;

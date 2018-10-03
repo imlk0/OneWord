@@ -225,7 +225,7 @@ public class BaseUIFixer implements View.OnLongClickListener, View.OnAttachState
                 XposedBridge.log("版本号不匹配，MODULE_PORT_VERSION_CODE：" + BuildConfig.VERSION_CODE + "\nONEWORD_APP_VERSION_CODE：" + senderVersionCode);
                 Toast.makeText(context, "模块版本号不匹配，您可能需要重启手机", Toast.LENGTH_SHORT).show();
                 if (!BuildConfig.DEBUG) {
-                    return;
+                    return;//若是非debug版本直接跳出
                 }
             }
 

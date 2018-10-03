@@ -38,7 +38,7 @@ public class WordViewConfig implements Parcelable {
 
     public LongClickEvent keyguardLongClick = LongClickEvent.NEXT;
 
-    public int maxHeight = 280;
+    public int maxHeight = 0;// 默认改为不进行限制
 
 
     protected WordViewConfig(Parcel in) {

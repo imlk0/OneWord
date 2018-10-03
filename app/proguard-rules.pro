@@ -47,6 +47,15 @@
 -keep public class top.imlk.oneword.bean.ApiBean{*;}
 -keep public class top.imlk.oneword.bean.WordBean{*;}
 -keep public class top.imlk.oneword.bean.WordViewConfig{*;}
+-keep public class top.imlk.oneword.bean.WordViewConfig$*{*;}
 
 -dontwarn com.tencent.bugly.**
 -keep public class com.tencent.bugly.**{*;}
+
+# butterknife
+-keep class butterknife.** { *; }
+-dontwarn butterknife.internal.** -keep class **$$ViewBinder { *; }
+-keepclasseswithmembernames class * { @butterknife.* <fields>; }
+-keepclasseswithmembernames class * { @butterknife.* <methods>; }
+
+-keep public class com.zqc.opencc.android.lib.ChineseConverter{*;}

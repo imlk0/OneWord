@@ -89,7 +89,6 @@ public class AppInjecter implements IXposedHookLoadPackage, IXposedHookZygoteIni
                     }
                 });
 
-                XposedBridge.log("注入");
                 break;
             case BuildConfig.APPLICATION_ID:
 
@@ -171,6 +170,8 @@ public class AppInjecter implements IXposedHookLoadPackage, IXposedHookZygoteIni
 
                     if (RomHelper.isMIUI()) {
                         new MiuiKeyguardBaseClockHook().doHook(lpparam.classLoader);
+                    } else {
+                        XposedBridge.log("不是MIUI系统，跳过");
                     }
 
                     new SamsungKeyguardCarrierViewHooker().doHook(lpparam.classLoader);
@@ -182,6 +183,8 @@ public class AppInjecter implements IXposedHookLoadPackage, IXposedHookZygoteIni
 
                     if (RomHelper.isMIUI()) {
                         new MiuiKeyguardBaseClockHook().doHook(lpparam.classLoader);
+                    } else {
+                        XposedBridge.log("不是MIUI系统，跳过");
                     }
                     break;
             }

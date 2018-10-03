@@ -1,41 +1,60 @@
 package top.imlk.oneword.systemui.injecter;
 
-import android.os.Environment;
-
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.lang.ref.WeakReference;
-import java.util.Properties;
+import java.io.InputStream;
 
 /**
  * Created by imlk on 2018/9/22.
  */
 public class RomHelper {
 
-    private static WeakReference<Properties> propertiesWeakReference;
+
+    private static final String MIUI_VERSION_NAME = "ro.miui.ui.version.name";
+    private static final String CMD_GETPROP = "getprop";
+
+    private static Boolean isMIUI;
+
 
     public synchronized static boolean isMIUI() {
-        return getProperties().contains("ro.miui.ui.version.name");
+
+        if (isMIUI == null) {
+            String value = readProp(MIUI_VERSION_NAME);
+
+            if (value == null || "".equals(value.trim())) {
+                isMIUI = false;
+            } else {
+                isMIUI = true;
+            }
+        }
+
+        return isMIUI;
     }
 
-
-    private synchronized static Properties getProperties() {
-
-        Properties properties;
-        if (propertiesWeakReference == null || (properties = propertiesWeakReference.get()) == null) {
-            properties = new Properties();
-
-
-            try {
-                properties.load(new FileInputStream(new File(Environment.getRootDirectory(), "build.prop")));
-
-            } catch (IOException e) {
-                e.printStackTrace();
+    private static String readProp(String propName) {// andorid 8 以上限制build.prop文件读取
+        InputStream inputStream = null;
+        try {
+            inputStream = Runtime.getRuntime().exec(new String[]{CMD_GETPROP, propName}).getInputStream();
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            byte[] bytes = new byte[1024];
+            int len = 0;
+            while ((len = inputStream.read(bytes)) != -1) {
+                byteArrayOutputStream.write(bytes, 0, len);
             }
 
-            propertiesWeakReference = new WeakReference<>(properties);
+            return byteArrayOutputStream.toString();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+            } catch (IOException e) {
+            }
         }
-        return properties;
+
+        return null;
     }
 }
